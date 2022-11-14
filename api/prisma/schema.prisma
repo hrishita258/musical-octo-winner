@@ -1,0 +1,184 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String   @id @default(uuid()) @db.Uuid
+  email            String   @unique
+  password         String
+  name             String
+  contactNumber    String?  @unique
+  githubProfile    String?
+  linkedinProfile  String?
+  isActive         Boolean  @default(true)
+  role             Role
+  gender           Gender
+  semester         Int?
+  enrollmentYear   Int?
+  isAdmin          Boolean  @default(false)
+  profileImage     String?
+  specializationId String?  @db.Uuid
+  collegeId        String?  @db.Uuid
+  createdAt        DateTime @default(now()) @db.Timestamptz()
+  updatedAt        DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  specialization Specialization?         @relation(fields: [specializationId], references: [id])
+  College        College?                @relation(fields: [collegeId], references: [id])
+  Activities     ActivityLogs[]
+  quiz           QuizAssigendToStudent[]
+  scores         StudenQuizScores[]
+  createdQuiz    Quiz[]
+  refreshTokens  RefreshTokens[]
+}
+
+model Specialization {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  collegeId String   @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  College College @relation(fields: [collegeId], references: [id])
+  User    User[]
+  Quiz    Quiz[]
+}
+
+model College {
+  id             String   @id @default(uuid()) @db.Uuid
+  name           String   @unique
+  email          String   @unique
+  contactNumber  String?  @unique
+  address        String?
+  logoSrc        String?
+  directorName   String
+  collegeWebsite String?
+  description    String?  @db.Text
+  createdAt      DateTime @default(now()) @db.Timestamptz()
+  updatedAt      DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  Users           User[]
+  specializations Specialization[]
+  quizes          Quiz[]
+}
+
+model Quiz {
+  id               String    @id @default(uuid()) @db.Uuid
+  name             String    @unique
+  duration         Int?
+  description      String?   @db.Text
+  isPublished      Boolean
+  publishedAt      DateTime?
+  image            String?
+  specializationId String    @db.Uuid
+  createdAt        DateTime  @default(now()) @db.Timestamptz()
+  updatedAt        DateTime  @default(now()) @updatedAt @db.Timestamptz()
+  collegeId        String    @db.Uuid
+  createdById      String    @db.Uuid
+
+  Questions      QuizQuestions[]
+  user           QuizAssigendToStudent[]
+  score          StudenQuizScores[]
+  User           User                    @relation(fields: [createdById], references: [id])
+  College        College                 @relation(fields: [collegeId], references: [id])
+  Specialization Specialization          @relation(fields: [specializationId], references: [id])
+}
+
+model QuizQuestions {
+  id        String           @id @default(uuid()) @db.Uuid
+  question  String           @db.Text
+  type      QuizQuestionType
+  quizId    String           @db.Uuid
+  createdAt DateTime         @default(now()) @db.Timestamptz()
+  updatedAt DateTime         @default(now()) @updatedAt @db.Timestamptz()
+
+  Choices QuizQuestionsChoices[]
+  Quiz    Quiz?                  @relation(fields: [quizId], references: [id])
+}
+
+model QuizQuestionsChoices {
+  id              String   @id @default(uuid()) @db.Uuid
+  quizQuestionsId String   @db.Uuid
+  text            String   @db.Text
+  isCorrect       Boolean
+  createdAt       DateTime @default(now()) @db.Timestamptz()
+  updatedAt       DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  QuizQuestions QuizQuestions? @relation(fields: [quizQuestionsId], references: [id])
+}
+
+model QuizAssigendToStudent {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @db.Uuid
+  quizId       String   @db.Uuid
+  assignedAt   DateTime @default(now()) @db.Timestamptz()
+  assignedById String   @db.Uuid
+
+  Quiz Quiz @relation(fields: [quizId], references: [id])
+  User User @relation(fields: [userId], references: [id])
+}
+
+model ActivityLogs {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  activity  String
+  type      String
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  User User @relation(fields: [userId], references: [id])
+}
+
+model StudenQuizScores {
+  id               String   @id @default(uuid()) @db.Uuid
+  duration         Decimal
+  score            Decimal
+  isPassed         Boolean
+  attemptedAt      DateTime
+  correctCount     Int
+  incorrectCount   Int
+  unAttemptedCount Int
+  userId           String   @db.Uuid
+  quizId           String   @db.Uuid
+  createdAt        DateTime @default(now()) @db.Timestamptz()
+  updatedAt        DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  User User @relation(fields: [userId], references: [id])
+  Quiz Quiz @relation(fields: [quizId], references: [id])
+}
+
+model RefreshTokens {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  userAgent String   @db.Text
+  isActive  Boolean  @default(true)
+  token     String   @unique @db.Text
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  User User @relation(fields: [userId], references: [id])
+}
+
+enum QuizQuestionType {
+  Single
+  MCQ
+}
+
+enum Gender {
+  Male
+  Female
+  other
+}
+
+enum Role {
+  student
+  faculty
+  spoc
+}

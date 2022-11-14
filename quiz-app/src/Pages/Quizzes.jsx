@@ -1,0 +1,305 @@
+import { Avatar, Card, Col, Form, message, Row, Select, Tag } from 'antd'
+import moment from 'moment'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import PageLayout from '../components/PageLayout'
+import QuizCardStat from '../components/QuizCardStat'
+const BREADCRUMBS = [
+  {
+    name: 'Home',
+    link: {
+      route: '/',
+      key: 1
+    }
+  },
+  {
+    name: 'Quizzes'
+  }
+]
+const images = [
+  'https://media-fastly.hackerearth.com/media/hackathon/buidl-the-future/images/700c45c24e-image_1_1.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/ibm-z-student-contest-2022/images/99ca390a0e-Listing2x.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/november-easy-22/images/2d43595259-Listing.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/wsis-dga-hack/images/befdd33c53-Cover__1_1.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/build-a-climate-fintech-app/images/d861775a2e-Listing.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/SORDI-ai-hackathon-2022/images/ba2e5d564f-Thumbnail1.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/chhalaang-hack/images/b9b09ab650-Listing.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/ust-d3code-campus-hackathon22/images/d2e61b3a5c-listing_image_2.jpg',
+  'https://media-fastly.hackerearth.com/media/hackathon/shift-hackathon-2022/images/9d2ff89433-V2_490x300_pixels_for_contests_page.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/october-circuits-22/images/847cdf2449-Listing.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/oppo-inspiration-cup/images/a9d54f5a28-Listing_1.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/dsa-coding-contest-october-22/images/00f7dbca43-Listing.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/flexcar-codeathon/images/e72dd12027-Flexcar_Hackathon_Listing_Image.png'
+]
+const Quizzes = () => {
+  const [quizzesData, setQuizzesData] = useState(null)
+
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('http://localhost:4000/admin/quizzes')
+      .then(res => res.json())
+      .then(response => {
+        if (response.status === 200) {
+          setQuizzesData(response.result)
+          setLoading(false)
+        }
+      })
+      .catch(err => {
+        setLoading(false)
+        message.error('internal server error please try agin later')
+      })
+  }, [])
+
+  let i = 0
+  const roundArray = index => {
+    i = index
+    for (let counter = 0; counter < 13; ++counter) {
+      return (i = (i + 1) % images.length)
+    }
+  }
+  return (
+    <PageLayout breadcrumbs={BREADCRUMBS} loading={loading}>
+      <Card>
+        <h1
+          style={{
+            color: '#6e6b7b',
+            fontWeight: 500,
+            fontSize: '1.07rem',
+            marginBottom: '1rem'
+          }}
+        >
+          Filters
+        </h1>
+        <Form layout="vertical">
+          <Row gutter={10}>
+            <Col span={6}>
+              <Form.Item
+                style={{ width: '100%' }}
+                name="Specialization"
+                label="Specialization"
+                // rules={[{ required: true }]}
+              >
+                <Select
+                  placeholder="select specialization"
+                  allowClear
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.children ?? '').includes(input)
+                  }
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.children ?? '')
+                      .toLowerCase()
+                      .localeCompare((optionB?.children ?? '').toLowerCase())
+                  }
+                  showSearch
+                >
+                  {quizzesData
+                    ?.map(quiz => quiz.Specialization)
+                    .reduce((unique, o) => {
+                      if (!unique.some(obj => obj.id === o.id)) {
+                        unique.push(o)
+                      }
+                      return unique
+                    }, [])
+                    .map(option => (
+                      <Select.Option key={option.id} value={option.id}>
+                        {option.name}
+                      </Select.Option>
+                    ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item
+                style={{ width: '100%' }}
+                name="College"
+                label="College"
+                // rules={[{ required: true }]}
+              >
+                <Select
+                  placeholder="select College"
+                  allowClear
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.children ?? '').includes(input)
+                  }
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.children ?? '')
+                      .toLowerCase()
+                      .localeCompare((optionB?.children ?? '').toLowerCase())
+                  }
+                  showSearch
+                >
+                  {quizzesData
+                    ?.map(quiz => quiz.College)
+                    .reduce((unique, o) => {
+                      if (!unique.some(obj => obj.id === o.id)) {
+                        unique.push(o)
+                      }
+                      return unique
+                    }, [])
+                    .map(option => (
+                      <Select.Option key={option.id} value={option.id}>
+                        {option.name}
+                      </Select.Option>
+                    ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item
+                style={{ width: '100%' }}
+                name="faculty"
+                label="Created by"
+              >
+                <Select
+                  placeholder="select faculty"
+                  allowClear
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.children ?? '').includes(input)
+                  }
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.children ?? '')
+                      .toLowerCase()
+                      .localeCompare((optionB?.children ?? '').toLowerCase())
+                  }
+                  showSearch
+                >
+                  {quizzesData
+                    ?.map(quiz => quiz.User)
+                    .reduce((unique, o) => {
+                      if (!unique.some(obj => obj.id === o.id)) {
+                        unique.push(o)
+                      }
+                      return unique
+                    }, [])
+                    .map(option => (
+                      <Select.Option key={option.id} value={option.id}>
+                        {option.name}
+                      </Select.Option>
+                    ))}
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </Card>
+      <Row gutter={20}>
+        {quizzesData?.map((quiz, i) => (
+          <Col
+            key={quiz.id}
+            xs={{
+              span: 24
+            }}
+            sm={{
+              span: 12
+            }}
+            md={{
+              span: 12
+            }}
+            lg={{
+              span: 8
+            }}
+            xl={{
+              span: 6
+            }}
+          >
+            <Link to={`/quizzes/${quiz.id}`}>
+              <a href="#">
+                <Card
+                  hoverable
+                  cover={
+                    <img
+                      alt="example"
+                      className="quiz-card-img"
+                      src={images[roundArray(i)]}
+                    />
+                  }
+                >
+                  <div>
+                    <Card.Meta
+                      style={{ marginBottom: '.7rem' }}
+                      title={quiz.name}
+                    />
+                    <div className="quiz-card-items-container">
+                      <Avatar
+                        style={{
+                          color: '#ea5455',
+                          backgroundColor: 'rgba(234,84,85,.12)'
+                        }}
+                      >
+                        {' '}
+                        <b>
+                          {quiz.User.name[0].toLocaleUpperCase() +
+                            quiz.User.name.split('')[1][0].toLocaleUpperCase()}
+                        </b>
+                      </Avatar>{' '}
+                      <div
+                        style={{
+                          marginLeft: '0.4rem'
+                        }}
+                      >
+                        <small
+                          style={{
+                            fontWeight: 400,
+                            color: '#b9b9c3',
+                            marginRight: '0.4rem'
+                          }}
+                        >
+                          by
+                        </small>
+                        <small
+                          style={{ color: '#6e6b7b', fontSize: '.857rem' }}
+                        >
+                          {quiz.User.name}
+                        </small>
+                        <span
+                          style={{
+                            margin: '0px 0.4rem',
+                            color: '#b9b9c3'
+                          }}
+                        >
+                          |
+                        </span>
+                        <small
+                          style={{
+                            color: '#b9b9c3',
+                            fontSize: '.857rem'
+                          }}
+                        >
+                          {moment(new Date(quiz.createdAt)).format('MMM Do YY')}
+                        </small>
+                      </div>
+                    </div>
+                    <Tag
+                      style={{
+                        marginBottom: '0.7rem',
+                        borderRadius: '5px',
+                        color: '#7367f0',
+                        padding: '0px 0.5rem',
+                        fontWeight: 600,
+                        fontSize: '83%'
+                      }}
+                      color="rgba(115,103,240,.12)"
+                    >
+                      {quiz.Specialization.name}
+                    </Tag>
+                    <QuizCardStat
+                      duration={quiz.duration}
+                      users={quiz._count.Users}
+                      questions={quiz._count.Questions}
+                    />
+                  </div>
+                </Card>
+              </a>
+            </Link>
+          </Col>
+        ))}
+      </Row>
+    </PageLayout>
+  )
+}
+
+export default Quizzes
