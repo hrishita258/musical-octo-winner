@@ -1,3 +1,4 @@
 module.exports = {
-  authToken: require('./authTokenMiddleware')
+  authToken: require('./authTokenMiddleware'),
+  authCheck: require('./authCheck')
 }

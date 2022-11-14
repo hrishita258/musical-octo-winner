@@ -7,4 +7,8 @@ router.get('/', async (req, res) => {
   res.status(200).json({ status: 200, result: colleges })
 })
 
+router.get('/hh', (req, res) => {
+  res.send('working')
+})
+
 module.exports = router

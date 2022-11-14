@@ -2,10 +2,12 @@ import { Result, Spin } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { fetchRefreshToken } from './auth/fetchRefreshToken'
 import MainLayout from './components/MainLayout'
-import { AppStateContext } from './state/appState'
+import { AppStateContext, defaultAppState } from './state/AppState'
 
 const App = () => {
-  const [appState, setAppState] = useState({})
+  const [appState, setAppState] = useState({
+    ...defaultAppState
+  })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
@@ -133,17 +135,17 @@ const App = () => {
     )
   }
 
-  console.log('c,jsbdjdsbj', appState)
-
   return (
-    <AppStateContext.Provider
-      value={{
-        appState,
-        setAppState: obj => console.log('fuck', obj)
-      }}
-    >
-      <MainLayout />
-    </AppStateContext.Provider>
+    <div>
+      <AppStateContext.Provider
+        value={{
+          appState,
+          setAppState
+        }}
+      >
+        <MainLayout />
+      </AppStateContext.Provider>
+    </div>
   )
 }
 

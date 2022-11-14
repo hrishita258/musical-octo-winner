@@ -43,7 +43,7 @@ const Users = () => {
       title: 'College',
       dataIndex: 'College',
       key: 'College',
-      render: col => col.name,
+      render: col => (col && col.name ? col.name : ''),
       width: 180,
       onFilter: (value, record) => record.name.indexOf(value) === 0
     },
@@ -105,7 +105,7 @@ const Users = () => {
           }}
         >
           <Link to={`/users/${record.id}`}>
-            <a href="#">View</a>
+            <span href="#">View</span>
           </Link>
           <DropOptions
             items={[
@@ -140,7 +140,11 @@ const Users = () => {
   ]
 
   useEffect(() => {
-    fetch('http://localhost:4000/admin/users')
+    fetch('http://localhost:4000/admin/users', {
+      headers: new Headers({
+        Authorization: appState.accessToken
+      })
+    })
       .then(res => res.json())
       .then(response => {
         if (response.status === 200) {

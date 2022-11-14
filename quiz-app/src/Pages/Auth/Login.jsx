@@ -4,11 +4,10 @@ import React from 'react'
 import { useAppState } from '../../state/AppState'
 const Login = () => {
   const { setAppState } = useAppState()
-
-  console.log(setAppState)
+  const [loading, setLoading] = useState(false)
 
   const onFinish = async values => {
-    // console.log(setAppState)
+    setLoading(true)
     try {
       const loginPromise = await fetch('http://localhost:4000/auth/login', {
         body: JSON.stringify(values),
@@ -17,6 +16,7 @@ const Login = () => {
       })
       const authData = await loginPromise.json()
       if (authData.status === 200) {
+        setLoading(false)
         const {
           userId,
           role,
@@ -39,17 +39,16 @@ const Login = () => {
           issuedAt,
           expiresAt: expiresAt * 1000
         }
-        console.log('dsljnsdfn')
-        setAppState({
-          abc: 123
-        })
+        setAppState(obj)
         localStorage.setItem('quiz-appState', JSON.stringify(obj))
         return
       }
       if (authData.status === 401) {
         message.error('Invalid credentials')
+        setLoading(false)
       }
     } catch (error) {
+      setLoading(false)
       console.log(error)
     }
   }
@@ -104,6 +103,7 @@ const Login = () => {
               type="primary"
               htmlType="submit"
               className="login-form-button"
+              loading={loading}
             >
               Log in
             </Button>

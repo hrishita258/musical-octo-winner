@@ -13,6 +13,9 @@ export const defaultAppState = {
   expiresAt: 0
 }
 
-export const AppStateContext = createContext({})
+export const AppStateContext = createContext({
+  appState: { ...defaultAppState },
+  setAppState: obj => console.log(obj)
+})
 
 export const useAppState = () => useContext(AppStateContext)
