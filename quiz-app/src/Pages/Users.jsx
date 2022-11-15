@@ -1,6 +1,7 @@
 import { Avatar, Button, Card, message, Table, Tag } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { getRequest } from '../axios/axiosMethods'
 import DropOptions from '../components/DropOptions'
 import PageLayout from '../components/PageLayout'
 const Users = () => {
@@ -140,18 +141,15 @@ const Users = () => {
   ]
 
   useEffect(() => {
-    fetch('http://localhost:4000/admin/users', {
-      headers: new Headers({
-        Authorization: appState.accessToken
-      })
-    })
-      .then(res => res.json())
+    getRequest('users')
       .then(response => {
+        console.log(response)
         if (response.status === 200) {
-          console.log(response.result)
-          setUsers(response.result)
-          console.log(response.result)
+          if (response.data.status) {
+            setUsers(response.data.result)
+          }
           setLoading(false)
+        } else {
         }
       })
       .catch(err => {

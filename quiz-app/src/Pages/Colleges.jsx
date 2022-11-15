@@ -2,11 +2,9 @@ import { Card, Space, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { getRequest } from '../axios/axiosMethods'
 import PageLayout from '../components/PageLayout'
-import { useAppState } from '../state/AppState'
 const Colleges = () => {
   const [collegesData, setColleges] = useState(null)
   const [loading, setLoading] = useState(true)
-  const { appState } = useAppState()
   const defaultExpandable = {
     expandedRowRender: record => <p>{record.description}</p>
   }
@@ -61,7 +59,7 @@ const Colleges = () => {
   ]
 
   useEffect(() => {
-    getRequest('admin/colleges').then(response => {
+    getRequest('colleges').then(response => {
       if (response.status === 200) {
         if (response.data.status) {
           setColleges(response.data.result)

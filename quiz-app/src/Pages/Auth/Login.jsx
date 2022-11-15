@@ -1,5 +1,5 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Button, Card, Form, Input } from 'antd'
+import { Button, Card, Form, Input, message } from 'antd'
 import React, { useState } from 'react'
 import { useAppState } from '../../state/AppState'
 const Login = () => {
@@ -45,10 +45,11 @@ const Login = () => {
         return
       }
       if (authData.status === 401) {
-        message.error('Invalid credentials')
+        message.error(authData.msg || 'something went wrong')
         setLoading(false)
       }
     } catch (error) {
+      message.error(err.toString() || 'something went wrong')
       setLoading(false)
       console.log(error)
     }

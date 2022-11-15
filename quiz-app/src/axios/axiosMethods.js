@@ -7,7 +7,7 @@ const token = JSON.parse(
 
 const axiosClient = axios.create()
 
-axiosClient.defaults.baseURL = 'http://localhost:4000/admin'
+axiosClient.defaults.baseURL = 'http://192.168.2.155:4000/admin'
 
 axiosClient.defaults.headers = {
   'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ axiosClient.defaults.headers = {
 //All request will wait 10 seconds before timeout
 axiosClient.defaults.timeout = 10000
 
-axiosClient.defaults.withCredentials = true
+// axiosClient.defaults.withCredentials = true
 
 export function getRequest(URL) {
   return axiosClient.get(`/${URL}`).then(response => response)

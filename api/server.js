@@ -14,18 +14,18 @@ const PORT = 4000
 const ACCESS_TOKEN_EXPIRE_TIME = 3600
 const JWT_ACCESS_SECRET = 'access_secret_HH'
 
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header(
-    'Access-Control-Allow-Methods',
-    'GET, POST, OPTIONS, PUT, PATCH, DELETE'
-  )
-  res.header(
-    'Access-Control-Allow-Headers',
-    'x-access-token, Origin, X-Requested-With, Content-Type, Accept'
-  )
-  next()
-})
+// app.use(function (req, res, next) {
+//   res.header('Access-Control-Allow-Origin', '*')
+//   res.header(
+//     'Access-Control-Allow-Methods',
+//     'GET, POST, OPTIONS, PUT, PATCH, DELETE'
+//   )
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'x-access-token, Origin, X-Requested-With, Content-Type, Accept'
+//   )
+//   next()
+// })
 const authTokenMiddleware = secret => {
   return (req, res, next) => {
     const token = req.headers['authorization']
@@ -40,7 +40,8 @@ const authTokenMiddleware = secret => {
     next()
   }
 }
-app.use(cors({ origin: true, credentials: true }))
+
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(authTokenMiddleware(JWT_ACCESS_SECRET))
@@ -56,13 +57,22 @@ app.get('/', (req, res) => {
 app.post('/auth/login', async (req, res) => {
   const { email, password } = req.body
   const userAgent = req.headers['user-agent']
-  if (!userAgent) return res.send({ msg: 'user-agent not found......' })
+  console.log({ userAgent })
+  if (!userAgent)
+    return res.send({ status: 401, msg: 'user-agent not found......' })
   const user = await prisma.user.findFirst({
     where: { email }
   })
   if (!user || !user.isActive)
-    return res.send({ msg: 'user not found or user is inactive...!' })
-  if (!(await bcrypt.compare(password, user.password))) return
+    return res.send({
+      status: 401,
+      msg: 'user not found or user is inactive...!'
+    })
+  if (!(await bcrypt.compare(password, user.password)))
+    return res.send({
+      status: 401,
+      msg: 'user credentials not found'
+    })
   const { accessToken, refreshToken, issuedAt, expiresAt } =
     generateTokens(user)
   try {
