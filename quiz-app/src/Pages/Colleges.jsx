@@ -61,20 +61,15 @@ const Colleges = () => {
   ]
 
   useEffect(() => {
-    getRequest('admin/colleges').then(s => console.log(s))
-
-    fetch('http://localhost:4000/admin/colleges', {
-      headers: new Headers({
-        Authorization: appState.accessToken
-      })
-    })
-      .then(res => res.json())
-      .then(response => {
-        if (response.status === 200) {
-          setColleges(response.result)
-          setLoading(false)
+    getRequest('admin/colleges').then(response => {
+      if (response.status === 200) {
+        if (response.data.status) {
+          setColleges(response.data.result)
         }
-      })
+        setLoading(false)
+      } else {
+      }
+    })
   }, [])
 
   return (

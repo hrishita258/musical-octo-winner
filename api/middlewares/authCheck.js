@@ -1,7 +1,8 @@
 module.exports = (req, res, next) => {
   const user = req.user
+  console.log(user)
   if (!user) {
-    res.json({ message: 'not authenticated', status: 403 })
+    return res.json({ message: 'not authenticated', status: 403 })
   }
   next()
 }

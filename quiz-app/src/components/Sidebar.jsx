@@ -78,17 +78,26 @@ const Sidebar = ({ collapsed }) => {
           {
             key: '1',
             icon: <UserOutlined />,
-            label: 'Dashboard'
+            label: 'Dashboard',
+            link: '/'
           },
           {
             key: '2',
             icon: <VideoCameraOutlined />,
-            label: 'Users'
+            label: 'Users',
+            link: '/users'
           },
           {
             key: '3',
             icon: <UploadOutlined />,
-            label: 'Colleges'
+            label: 'Colleges',
+            link: '/colleges'
+          },
+          {
+            key: '4',
+            icon: <AppstoreOutlined />,
+            label: 'Quizzes',
+            link: '/quizzes'
           }
         ]}
       />

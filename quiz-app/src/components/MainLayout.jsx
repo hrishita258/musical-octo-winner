@@ -11,6 +11,7 @@ const MainLayout = () => {
   const { appState } = useAppState()
 
   if (!appState.isLoggidIn) return <Login />
+
   return (
     <BrowserRouter>
       <Layout style={{ minHeight: '100vh', background: '#fafafa' }}>

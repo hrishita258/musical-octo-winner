@@ -1,6 +1,6 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Card, Form, Input } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
 import { useAppState } from '../../state/AppState'
 const Login = () => {
   const { setAppState } = useAppState()
@@ -15,6 +15,7 @@ const Login = () => {
         method: 'POST'
       })
       const authData = await loginPromise.json()
+      console.log(authData)
       if (authData.status === 200) {
         setLoading(false)
         const {

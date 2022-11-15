@@ -3,16 +3,16 @@ const token = JSON.parse(
   localStorage.getItem('quiz-appState') !== null
     ? localStorage.getItem('quiz-appState')
     : '[]'
-).accessToken
+)
 
 const axiosClient = axios.create()
 
-axiosClient.defaults.baseURL = 'http://localhost:4000/'
+axiosClient.defaults.baseURL = 'http://localhost:4000/admin'
 
 axiosClient.defaults.headers = {
   'Content-Type': 'application/json',
   Accept: 'application/json',
-  Authorization: token
+  Authorization: token.accessToken
 }
 
 //All request will wait 10 seconds before timeout

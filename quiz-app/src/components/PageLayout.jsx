@@ -6,7 +6,7 @@ import Sidebar from './Sidebar'
 const { Header, Content } = Layout
 
 const PageLayout = ({ children, breadcrumbs, loading }) => {
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(true)
   return (
     <Layout style={{ backgroundColor: '#fafafa' }}>
       <Sidebar collapsed={collapsed} />

@@ -14,6 +14,7 @@ import {
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { getRequest } from '../axios/axiosMethods'
 import PageLayout from '../components/PageLayout'
 
 const Quiz = () => {
@@ -41,13 +42,15 @@ const Quiz = () => {
   ]
 
   useEffect(() => {
-    fetch('http://localhost:4000/admin/quizzes/' + params.quizId)
-      .then(res => res.json())
+    getRequest('quizzes/' + params.quizId)
       .then(response => {
+        console.log(response)
         if (response.status === 200) {
-          console.log(response)
-          setQuizData(response.result)
+          if (response.data.status) {
+            setQuizData(response.data.result)
+          }
           setLoading(false)
+        } else {
         }
       })
       .catch(err => {
