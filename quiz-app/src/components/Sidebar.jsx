@@ -8,9 +8,9 @@ import {
   UserOutlined,
   VideoCameraOutlined
 } from '@ant-design/icons'
-
 import { Image, Layout, Menu } from 'antd'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const { Sider } = Layout
 const items = [
@@ -78,26 +78,22 @@ const Sidebar = ({ collapsed }) => {
           {
             key: '1',
             icon: <UserOutlined />,
-            label: 'Dashboard',
-            link: '/'
+            label: <Link to={'/'}>Dashboard</Link>
           },
           {
             key: '2',
             icon: <VideoCameraOutlined />,
-            label: 'Users',
-            link: '/users'
+            label: <Link to={'/users'}>Users</Link>
           },
           {
             key: '3',
             icon: <UploadOutlined />,
-            label: 'Colleges',
-            link: '/colleges'
+            label: <Link to={'/colleges'}>Colleges</Link>
           },
           {
             key: '4',
             icon: <AppstoreOutlined />,
-            label: 'Quizzes',
-            link: '/quizzes'
+            label: <Link to={'/quizzes'}>Quizzes</Link>
           }
         ]}
       />
