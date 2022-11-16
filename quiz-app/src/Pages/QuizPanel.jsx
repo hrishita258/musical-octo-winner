@@ -1,4 +1,13 @@
-import { Button, Card, Col, Layout, Row } from 'antd'
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  Image,
+  PageHeader,
+  Progress,
+  Row
+} from 'antd'
 import React from 'react'
 import PageLayout from '../components/PageLayout'
 const BREADCRUMBS = [
@@ -16,12 +25,90 @@ const BREADCRUMBS = [
 const QuizPanel = () => {
   return (
     <PageLayout noStyle breadcrumbs={BREADCRUMBS}>
-      <Layout.Header style={{ backgroundColor: '#FFF' }}>
-        something is going here
-      </Layout.Header>
+      <PageHeader
+        style={{
+          backgroundColor: '#FFF',
+          padding: '0px 15px 5px 15px',
+          height: '67px',
+          boxShadow:
+            '0 2px 6px 0 rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: 8,
+              alignItems: 'center'
+            }}
+          >
+            <Avatar
+              size={55}
+              src={
+                <Image
+                  preview={false}
+                  src="https://joeschmoe.io/api/v1/random"
+                  style={{ width: 55 }}
+                />
+              }
+            />
+            <div>
+              <span>Hrishita Bhandari</span>
+              <span style={{ display: 'block' }}>
+                <small>Candidate ID:</small> Hrishita258@technonjr.org
+              </span>
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <Progress
+              status="active"
+              type="circle"
+              width={58}
+              strokeColor={{
+                '0%': '#108ee9',
+                '100%': '#87d068'
+              }}
+              percent={90}
+              style={{ marginTop: '3px' }}
+            />
+            <div style={{ padding: 0 }}>
+              <small>Time Remaining</small>
+              <div className="countdown-wrapper">
+                <div className="time-section">
+                  <div className="time">01</div>
+                  <small className="time-text">Hrs</small>
+                </div>
+                <div className="time-section">
+                  <div className="time">:</div>
+                </div>
+                <div className="time-section">
+                  <div className="time">19</div>
+                  <small className="time-text">Min</small>
+                </div>
+                <div className="time-section">
+                  <div className="time">:</div>
+                </div>
+                <div className="time-section">
+                  <div className="time">25</div>
+                  <small className="time-text">Sec</small>
+                </div>
+              </div>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Button type="primary">Rules</Button>
+            </div>
+          </div>
+        </div>
+      </PageHeader>
       <div style={{ padding: '1rem' }}>
         <Row gutter={5} style={{ height: 'calc(100vh - 100px)' }}>
-          <Col span={5}>
+          <Col span={4}>
             <Card title="" style={{ position: 'relative', height: '100%' }}>
               <div
                 style={{
@@ -90,10 +177,7 @@ const QuizPanel = () => {
                   marginTop: '10px'
                 }}
               >
-                {[
-                  1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3,
-                  4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9
-                ].map(s => (
+                {Array.from({ length: 25 }).map((q, s) => (
                   // <Badge size="default" color="orange" count={s}></Badge>
                   <div
                     style={{
@@ -110,7 +194,7 @@ const QuizPanel = () => {
                       fontSize: '15px'
                     }}
                   >
-                    <span>{s}</span>
+                    <span>{s + 1}</span>
                   </div>
                 ))}
               </div>
@@ -130,7 +214,7 @@ const QuizPanel = () => {
               </Button>
             </Card>
           </Col>
-          <Col span={19}>
+          <Col span={20}>
             <Card>this</Card>
           </Col>
         </Row>
