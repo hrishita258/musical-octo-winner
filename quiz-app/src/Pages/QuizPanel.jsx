@@ -27,7 +27,7 @@ const QuizPanel = () => {
     <PageLayout noStyle breadcrumbs={BREADCRUMBS}>
       <PageHeader
         style={{
-          backgroundColor: '#FFF',
+          backgroundColor: '#fefe',
           padding: '0px 15px 5px 15px',
           height: '67px',
           boxShadow:
@@ -54,7 +54,12 @@ const QuizPanel = () => {
             />
             <div>
               <span>Hrishita Bhandari</span>
-              <span style={{ display: 'block' }}>
+              <span
+                style={{
+                  display: 'block',
+                  color: 'rgb(156 163 175 / 1)'
+                }}
+              >
                 <small>Candidate ID:</small> Hrishita258@technonjr.org
               </span>
             </div>
