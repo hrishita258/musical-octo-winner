@@ -1,4 +1,4 @@
-export default (req, res, next) => {
+export const AuthCheck = (req, res, next) => {
   const user = req.user
   console.log(user)
   if (!user) {
