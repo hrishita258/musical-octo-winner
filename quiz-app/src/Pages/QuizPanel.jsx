@@ -4,36 +4,65 @@ import {
   Card,
   Col,
   Image,
+  message,
   PageHeader,
   Progress,
   Row
 } from 'antd'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { getRequest } from '../axios/axiosMethods'
 import PageLayout from '../components/PageLayout'
-const BREADCRUMBS = [
-  {
-    name: 'Home',
-    link: {
-      route: '/',
-      key: 1
-    }
-  },
-  {
-    name: 'Quizzes'
-  }
-]
+import { useAppState } from '../state/AppState'
+
 const QuizPanel = () => {
+  const [quizData, setQuizData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [seconds, setSeconds] = useState(60)
+  const [minutes, setMinutes] = useState(0)
+  const params = useParams()
+  const { appState } = useAppState()
+
+  useEffect(() => {
+    getRequest('quizzes/' + params.quizId)
+      .then(response => {
+        console.log(response)
+        if (response.status === 200) {
+          if (response.data.status) {
+            setQuizData(response.data.result)
+            setMinutes(response.data.result.duration)
+          }
+          setLoading(false)
+        } else {
+        }
+      })
+      .catch(err => {
+        setLoading(false)
+        message.error(
+          err.toString() || 'internal server error please try agin later'
+        )
+      })
+  }, [params])
+
+  var myIntervel
+  useEffect(() => {
+    myIntervel = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(s => s - 1)
+      }
+      if (seconds === 0) {
+        if (minutes === 0) {
+          clearInterval(myIntervel)
+        } else {
+          setMinutes(m => m - 1)
+          setSeconds(59)
+        }
+      }
+    }, 1000)
+  }, [])
   return (
-    <PageLayout noStyle breadcrumbs={BREADCRUMBS}>
-      <PageHeader
-        style={{
-          backgroundColor: '#fefe',
-          padding: '0px 15px 5px 15px',
-          height: '67px',
-          boxShadow:
-            '0 2px 6px 0 rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
-        }}
-      >
+    <PageLayout noStyle loading={loading}>
+      <PageHeader className="quiz-panel-pageheader">
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div
             style={{
@@ -47,20 +76,24 @@ const QuizPanel = () => {
               src={
                 <Image
                   preview={false}
-                  src="https://joeschmoe.io/api/v1/random"
+                  src={
+                    appState.profileImg
+                      ? appState.profileImg
+                      : 'https://joeschmoe.io/api/v1/random'
+                  }
                   style={{ width: 55 }}
                 />
               }
             />
             <div>
-              <span>Hrishita Bhandari</span>
+              <span>{appState.fullname}</span>
               <span
                 style={{
                   display: 'block',
                   color: 'rgb(156 163 175 / 1)'
                 }}
               >
-                <small>Candidate ID:</small> Hrishita258@technonjr.org
+                <small>Candidate ID:</small> {appState.email}
               </span>
             </div>
           </div>
@@ -114,91 +147,60 @@ const QuizPanel = () => {
       <div style={{ padding: '1rem' }}>
         <Row gutter={5} style={{ height: 'calc(100vh - 100px)' }}>
           <Col span={4}>
-            <Card title="" style={{ position: 'relative', height: '100%' }}>
+            <Card style={{ position: 'relative', height: '100%' }}>
               <div
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   padding: '10px',
-                  borderBottom: '2px solid #e8e8e8'
+                  borderBottom: '1px solid #ddd'
                 }}
               >
-                <div>
-                  <small>Completed</small>
-                  <div
-                    style={{
-                      height: '23px',
-                      width: '23px',
-                      marginTop: '3px',
-                      borderRadius: '6px',
-                      backgroundColor: '#52c41a'
-                    }}
-                  ></div>
-                </div>
-                <div>
-                  <small>Not Answered</small>
-                  <div
-                    style={{
-                      height: '23px',
-                      width: '23px',
-                      marginTop: '3px',
-                      borderRadius: '6px',
-                      backgroundColor: '#fa8c16'
-                    }}
-                  ></div>
-                </div>
-                <div>
-                  <small>Current</small>
-                  <div
-                    style={{
-                      height: '23px',
-                      width: '23px',
-                      marginTop: '3px',
-                      borderRadius: '6px',
-                      backgroundColor: 'black'
-                    }}
-                  ></div>
-                </div>
+                {[
+                  { name: 'Completed', bgColor: '#0cb66e', color: '#FFF' },
+                  {
+                    name: 'Not Answered',
+                    bgColor: '#e7eaef',
+                    color: '#142439'
+                  },
+                  { name: 'Current', bgColor: '#142439', color: '#FFF' }
+                ].map(h => (
+                  <div key={h.name}>
+                    <small>{h.name}</small>
+                    <div
+                      style={{
+                        display: 'flex',
+                        gap: '5px',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <div
+                        style={{
+                          backgroundColor: h.bgColor,
+                          color: h.color
+                        }}
+                        className="quiz-panel-status-badge"
+                      ></div>
+                      <span>1</span>
+                    </div>
+                  </div>
+                ))}
               </div>
 
               <p
                 style={{
                   margin: '0px auto',
                   textAlign: 'center',
-                  borderBottom: '2px solid #e8e8e8',
+                  borderBottom: '1px solid #ddd',
                   padding: '10px'
                 }}
               >
                 <b>25 Questions</b>
               </p>
-              <div
-                style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '210px',
-                  overflow: 'auto',
-                  marginTop: '10px'
-                }}
-              >
-                {Array.from({ length: 25 }).map((q, s) => (
-                  // <Badge size="default" color="orange" count={s}></Badge>
-                  <div
-                    style={{
-                      height: '30px',
-                      width: '30px',
-                      borderRadius: '50%',
-                      margin: '0.4rem',
-                      background: '#fa8c16',
-                      // #52c41a
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      color: '#FFF',
-                      fontSize: '15px'
-                    }}
-                  >
+              <div className="quiz-panel-indextags-container">
+                {Array.from({ length: 60 }).map((q, s) => (
+                  <div key={s} className="quiz-panel-indextags">
                     <span>{s + 1}</span>
                   </div>
                 ))}
@@ -207,13 +209,7 @@ const QuizPanel = () => {
                 type="primary"
                 block
                 danger
-                style={{
-                  position: 'absolute',
-                  bottom: 10,
-                  right: 7,
-                  width: '95%',
-                  alignSelf: 'center'
-                }}
+                className="quiz-panel-submit-btn"
               >
                 Submit
               </Button>

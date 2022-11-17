@@ -143,3 +143,47 @@ code {
 .time-text {
   color: rgb(156 163 175 / 1) !important;
 }
+
+.quiz-panel-pageheader {
+  background-color: #fefefe;
+  padding: 0px 15px 5px 15px;
+  height: 67px;
+  box-shadow: 0 2px 6px 0 rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.quiz-panel-indextags-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  height: 210px;
+  overflow: auto;
+  margin-top: 10px;
+}
+
+.quiz-panel-indextags {
+  height: 30px;
+  width: 30px;
+  border-radius: 25%;
+  margin: 0.4rem;
+  background: #e7eaef;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.quiz-panel-submit-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 7px !important;
+  width: 95% !important;
+  align-self: center !important;
+}
+
+.quiz-panel-status-badge {
+  height: 23px;
+  width: 23px;
+  margin-top: 3px;
+  border-radius: 6px;
+}
