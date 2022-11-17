@@ -1,4 +1,4 @@
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
   const user = req.user
   console.log(user)
   if (!user) {

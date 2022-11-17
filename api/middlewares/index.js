@@ -1,4 +1,2 @@
-module.exports = {
-  authToken: require('./authTokenMiddleware'),
-  authCheck: require('./authCheck')
-}
+export * from './authCheck'
+export * from './authTokenMiddleware'

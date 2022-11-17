@@ -1,19 +1,19 @@
-const express = require('express')
-const cors = require('cors')
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcryptjs')
-const crypto = require('crypto')
-const { PrismaClient } = require('@prisma/client')
+import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs'
+import cors from 'cors'
+import { randomBytes } from 'crypto'
+import express from 'express'
+import jwt from 'jsonwebtoken'
+import Routes from './Routes/index.js'
+
 const app = express()
-const { hash } = require('bcryptjs')
-const { verify } = require('jsonwebtoken')
 
 const prisma = new PrismaClient()
 const PORT = 4000
 
 const ACCESS_TOKEN_EXPIRE_TIME = 3600
 const JWT_ACCESS_SECRET = 'access_secret_HH'
-
+app.use('/api', Routes)
 // app.use(function (req, res, next) {
 //   res.header('Access-Control-Allow-Origin', '*')
 //   res.header(
@@ -31,7 +31,7 @@ const authTokenMiddleware = secret => {
     const token = req.headers['authorization']
     if (token) {
       try {
-        const user = verify(token, secret)
+        const user = jwt.verify(token, secret)
         req.user = user
       } catch (err) {
         console.log(err)
@@ -48,7 +48,7 @@ app.use(authTokenMiddleware(JWT_ACCESS_SECRET))
 
 app.disable('x-powered-by')
 
-app.use('/', require('./Routes'))
+// app.use('/', require('./Routes'))
 
 app.get('/', (req, res) => {
   res.json({ user: req.user })
@@ -177,6 +177,6 @@ const generateTokens = user => {
     expiresAt: expire
   }
 }
-const generateRandomString = () => crypto.randomBytes(128).toString('hex')
+const generateRandomString = () => randomBytes(128).toString('hex')
 
 app.listen(PORT, console.log('server started on port' + ' ' + PORT))

@@ -1,10 +1,10 @@
-const express = require('express')
-const { authCheck } = require('../middlewares')
+import express from 'express'
+import AdminRoutes from '../Routes/admin/index.js'
 const router = express.Router()
 
-router.use('/admin', authCheck, require('./admin'))
-router.use('/spoc', require('./spoc'))
-router.use('/faculty', require('./faculty'))
-router.use('/student', require('./student'))
+router.use('/admin', AdminRoutes)
+// router.use('/spoc', require('./spoc'))
+// router.use('/faculty', require('./faculty'))
+// router.use('/student', require('./student'))
 
-module.exports = router
+export default router

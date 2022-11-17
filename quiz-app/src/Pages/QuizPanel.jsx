@@ -9,19 +9,81 @@ import {
   Progress,
   Row
 } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getRequest } from '../axios/axiosMethods'
 import PageLayout from '../components/PageLayout'
 import { useAppState } from '../state/AppState'
 
+const INITIAL_COUNT = 7200
+const STATUS_BADGES = [
+  { name: 'Completed', bgColor: '#0cb66e', color: '#FFF' },
+  {
+    name: 'Not Answered',
+    bgColor: '#e7eaef',
+    color: '#142439'
+  },
+  { name: 'Current', bgColor: '#142439', color: '#FFF' }
+]
+
+function useInterval(callback, delay) {
+  const savedCallback = useRef()
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback
+  }, [callback])
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current()
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay)
+      return () => clearInterval(id)
+    }
+  }, [delay])
+}
+
 const QuizPanel = () => {
   const [quizData, setQuizData] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [seconds, setSeconds] = useState(60)
-  const [minutes, setMinutes] = useState(0)
+  const [secondsRemaining, setSecondsRemaining] = useState(INITIAL_COUNT)
   const params = useParams()
   const { appState } = useAppState()
+
+  const secondsToDisplay = secondsRemaining % 60
+  const minutesRemaining = (secondsRemaining - secondsToDisplay) / 60
+
+  useEffect(() => {
+    function toggleFullScreen() {
+      var doc = window.document
+      var docEl = doc.documentElement
+
+      var requestFullScreen =
+        docEl.requestFullscreen ||
+        docEl.mozRequestFullScreen ||
+        docEl.webkitRequestFullScreen ||
+        docEl.msRequestFullscreen
+
+      requestFullScreen.call(docEl)
+    }
+    let trigger = document.getElementById('fullscreen')
+    console.log(trigger)
+    if (trigger)
+      document.getElementById('fullscreen').addEventListener('click', () => {
+        console.log('click')
+        toggleFullScreen()
+      })
+  }, [])
+
+  useEffect(() => {
+    document.addEventListener('fullscreenerror', function (err) {
+      alert(err)
+      console.log(err)
+    })
+  }, [])
 
   useEffect(() => {
     getRequest('quizzes/' + params.quizId)
@@ -30,7 +92,6 @@ const QuizPanel = () => {
         if (response.status === 200) {
           if (response.data.status) {
             setQuizData(response.data.result)
-            setMinutes(response.data.result.duration)
           }
           setLoading(false)
         } else {
@@ -44,22 +105,15 @@ const QuizPanel = () => {
       })
   }, [params])
 
-  var myIntervel
-  useEffect(() => {
-    myIntervel = setInterval(() => {
-      if (seconds > 0) {
-        setSeconds(s => s - 1)
-      }
-      if (seconds === 0) {
-        if (minutes === 0) {
-          clearInterval(myIntervel)
-        } else {
-          setMinutes(m => m - 1)
-          setSeconds(59)
-        }
-      }
-    }, 1000)
-  }, [])
+  useInterval(() => {
+    if (secondsRemaining > 0) {
+      setSecondsRemaining(secondsRemaining - 1)
+    } else {
+      console.log('stopped')
+    }
+  }, 1000)
+
+  const twoDigits = num => String(num).padStart(2, '0')
   return (
     <PageLayout noStyle loading={loading}>
       <PageHeader className="quiz-panel-pageheader">
@@ -97,7 +151,7 @@ const QuizPanel = () => {
               </span>
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div className="quiz-panel-countdown-container">
             <Progress
               status="active"
               type="circle"
@@ -106,39 +160,41 @@ const QuizPanel = () => {
                 '0%': '#108ee9',
                 '100%': '#87d068'
               }}
-              percent={90}
+              percent={parseInt((100 * secondsRemaining) / INITIAL_COUNT)}
               style={{ marginTop: '3px' }}
             />
             <div style={{ padding: 0 }}>
               <small>Time Remaining</small>
               <div className="countdown-wrapper">
                 <div className="time-section">
-                  <div className="time">01</div>
+                  <div className="time">
+                    {twoDigits(
+                      (minutesRemaining - (minutesRemaining % 60)) / 60
+                    )}
+                  </div>
                   <small className="time-text">Hrs</small>
                 </div>
                 <div className="time-section">
                   <div className="time">:</div>
                 </div>
                 <div className="time-section">
-                  <div className="time">19</div>
+                  <div className="time">
+                    {twoDigits(
+                      ((secondsRemaining - secondsToDisplay) / 60) % 60
+                    )}
+                  </div>
                   <small className="time-text">Min</small>
                 </div>
                 <div className="time-section">
                   <div className="time">:</div>
                 </div>
                 <div className="time-section">
-                  <div className="time">25</div>
+                  <div className="time">{twoDigits(secondsRemaining % 60)}</div>
                   <small className="time-text">Sec</small>
                 </div>
               </div>
             </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
+            <div className="quiz-panel-rule-button">
               <Button type="primary">Rules</Button>
             </div>
           </div>
@@ -148,33 +204,11 @@ const QuizPanel = () => {
         <Row gutter={5} style={{ height: 'calc(100vh - 100px)' }}>
           <Col span={4}>
             <Card style={{ position: 'relative', height: '100%' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  padding: '10px',
-                  borderBottom: '1px solid #ddd'
-                }}
-              >
-                {[
-                  { name: 'Completed', bgColor: '#0cb66e', color: '#FFF' },
-                  {
-                    name: 'Not Answered',
-                    bgColor: '#e7eaef',
-                    color: '#142439'
-                  },
-                  { name: 'Current', bgColor: '#142439', color: '#FFF' }
-                ].map(h => (
+              <div className="quiz-panel-status-badges-container">
+                {STATUS_BADGES.map(h => (
                   <div key={h.name}>
                     <small>{h.name}</small>
-                    <div
-                      style={{
-                        display: 'flex',
-                        gap: '5px',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
+                    <div className="quiz-panel-status-badges-item-container">
                       <div
                         style={{
                           backgroundColor: h.bgColor,
@@ -188,14 +222,7 @@ const QuizPanel = () => {
                 ))}
               </div>
 
-              <p
-                style={{
-                  margin: '0px auto',
-                  textAlign: 'center',
-                  borderBottom: '1px solid #ddd',
-                  padding: '10px'
-                }}
-              >
+              <p className="quiz-panel-sidebar-total-questions">
                 <b>25 Questions</b>
               </p>
               <div className="quiz-panel-indextags-container">
@@ -216,7 +243,9 @@ const QuizPanel = () => {
             </Card>
           </Col>
           <Col span={20}>
-            <Card>this</Card>
+            <Card>
+              <Button id="fullscreen">go full screen</Button>
+            </Card>
           </Col>
         </Row>
       </div>

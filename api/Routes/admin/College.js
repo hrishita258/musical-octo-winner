@@ -1,6 +1,6 @@
-const express = require('express')
+import express from 'express'
+import postgres from '../../db/Prisma.js'
 const router = express.Router()
-const { postgres } = require('../../db')
 
 router.get('/', async (req, res) => {
   const colleges = await postgres.college.findMany()
@@ -11,4 +11,4 @@ router.get('/hh', (req, res) => {
   res.send('working')
 })
 
-module.exports = router
+export default router

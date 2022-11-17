@@ -1,8 +1,10 @@
-const express = require('express')
+import express from 'express'
+import CollegeRoutes from './College.js'
+
 const router = express.Router()
+router.use('/colleges', CollegeRoutes)
 
-router.use('/colleges', require('./College'))
-router.use('/users', require('./Users'))
-router.use('/quizzes', require('./Quizzes'))
+// router.use('/users', require('./Users'))
+// router.use('/quizzes', require('./Quizzes'))
 
-module.exports = router
+export default router

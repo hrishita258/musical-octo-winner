@@ -1,6 +1,6 @@
-const { verify } = require('jsonwebtoken')
+import { verify } from 'jsonwebtoken'
 
-const authTokenMiddleware = secret => {
+export const authTokenMiddleware = secret => {
   return (req, res, next) => {
     const token = req.headers['authorization']
     console.log({ token: req.headers['authorization'] })
@@ -16,5 +16,3 @@ const authTokenMiddleware = secret => {
     next()
   }
 }
-
-module.exports = authTokenMiddleware

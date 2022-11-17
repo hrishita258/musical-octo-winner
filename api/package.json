@@ -5,6 +5,7 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "type": "module",
   "scripts": {
     "devStart": "nodemon server.js"
   },
@@ -16,6 +17,9 @@
   },
   "dependencies": {
     "@prisma/client": "^4.5.0",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.12",
+    "@types/jsonwebtoken": "^8.5.9",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^8.5.1"
   }

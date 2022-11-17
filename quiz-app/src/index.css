@@ -187,3 +187,34 @@ code {
   margin-top: 3px;
   border-radius: 6px;
 }
+
+.quiz-panel-status-badges-item-container {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+}
+
+.quiz-panel-status-badges-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.quiz-panel-sidebar-total-questions {
+  margin: 0px auto;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+}
+.quiz-panel-rule-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.quiz-panel-countdown-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
