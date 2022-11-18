@@ -7,7 +7,7 @@ const token = JSON.parse(
 
 const axiosClient = axios.create()
 
-axiosClient.defaults.baseURL = 'http://localhost:4000/admin'
+axiosClient.defaults.baseURL = 'http://localhost:4000/api/admin'
 
 axiosClient.defaults.headers = {
   'Content-Type': 'application/json',

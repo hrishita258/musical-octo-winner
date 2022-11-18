@@ -218,3 +218,11 @@ code {
   align-items: center;
   gap: 12px;
 }
+
+.rules-panel-list {
+  font-size: 14px;
+  line-height: 22px;
+  margin-bottom: 6px;
+  color: #1c4980;
+  font-weight: 500;
+}

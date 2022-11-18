@@ -4,7 +4,7 @@ import cors from 'cors'
 import { randomBytes } from 'crypto'
 import express from 'express'
 import jwt from 'jsonwebtoken'
-import Routes from './Routes/index.js'
+import APIRoutes from './Routes/index.js'
 
 const app = express()
 
@@ -13,7 +13,7 @@ const PORT = 4000
 
 const ACCESS_TOKEN_EXPIRE_TIME = 3600
 const JWT_ACCESS_SECRET = 'access_secret_HH'
-app.use('/api', Routes)
+
 // app.use(function (req, res, next) {
 //   res.header('Access-Control-Allow-Origin', '*')
 //   res.header(
@@ -41,7 +41,7 @@ const authTokenMiddleware = secret => {
   }
 }
 
-app.use(cors())
+app.use(cors({ origin: true, credentials: true }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(authTokenMiddleware(JWT_ACCESS_SECRET))
@@ -49,6 +49,7 @@ app.use(authTokenMiddleware(JWT_ACCESS_SECRET))
 app.disable('x-powered-by')
 
 // app.use('/', require('./Routes'))
+app.use('/api', APIRoutes)
 
 app.get('/', (req, res) => {
   res.json({ user: req.user })

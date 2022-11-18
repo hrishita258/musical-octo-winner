@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   Col,
+  Drawer,
   Image,
   message,
   PageHeader,
@@ -15,7 +16,6 @@ import { getRequest } from '../axios/axiosMethods'
 import PageLayout from '../components/PageLayout'
 import { useAppState } from '../state/AppState'
 
-const INITIAL_COUNT = 7200
 const STATUS_BADGES = [
   { name: 'Completed', bgColor: '#0cb66e', color: '#FFF' },
   {
@@ -47,9 +47,12 @@ function useInterval(callback, delay) {
 }
 
 const QuizPanel = () => {
+  let INITIAL_COUNT = 0
   const [quizData, setQuizData] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [secondsRemaining, setSecondsRemaining] = useState(INITIAL_COUNT)
+  const [secondsRemaining, setSecondsRemaining] = useState(0)
+  const [open, setOpen] = useState(true)
+
   const params = useParams()
   const { appState } = useAppState()
 
@@ -88,10 +91,11 @@ const QuizPanel = () => {
   useEffect(() => {
     getRequest('quizzes/' + params.quizId)
       .then(response => {
-        console.log(response)
         if (response.status === 200) {
           if (response.data.status) {
             setQuizData(response.data.result)
+            setSecondsRemaining(response.data.result.duration * 60)
+            INITIAL_COUNT = response.data.result.duration * 60
           }
           setLoading(false)
         } else {
@@ -223,14 +227,19 @@ const QuizPanel = () => {
               </div>
 
               <p className="quiz-panel-sidebar-total-questions">
-                <b>25 Questions</b>
+                <b>
+                  {quizData && quizData.Questions && quizData.Questions.length}{' '}
+                  Questions
+                </b>
               </p>
               <div className="quiz-panel-indextags-container">
-                {Array.from({ length: 60 }).map((q, s) => (
-                  <div key={s} className="quiz-panel-indextags">
-                    <span>{s + 1}</span>
-                  </div>
-                ))}
+                {quizData &&
+                  quizData.Questions &&
+                  quizData.Questions?.map((q, s) => (
+                    <div key={s} className="quiz-panel-indextags">
+                      <span>{s + 1}</span>
+                    </div>
+                  ))}
               </div>
               <Button
                 type="primary"
@@ -249,6 +258,62 @@ const QuizPanel = () => {
           </Col>
         </Row>
       </div>
+      {/* drawer */}
+      <Drawer placement="right" closable={false} open={open}>
+        <div
+          style={{
+            paddingLeft: '16px',
+            borderLeft: '2px solid #1c4980',
+            marginBottom: '25px'
+          }}
+        >
+          <h2 style={{ color: '#1c4980', fontSize: '18px' }}>
+            Assessment Guidelines
+          </h2>
+          <p>
+            Kindly read through the following key instructions and important
+            guidelines for this assessment:
+          </p>
+        </div>
+        <div style={{}}>
+          <h4
+            style={{
+              color: '#1c4980',
+              fontSize: '16px',
+              borderLeft: '2px solid #1c4980',
+              paddingLeft: '16px'
+            }}
+          >
+            Assessment Guidelines
+          </h4>
+          <ul class="browser-default" style={{ paddingLeft: '33px' }}>
+            <li className="rules-panel-list">
+              <strong>Assessment Window: </strong> 16 Nov 22, 09:08 PM IST to 22
+              Nov 22, 09:08 PM IST
+            </li>
+            <li className="rules-panel-list">
+              <strong> Assessment Duration: </strong> 00:30:00 (hh:mm:ss)
+            </li>
+            <li className="rules-panel-list">
+              <strong>Total Questions to be answered:</strong> 20 Questions
+            </li>
+            <li className="rules-panel-list">
+              You can attempt the assessment anytime between the provided
+              assessment window.
+            </li>
+            <li className="rules-panel-list">
+              Please ensure that you attempt the assessment in one sitting as
+              once you start the assessment, the timer won’t stop.
+            </li>
+            <li className="rules-panel-list">
+              You will have to finish the assessment before 22 Nov 22, 09:08 PM
+              IST. To get the complete assessment duration, you need to start
+              the assessment latest by 22 Nov 22, 08:38 PM IST. Otherwise,
+              you’ll get less time to complete the assessment.
+            </li>
+          </ul>
+        </div>
+      </Drawer>
     </PageLayout>
   )
 }

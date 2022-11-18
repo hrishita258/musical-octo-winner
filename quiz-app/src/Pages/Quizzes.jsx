@@ -17,6 +17,7 @@ const BREADCRUMBS = [
     name: 'Quizzes'
   }
 ]
+
 const images = [
   'https://media-fastly.hackerearth.com/media/hackathon/buidl-the-future/images/700c45c24e-image_1_1.png',
   'https://media-fastly.hackerearth.com/media/hackathon/ibm-z-student-contest-2022/images/99ca390a0e-Listing2x.png',
@@ -30,8 +31,31 @@ const images = [
   'https://media-fastly.hackerearth.com/media/hackathon/october-circuits-22/images/847cdf2449-Listing.png',
   'https://media-fastly.hackerearth.com/media/hackathon/oppo-inspiration-cup/images/a9d54f5a28-Listing_1.png',
   'https://media-fastly.hackerearth.com/media/hackathon/dsa-coding-contest-october-22/images/00f7dbca43-Listing.png',
-  'https://media-fastly.hackerearth.com/media/hackathon/flexcar-codeathon/images/e72dd12027-Flexcar_Hackathon_Listing_Image.png'
+  'https://media-fastly.hackerearth.com/media/hackathon/flexcar-codeathon/images/e72dd12027-Flexcar_Hackathon_Listing_Image.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/buidl-the-future/images/700c45c24e-image_1_1.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/ibm-z-student-contest-2022/images/99ca390a0e-Listing2x.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/smart-odisha-hackathon-2018/images/6554ad2a60-0bd-2018-09-20.jpg',
+  'https://media-fastly.hackerearth.com/media/hackathon/build-a-climate-fintech-app/images/d861775a2e-Listing.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/SORDI-ai-hackathon-2022/images/ba2e5d564f-Thumbnail1.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/intel-oneapi-hackathon-for-open-innovation/images/5c1cdef260-Listing.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/november-circuits-22/images/9c0ab00664-Listing.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/chhalaang-hack/images/b9b09ab650-Listing.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/the-epic-tournament/images/b7b10d6a65-EPIC_Tournament_-_HE_Listing.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/hack-the-journey-coding-india-edition-2022/images/e1b0f8b45c-Amadeus_Listing_1.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/ust-d3code-campus-hackathon22/images/d2e61b3a5c-listing_image_2.jpg',
+  'https://media-fastly.hackerearth.com/media/hackathon/shift-hackathon-2022/images/9d2ff89433-V2_490x300_pixels_for_contests_page.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/dsa-coding-contest-november-22/images/7edcd7985f-Listing.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/november-easy-22/images/2d43595259-Listing.png',
+  'https://media-fastly.hackerearth.com/media/hackathon/october-circuits-22/images/847cdf2449-Listing.png',
+  'https://media-fastly.hackerearth.com/media/companies/fb4da9f-capillary_logo.png',
+  'https://media-fastly.hackerearth.com/media/companies/d3b48b6-BuyerLogoLockupFullColor.jpg',
+  'https://media-fastly.hackerearth.com/media/companies/c037243-drishti-stacked-rgb-logo_2021-09-28-202606_gygl.png',
+  'https://media-fastly.hackerearth.com/media/companies/c037243-drishti-stacked-rgb-logo_2021-09-28-202606_gygl.png',
+  'https://media-fastly.hackerearth.com/media/companies/ee3ed61-UI_logo.png',
+  'https://media-fastly.hackerearth.com/media/companies/8b02bb0-Wipro_Primary_Logo_Color_RGB.png',
+  'https://media-fastly.hackerearth.com/media/companies/1e1121b-truecaller.JPG'
 ]
+
 const Quizzes = () => {
   const [quizzesData, setQuizzesData] = useState(null)
 
