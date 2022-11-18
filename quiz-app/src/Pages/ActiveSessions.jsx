@@ -1,3 +1,4 @@
+import { DesktopOutlined } from '@ant-design/icons'
 import { Button, Card, Col, message, Row } from 'antd'
 import DeviceDetector from 'device-detector-js'
 import moment from 'moment'
@@ -59,7 +60,7 @@ const ActiveSessions = () => {
         {session?.map(session => (
           <div key={session.id}>
             <Col span={8}>
-              <Card style={{ width: 335, margin: 5 }}>
+              <Card style={{ width: 335, margin: 5, marginBottom: 20 }}>
                 <h5>
                   <b>Started on :</b>
                   {moment(session.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
@@ -74,9 +75,27 @@ const ActiveSessions = () => {
                 <div style={{ marginBottom: 15 }}>
                   Version : {session.parsed.client?.version}
                 </div>
-                <h3 style={{ color: '#00a8ff' }}>Device</h3>
-                <div style={{ marginBottom: 15 }}>
-                  Type : {session.parsed.device?.type}
+                <div style={{ display: 'flex' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: '50px',
+                      width: '50px',
+                      marginRight: '10px'
+                    }}
+                  >
+                    <DesktopOutlined
+                      style={{ fontSize: '50px', color: '#fa8c16' }}
+                    />
+                  </div>
+                  <div>
+                    <h3 style={{ color: '#00a8ff' }}>Device</h3>
+                    <div style={{ marginBottom: 15 }}>
+                      Type : {session.parsed.device?.type}
+                    </div>
+                  </div>
                 </div>
                 <h3 style={{ color: '#00a8ff' }}>OS</h3>
                 <div>Name : {session.parsed.os?.name}</div>
