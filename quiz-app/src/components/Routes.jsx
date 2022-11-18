@@ -1,5 +1,6 @@
 import React from 'react'
 import { Route, Routes as HHRoutes } from 'react-router-dom'
+import ActiveSessions from '../Pages/ActiveSessions'
 import Colleges from '../Pages/Colleges'
 import Dashboard from '../Pages/Dashboard'
 import Quiz from '../Pages/Quiz'
@@ -16,6 +17,10 @@ export const Routes = () => {
       <Route path="/quizzes" element={<Quizzes />} />
       <Route path="/quizzes/:quizId" element={<Quiz />}></Route>
       <Route path="/quizzes/:quizId/quizpanel" element={<QuizPanel />}></Route>
+      <Route
+        path="/account/activeSessions"
+        element={<ActiveSessions />}
+      ></Route>
     </HHRoutes>
   )
 }

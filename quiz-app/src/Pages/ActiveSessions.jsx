@@ -1,7 +1,9 @@
-import { Button, Card, Col, Row } from 'antd'
+import { Button, Card, Col, message, Row } from 'antd'
 import DeviceDetector from 'device-detector-js'
-import { PageLayout } from '../../components/PageLayout'
-import { useAppState } from '../../state/AppState'
+import moment from 'moment'
+import { useEffect, useState } from 'react'
+import { getRequest } from '../axios/axiosMethods'
+import PageLayout from '../components/PageLayout'
 
 const TITLE = 'Active Sessions'
 
@@ -21,25 +23,51 @@ const BREADCRUMBS = [
   }
 ]
 
-export const ActiveSessions = () => {
-  const { appState } = useAppState()
+const ActiveSessions = () => {
+  const [activeSessions, setActiveSessions] = useState()
+  const [loading, setLoading] = useState(true)
 
   const deviceDetector = new DeviceDetector()
 
-  const session = data?.activeSessions?.map(ses => {
+  const session = activeSessions?.map(ses => {
     const parsed = deviceDetector.parse(ses.userAgent)
     return { ...ses, parsed }
   })
+  console.log(session, activeSessions)
+  useEffect(() => {
+    getRequest('activeSessions')
+      .then(response => {
+        console.log(response)
+        if (response.status === 200) {
+          if (response.data.status) {
+            setActiveSessions(response.data.result)
+          }
+          setLoading(false)
+        } else {
+          console.log(response.data.result)
+        }
+      })
+      .catch(err => {
+        setLoading(false)
+        message.error('internal server error please try agin later')
+      })
+  }, [])
 
   return (
-    <PageLayout breadcrumbs={BREADCRUMBS}>
+    <PageLayout breadcrumbs={BREADCRUMBS} loading={loading}>
       <Row gutter={16}>
         {session?.map(session => (
           <div key={session.id}>
             <Col span={8}>
-              <Card style={{ width: 300, margin: 10 }}>
-                <h4>Started on : {session.createdAt}</h4>
-                <h4>Last Seen : {session.updatedAt}</h4>
+              <Card style={{ width: 335, margin: 5 }}>
+                <h5>
+                  <b>Started on :</b>
+                  {moment(session.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
+                </h5>
+                <h5>
+                  <b>Last Seen :</b>
+                  {moment(session.updatedAt).format('MMMM Do YYYY, h:mm:ss a')}
+                </h5>
                 <h3 style={{ color: '#00a8ff' }}>Client</h3>
                 <div>Name : {session.parsed.client?.name}</div>
                 <div>Type : {session.parsed.client?.type}</div>
@@ -77,3 +105,5 @@ export const ActiveSessions = () => {
     </PageLayout>
   )
 }
+
+export default ActiveSessions

@@ -5946,39 +5946,39 @@ const main = async () => {
   //   }
   // })
   // console.log(JSON.stringify(quiz))
-  const allQuiz = await postgres.quiz.findMany({
-    select: {
-      id: true,
-      name: true
-    }
-  })
-  for (let i = 0; i < allQuiz.length; i++) {
-    const quiz = quizData2.find(
-      s => s.specialization + ' Quiz' === allQuiz[i].name
-    )
-    if (quiz) {
-      quiz.questions.forEach(async s => {
-        await postgres.quizQuestions.create({
-          data: {
-            question: s.question,
-            type: s.type,
-            quizId: allQuiz[i].id,
-            Choices: {
-              createMany: {
-                data: s.options.map((ch, i) => {
-                  return {
-                    text: ch,
-                    isCorrect: i === s.correct ? true : false
-                  }
-                })
-              }
-            }
-          }
-        })
-      })
-      console.log(quiz.specialization)
-    }
-  }
+  // const allQuiz = await postgres.quiz.findMany({
+  //   select: {
+  //     id: true,
+  //     name: true
+  //   }
+  // })
+  // for (let i = 0; i < allQuiz.length; i++) {
+  //   const quiz = quizData2.find(
+  //     s => s.specialization + ' Quiz' === allQuiz[i].name
+  //   )
+  //   if (quiz) {
+  //     quiz.questions.forEach(async s => {
+  //       await postgres.quizQuestions.create({
+  //         data: {
+  //           question: s.question,
+  //           type: s.type,
+  //           quizId: allQuiz[i].id,
+  //           Choices: {
+  //             createMany: {
+  //               data: s.options.map((ch, i) => {
+  //                 return {
+  //                   text: ch,
+  //                   isCorrect: i === s.correct ? true : false
+  //                 }
+  //               })
+  //             }
+  //           }
+  //         }
+  //       })
+  //     })
+  //     console.log(quiz.specialization)
+  //   }
+  // }
 }
 
 main().then(() => console.log('done'))

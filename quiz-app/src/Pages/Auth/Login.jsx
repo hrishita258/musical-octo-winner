@@ -1,5 +1,5 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Button, Card, Form, Input, message } from 'antd'
+import { Button, Col, Form, Image, Input, message, Row } from 'antd'
 import React, { useState } from 'react'
 import { useAppState } from '../../state/AppState'
 const Login = () => {
@@ -55,63 +55,113 @@ const Login = () => {
     }
   }
   return (
-    <div className="login-container">
-      <Card className="login-form">
-        <Form
-          name="normal_login"
-          className="login-form"
-          initialValues={{
-            remember: true
-          }}
-          onFinish={onFinish}
+    <div>
+      <Row className="login-container">
+        <Col
+          span={17}
+          style={{ display: 'flex', alignItems: 'center', padding: '4rem' }}
         >
-          <Form.Item
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your Username!'
-              }
-            ]}
+          <div
+            style={{
+              padding: '0px 4rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
           >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username"
-            />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your Password!'
-              }
-            ]}
-          >
-            <Input
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              type="password"
-              placeholder="Password"
-            />
-          </Form.Item>
-          <Form.Item>
-            <a className="login-form-forgot" href="">
-              Forgot password
-            </a>
-          </Form.Item>
-
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button"
-              loading={loading}
+            {
+              <Image
+                src="https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/demo-1/static/media/login-v2.2198399d.svg"
+                preview={false}
+              />
+            }
+          </div>
+        </Col>
+        <Col
+          span={7}
+          style={{
+            padding: '4rem',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#FFF'
+          }}
+        >
+          <div style={{ width: '100%' }}>
+            <h2
+              style={{
+                marginBottom: '1rem',
+                color: '#5e5873',
+                fontSize: '1.714rem'
+              }}
             >
-              Log in
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
+              Welcome to Quizzer 👋
+            </h2>
+            <p style={{ fontSize: '1rem', marginBottom: '1.5rem' }}>
+              Please sign-in to your account and start the adventure
+            </p>
+            <Form
+              name="normal_login"
+              className="login-form"
+              initialValues={{
+                remember: true
+              }}
+              onFinish={onFinish}
+            >
+              <Form.Item
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your Username!'
+                  }
+                ]}
+              >
+                <Input
+                  prefix={<UserOutlined className="site-form-item-icon" />}
+                  placeholder="Username"
+                  size="large"
+                />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your Password!'
+                  }
+                ]}
+              >
+                <Input
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  type="password"
+                  placeholder="Password"
+                  size="large"
+                />
+              </Form.Item>
+              <Form.Item>
+                <a className="login-form-forgot" href="">
+                  Forgot password
+                </a>
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="login-form-button"
+                  loading={loading}
+                  size="large"
+                >
+                  Log in
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
+        </Col>
+      </Row>
     </div>
   )
 }

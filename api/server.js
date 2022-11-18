@@ -158,6 +158,15 @@ app.post('/refresh', async (req, res) => {
   }
 })
 
+app.get('/api/admin/activeSessions', async (req, res) => {
+  try {
+    const result = await prisma.refreshTokens.findMany()
+    res.json({ status: 200, result })
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 const generateTokens = user => {
   const iat = Math.floor(Date.now() / 1000)
   const expire = Math.floor(Date.now() / 1000) + ACCESS_TOKEN_EXPIRE_TIME

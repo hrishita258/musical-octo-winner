@@ -3,6 +3,7 @@ import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getRequest } from '../axios/axiosMethods'
+import MessageCard from '../components/MessageCard'
 import PageLayout from '../components/PageLayout'
 import QuizCardStat from '../components/QuizCardStat'
 const BREADCRUMBS = [
@@ -216,112 +217,129 @@ const Quizzes = () => {
         </Form>
       </Card>
       <Row gutter={20}>
-        {quizzesData?.map((quiz, i) => (
-          <Col
-            key={quiz.id}
-            xs={{
-              span: 24
-            }}
-            sm={{
-              span: 12
-            }}
-            md={{
-              span: 12
-            }}
-            lg={{
-              span: 8
-            }}
-            xl={{
-              span: 6
-            }}
-          >
-            <Link to={`/quizzes/${quiz.id}`}>
-              <Card
-                hoverable
-                cover={
-                  <img
-                    alt="example"
-                    className="quiz-card-img"
-                    src={images[roundArray(i)]}
-                  />
-                }
-              >
-                <div>
-                  <Card.Meta
-                    style={{ marginBottom: '.7rem' }}
-                    title={quiz.name}
-                  />
-                  <div className="quiz-card-items-container">
-                    <Avatar
-                      style={{
-                        color: '#ea5455',
-                        backgroundColor: 'rgba(234,84,85,.12)'
-                      }}
-                    >
-                      {' '}
-                      <b>
-                        {quiz.User.name[0].toLocaleUpperCase() +
-                          quiz.User.name.split('')[1][0].toLocaleUpperCase()}
-                      </b>
-                    </Avatar>{' '}
-                    <div
-                      style={{
-                        marginLeft: '0.4rem'
-                      }}
-                    >
-                      <small
+        {quizzesData ? (
+          quizzesData?.map((quiz, i) => (
+            <Col
+              key={quiz.id}
+              xs={{
+                span: 24
+              }}
+              sm={{
+                span: 12
+              }}
+              md={{
+                span: 12
+              }}
+              lg={{
+                span: 8
+              }}
+              xl={{
+                span: 6
+              }}
+            >
+              <Link to={`/quizzes/${quiz.id}`}>
+                <Card
+                  hoverable
+                  cover={
+                    <img
+                      alt="example"
+                      className="quiz-card-img"
+                      src={images[roundArray(i)]}
+                    />
+                  }
+                >
+                  <div>
+                    <Card.Meta
+                      style={{ marginBottom: '.7rem' }}
+                      title={quiz.name}
+                    />
+                    <div className="quiz-card-items-container">
+                      <Avatar
                         style={{
-                          fontWeight: 400,
-                          color: '#b9b9c3',
-                          marginRight: '0.4rem'
+                          color: '#ea5455',
+                          backgroundColor: 'rgba(234,84,85,.12)'
                         }}
                       >
-                        by
-                      </small>
-                      <small style={{ color: '#6e6b7b', fontSize: '.857rem' }}>
-                        {quiz.User.name}
-                      </small>
-                      <span
+                        {' '}
+                        <b>
+                          {quiz.User.name[0].toLocaleUpperCase() +
+                            quiz.User.name.split('')[1][0].toLocaleUpperCase()}
+                        </b>
+                      </Avatar>{' '}
+                      <div
                         style={{
-                          margin: '0px 0.4rem',
-                          color: '#b9b9c3'
+                          marginLeft: '0.4rem'
                         }}
                       >
-                        |
-                      </span>
-                      <small
-                        style={{
-                          color: '#b9b9c3',
-                          fontSize: '.857rem'
-                        }}
-                      >
-                        {moment(new Date(quiz.createdAt)).format('MMM Do YY')}
-                      </small>
+                        <small
+                          style={{
+                            fontWeight: 400,
+                            color: '#b9b9c3',
+                            marginRight: '0.4rem'
+                          }}
+                        >
+                          by
+                        </small>
+                        <small
+                          style={{ color: '#6e6b7b', fontSize: '.857rem' }}
+                        >
+                          {quiz.User.name}
+                        </small>
+                        <span
+                          style={{
+                            margin: '0px 0.4rem',
+                            color: '#b9b9c3'
+                          }}
+                        >
+                          |
+                        </span>
+                        <small
+                          style={{
+                            color: '#b9b9c3',
+                            fontSize: '.857rem'
+                          }}
+                        >
+                          {moment(new Date(quiz.createdAt)).format('MMM Do YY')}
+                        </small>
+                      </div>
                     </div>
+                    <Tag
+                      style={{
+                        marginBottom: '0.7rem',
+                        borderRadius: '5px',
+                        color: '#7367f0',
+                        padding: '0px 0.5rem',
+                        fontWeight: 600,
+                        fontSize: '83%'
+                      }}
+                      color="rgba(115,103,240,.12)"
+                    >
+                      {quiz.Specialization.name}
+                    </Tag>
+                    <QuizCardStat
+                      duration={quiz.duration}
+                      users={quiz._count.Users}
+                      questions={quiz._count.Questions}
+                    />
                   </div>
-                  <Tag
-                    style={{
-                      marginBottom: '0.7rem',
-                      borderRadius: '5px',
-                      color: '#7367f0',
-                      padding: '0px 0.5rem',
-                      fontWeight: 600,
-                      fontSize: '83%'
-                    }}
-                    color="rgba(115,103,240,.12)"
-                  >
-                    {quiz.Specialization.name}
-                  </Tag>
-                  <QuizCardStat
-                    duration={quiz.duration}
-                    users={quiz._count.Users}
-                    questions={quiz._count.Questions}
-                  />
-                </div>
-              </Card>
-            </Link>
-          </Col>
-        ))}
+                </Card>
+              </Link>
+            </Col>
+          ))
+        ) : (
+          <MessageCard
+            status={403}
+            title={'No Quiz found'}
+            subTitle={
+              'create some quiz and come back again. click on Create Quiz Button to add new Quiz'
+            }
+            btnLink={{
+              text: 'Create Quiz',
+              link: '/create',
+              type: 'primary'
+            }}
+          />
+        )}
       </Row>
     </PageLayout>
   )

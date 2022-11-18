@@ -1,20 +1,19 @@
 import {
   Avatar,
-  Button,
   Col,
   Descriptions,
   Divider,
   Form,
   Input,
   message,
-  Result,
   Row
 } from 'antd'
 
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { getRequest } from '../axios/axiosMethods'
+import MessageCard from '../components/MessageCard'
 import PageLayout from '../components/PageLayout'
 
 const Quiz = () => {
@@ -246,17 +245,15 @@ const Quiz = () => {
           </div>
         </div>
       ) : (
-        <Result
-          status="500"
-          title="500"
-          subTitle="Sorry, something went wrong."
-          extra={
-            <Link to={`/quizzes`}>
-              <a style={{ color: 'gray' }} href="">
-                <Button type="primary">Back Quizzes</Button>
-              </a>
-            </Link>
-          }
+        <MessageCard
+          status={500}
+          title={'500'}
+          subTitle={'Sorry, something went wrong.'}
+          btnLink={{
+            text: 'Back Quizzes',
+            link: '/quizzes',
+            type: 'primary'
+          }}
         />
       )}
     </PageLayout>
