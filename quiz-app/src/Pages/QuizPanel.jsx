@@ -46,12 +46,29 @@ function useInterval(callback, delay) {
   }, [delay])
 }
 
+const toggleFullScreen = () => {
+  useEffect(() => {
+    var doc = window.document
+    var docEl = doc.documentElement
+
+    var requestFullScreen =
+      docEl.requestFullscreen ||
+      docEl.mozRequestFullScreen ||
+      docEl.webkitRequestFullScreen ||
+      docEl.msRequestFullscreen
+    console.log('hh')
+
+    requestFullScreen.call(docEl)
+  }, [])
+}
+
+var INITIAL_COUNT = 0
+
 const QuizPanel = () => {
-  let INITIAL_COUNT = 0
   const [quizData, setQuizData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [secondsRemaining, setSecondsRemaining] = useState(0)
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
 
   const params = useParams()
   const { appState } = useAppState()
@@ -60,30 +77,7 @@ const QuizPanel = () => {
   const minutesRemaining = (secondsRemaining - secondsToDisplay) / 60
 
   useEffect(() => {
-    function toggleFullScreen() {
-      var doc = window.document
-      var docEl = doc.documentElement
-
-      var requestFullScreen =
-        docEl.requestFullscreen ||
-        docEl.mozRequestFullScreen ||
-        docEl.webkitRequestFullScreen ||
-        docEl.msRequestFullscreen
-
-      requestFullScreen.call(docEl)
-    }
-    let trigger = document.getElementById('fullscreen')
-    console.log(trigger)
-    if (trigger)
-      document.getElementById('fullscreen').addEventListener('click', () => {
-        console.log('click')
-        toggleFullScreen()
-      })
-  }, [])
-
-  useEffect(() => {
     document.addEventListener('fullscreenerror', function (err) {
-      alert(err)
       console.log(err)
     })
   }, [])
@@ -199,7 +193,9 @@ const QuizPanel = () => {
               </div>
             </div>
             <div className="quiz-panel-rule-button">
-              <Button type="primary">Rules</Button>
+              <Button type="primary" onClick={() => setOpen(true)}>
+                Rules
+              </Button>
             </div>
           </div>
         </div>
@@ -253,7 +249,9 @@ const QuizPanel = () => {
           </Col>
           <Col span={20}>
             <Card>
-              <Button id="fullscreen">go full screen</Button>
+              <Button id="fullscreen" onClick={toggleFullScreen()}>
+                go full screen
+              </Button>
             </Card>
           </Col>
         </Row>

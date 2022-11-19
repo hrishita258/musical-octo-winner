@@ -29,7 +29,7 @@ const Login = () => {
           expiresAt
         } = authData.result
         let obj = {
-          loggedIn: true,
+          isLoggedIn: true,
           userId,
           role,
           email,

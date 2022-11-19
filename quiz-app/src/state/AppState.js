@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react'
 
 export const defaultAppState = {
-  isLoggidIn: false,
+  isLoggedIn: false,
   userId: '',
   role: '',
   email: '',

@@ -23,7 +23,7 @@ const App = () => {
     }
     if (storageData) {
       if (
-        storageData.isLoggidIn &&
+        storageData.isLoggedIn &&
         storageData.userId &&
         storageData.role &&
         storageData.email &&
@@ -45,7 +45,7 @@ const App = () => {
           expiresAt
         } = storageData
         setAppState({
-          isLoggidIn: true,
+          isLoggedIn: true,
           userId,
           role,
           email,
@@ -72,7 +72,7 @@ const App = () => {
                 expiresAt
               } = response
               let obj = {
-                isLoggidIn: true,
+                isLoggedIn: true,
                 userId,
                 role,
                 profileImg: '',

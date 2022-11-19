@@ -9,8 +9,8 @@ import { Routes } from './Routes'
 const MainLayout = () => {
   const [sidebarKey, setSidebarKey] = useState('1')
   const { appState } = useAppState()
-
-  if (!appState.isLoggidIn) return <Login />
+  console.log(appState)
+  if (!appState.isLoggedIn) return <Login />
 
   return (
     <BrowserRouter>
