@@ -6,7 +6,6 @@ import {
   Drawer,
   Image,
   message,
-  PageHeader,
   Progress,
   Row
 } from 'antd'
@@ -114,7 +113,7 @@ const QuizPanel = () => {
   const twoDigits = num => String(num).padStart(2, '0')
   return (
     <PageLayout noStyle loading={loading}>
-      <PageHeader className="quiz-panel-pageheader">
+      <div className="quiz-panel-pageheader">
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div
             style={{
@@ -199,7 +198,7 @@ const QuizPanel = () => {
             </div>
           </div>
         </div>
-      </PageHeader>
+      </div>
       <div style={{ padding: '1rem' }}>
         <Row gutter={5} style={{ height: 'calc(100vh - 100px)' }}>
           <Col span={4}>

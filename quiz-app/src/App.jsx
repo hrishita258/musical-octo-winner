@@ -1,4 +1,4 @@
-import { Result, Spin } from 'antd'
+import { ConfigProvider, Result, Spin } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { fetchRefreshToken } from './auth/fetchRefreshToken'
 import MainLayout from './components/MainLayout'
@@ -137,14 +137,23 @@ const App = () => {
 
   return (
     <div>
-      <AppStateContext.Provider
-        value={{
-          appState,
-          setAppState
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: '#ef78b9',
+            colorInfo: '#ce69a0'
+          }
         }}
       >
-        <MainLayout />
-      </AppStateContext.Provider>
+        <AppStateContext.Provider
+          value={{
+            appState,
+            setAppState
+          }}
+        >
+          <MainLayout />
+        </AppStateContext.Provider>
+      </ConfigProvider>
     </div>
   )
 }
