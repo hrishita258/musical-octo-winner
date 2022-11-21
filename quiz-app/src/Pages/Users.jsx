@@ -1,4 +1,20 @@
-import { Avatar, Button, Card, message, Table, Tag } from 'antd'
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  Drawer,
+  Form,
+  Input,
+  message,
+  Popconfirm,
+  Radio,
+  Row,
+  Select,
+  Space,
+  Table,
+  Tag
+} from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getRequest } from '../axios/axiosMethods'
@@ -7,7 +23,11 @@ import PageLayout from '../components/PageLayout'
 const Users = () => {
   const [usersData, setUsers] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [selectedRowKeys, setSelectedRowKeys] = useState([])
+  const [open, setOpen] = useState(false)
+  const [role, setRole] = useState(null)
+  const [colleges, setColleges] = useState(null)
+  const [specialization, setSpecialization] = useState(null)
+  const [form] = Form.useForm()
 
   const columns = [
     {
@@ -143,7 +163,6 @@ const Users = () => {
   useEffect(() => {
     getRequest('users')
       .then(response => {
-        console.log(response)
         if (response.status === 200) {
           if (response.data.status) {
             setUsers(response.data.result)
@@ -158,32 +177,44 @@ const Users = () => {
       })
   }, [])
 
-  const hasSelected = selectedRowKeys.length > 0
+  useEffect(() => {
+    getRequest('colleges')
+      .then(response => {
+        if (response.status === 200) {
+          if (response.data.status) {
+            setColleges(response.data.result)
+          }
+        } else {
+        }
+      })
+      .catch(err => {
+        message.error('internal server error please try agin later')
+      })
+  }, [])
+  const getSpecializations = collegeId => {
+    setSpecialization(
+      colleges.find(college => college.id === collegeId).specializations
+    )
+  }
 
   return (
     <PageLayout breadcrumbs={BREADCRUMBS}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          marginBottom: '16px'
+        }}
+      >
+        <Button type="primary" onClick={() => setOpen(true)}>
+          Add User
+        </Button>
+      </div>
       <Card>
-        <div
-          style={{
-            marginBottom: 16
-          }}
-        >
-          <Button type="primary" disabled={!hasSelected} loading={loading}>
-            Reload
-          </Button>
-          <span
-            style={{
-              marginLeft: 8
-            }}
-          >
-            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
-          </span>
-        </div>
         <Table
           style={{ fontSize: '12px' }}
           size="small"
           bordered
-          rowSelection={{ onChange: e => setSelectedRowKeys(e) }}
           scroll={{ x: 1400 }}
           rowKey={record => record.id}
           columns={columns}
@@ -196,6 +227,193 @@ const Users = () => {
           })}
         />
       </Card>
+      {/* add user form */}
+      <Drawer
+        title="Create new user"
+        size="large"
+        placement="right"
+        closable={false}
+        open={open}
+        extra={
+          <Space>
+            <Popconfirm
+              title="Are you sure to leave?"
+              onConfirm={() => {
+                setOpen(false)
+                form.resetFields()
+                setSpecialization(null)
+                setRole(null)
+              }}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button>Cancel</Button>
+            </Popconfirm>
+
+            <Button type="primary" onClick={() => form.submit()}>
+              Submit
+            </Button>
+          </Space>
+        }
+      >
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={values => {
+            console.log(values)
+          }}
+        >
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item name="role" label="Role">
+                <Radio.Group onChange={role => setRole(role.target.value)}>
+                  <Radio value={'spoc'}>
+                    <Card>SPOC</Card>
+                  </Radio>
+                  <Radio value={'faculty'}>
+                    <Card>Faculty</Card>
+                  </Radio>
+                  <Radio value={'student'}>
+                    <Card>Student</Card>
+                  </Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="name"
+                rules={[
+                  { required: true, message: 'Please input user name!' },
+                  { min: 4, message: 'Name must be at least 4 characters' }
+                ]}
+                label="Name"
+              >
+                <Input placeholder="Please enter user name" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input user email!'
+                  },
+                  {
+                    type: 'email',
+                    message: 'Please input valid email!'
+                  }
+                ]}
+                label="Email"
+              >
+                <Input type="email" placeholder="Please enter user email" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="college" label="College">
+                <Select
+                  placeholder="Please select college"
+                  options={colleges?.map(college => {
+                    return {
+                      label: college.name,
+                      value: college.id
+                    }
+                  })}
+                  onChange={value => getSpecializations(value)}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="specialization" label="Specialization">
+                <Select
+                  placeholder="Please select a specialization"
+                  options={specialization?.map(spec => {
+                    return {
+                      label: spec.name,
+                      value: spec.id
+                    }
+                  })}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="contact" label="Contact Number">
+                <Input
+                  type="number"
+                  placeholder="Please enter user mobile number"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="gender"
+                label="Gender"
+                rules={[{ required: true, message: 'Please select gender!' }]}
+              >
+                <Input
+                  type="text"
+                  placeholder="Please enter user mobile number"
+                />
+              </Form.Item>
+            </Col>
+            {role === 'student' ? (
+              <>
+                <Col span={12}>
+                  <Form.Item
+                    name="semester"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input student semester'
+                      },
+                      { min: 1, message: 'Semester must be at least 1' },
+                      { max: 8, message: 'Semester must be at most 8' }
+                    ]}
+                    label="Semester"
+                  >
+                    <Input type="number" placeholder="Please enter user name" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="enrollmentYear"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input student enrollment year'
+                      }
+                    ]}
+                    label="Enrollment Year"
+                  >
+                    <Input type="number" placeholder="Please enter user name" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item name="github" label="Github Profile">
+                    <Input
+                      style={{ width: '100%' }}
+                      addonBefore="https://"
+                      addonAfter=".com"
+                      placeholder="Please enter github public url"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item name="linkedin" label="Linkedin Profile">
+                    <Input
+                      style={{ width: '100%' }}
+                      addonBefore="https://"
+                      addonAfter=".com"
+                      placeholder="Please enter linkedin profile url"
+                    />
+                  </Form.Item>
+                </Col>
+              </>
+            ) : null}
+          </Row>
+        </Form>
+      </Drawer>
+      {/* add user form end */}
     </PageLayout>
   )
 }

@@ -69,7 +69,7 @@ const PageLayout = ({ children, breadcrumbs, loading, noStyle = false }) => {
               {' '}
               <Breadcrumb separator=">" style={{ marginBottom: 20 }}>
                 {breadcrumbs.map((b, i) => (
-                  <Breadcrumb.Item key={i} onClick={() => console.log(b.link)}>
+                  <Breadcrumb.Item key={i}>
                     {b.link ? (
                       <NavLink to={b.link.route}>{b.name}</NavLink>
                     ) : (

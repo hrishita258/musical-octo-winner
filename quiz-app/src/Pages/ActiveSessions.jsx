@@ -34,18 +34,15 @@ const ActiveSessions = () => {
     const parsed = deviceDetector.parse(ses.userAgent)
     return { ...ses, parsed }
   })
-  console.log(session, activeSessions)
   useEffect(() => {
     getRequest('activeSessions')
       .then(response => {
-        console.log(response)
         if (response.status === 200) {
           if (response.data.status) {
             setActiveSessions(response.data.result)
           }
           setLoading(false)
         } else {
-          console.log(response.data.result)
         }
       })
       .catch(err => {

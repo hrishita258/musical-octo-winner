@@ -15,7 +15,6 @@ const Login = () => {
         method: 'POST'
       })
       const authData = await loginPromise.json()
-      console.log(authData)
       if (authData.status === 200) {
         setLoading(false)
         const {

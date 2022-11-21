@@ -43,7 +43,6 @@ const Quiz = () => {
   useEffect(() => {
     getRequest('quizzes/' + params.quizId)
       .then(response => {
-        console.log(response)
         if (response.status === 200) {
           if (response.data.status) {
             setQuizData(response.data.result)

@@ -6,6 +6,7 @@ import {
   Drawer,
   Image,
   message,
+  Modal,
   Progress,
   Row
 } from 'antd'
@@ -24,42 +25,6 @@ const STATUS_BADGES = [
   },
   { name: 'Current', bgColor: '#142439', color: '#FFF' }
 ]
-
-function useInterval(callback, delay) {
-  const savedCallback = useRef()
-
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback
-  }, [callback])
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback.current()
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay)
-      return () => clearInterval(id)
-    }
-  }, [delay])
-}
-
-const toggleFullScreen = () => {
-  useEffect(() => {
-    var doc = window.document
-    var docEl = doc.documentElement
-
-    var requestFullScreen =
-      docEl.requestFullscreen ||
-      docEl.mozRequestFullScreen ||
-      docEl.webkitRequestFullScreen ||
-      docEl.msRequestFullscreen
-    console.log('hh')
-
-    requestFullScreen.call(docEl)
-  }, [])
-}
 
 var INITIAL_COUNT = 0
 
@@ -109,6 +74,37 @@ const QuizPanel = () => {
       console.log('stopped')
     }
   }, 1000)
+
+  function useInterval(callback, delay) {
+    const savedCallback = useRef()
+
+    // Remember the latest callback.
+    useEffect(() => {
+      savedCallback.current = callback
+    }, [callback])
+
+    // Set up the interval.
+    useEffect(() => {
+      function tick() {
+        savedCallback.current()
+      }
+      if (delay !== null) {
+        let id = setInterval(tick, delay)
+        return () => clearInterval(id)
+      }
+    }, [delay])
+  }
+
+  useEffect(() => {
+    function onFullscreenChange() {
+      setIsFullscreen(Boolean(document.fullscreenElement))
+    }
+
+    document.addEventListener('fullscreenchange', onFullscreenChange)
+
+    return () =>
+      document.removeEventListener('fullscreenchange', onFullscreenChange)
+  }, [])
 
   const twoDigits = num => String(num).padStart(2, '0')
   return (
@@ -199,10 +195,13 @@ const QuizPanel = () => {
           </div>
         </div>
       </div>
-      <div style={{ padding: '1rem' }}>
+      <div style={{ padding: '0.5rem' }}>
         <Row gutter={5} style={{ height: 'calc(100vh - 100px)' }}>
           <Col span={4}>
-            <Card style={{ position: 'relative', height: '100%' }}>
+            <Card
+              style={{ position: 'relative', height: '100%' }}
+              bodyStyle={{ padding: 7 }}
+            >
               <div className="quiz-panel-status-badges-container">
                 {STATUS_BADGES.map(h => (
                   <div key={h.name}>
@@ -248,69 +247,83 @@ const QuizPanel = () => {
           </Col>
           <Col span={20}>
             <Card>
-              <Button id="fullscreen" onClick={toggleFullScreen()}>
+              <Button
+                id="fullscreen"
+                onClick={() => document.documentElement.requestFullscreen()}
+              >
                 go full screen
               </Button>
             </Card>
           </Col>
         </Row>
-      </div>
-      {/* drawer */}
-      <Drawer placement="right" closable={false} open={open}>
-        <div
-          style={{
-            paddingLeft: '16px',
-            borderLeft: '2px solid #1c4980',
-            marginBottom: '25px'
-          }}
+        {/* drawer */}
+        <Drawer
+          placement="right"
+          closable={false}
+          open={open}
+          forceRender={true}
         >
-          <h2 style={{ color: '#1c4980', fontSize: '18px' }}>
-            Assessment Guidelines
-          </h2>
-          <p>
-            Kindly read through the following key instructions and important
-            guidelines for this assessment:
-          </p>
-        </div>
-        <div style={{}}>
-          <h4
+          <div
             style={{
-              color: '#1c4980',
-              fontSize: '16px',
+              paddingLeft: '16px',
               borderLeft: '2px solid #1c4980',
-              paddingLeft: '16px'
+              marginBottom: '25px'
             }}
           >
-            Assessment Guidelines
-          </h4>
-          <ul class="browser-default" style={{ paddingLeft: '33px' }}>
-            <li className="rules-panel-list">
-              <strong>Assessment Window: </strong> 16 Nov 22, 09:08 PM IST to 22
-              Nov 22, 09:08 PM IST
-            </li>
-            <li className="rules-panel-list">
-              <strong> Assessment Duration: </strong> 00:30:00 (hh:mm:ss)
-            </li>
-            <li className="rules-panel-list">
-              <strong>Total Questions to be answered:</strong> 20 Questions
-            </li>
-            <li className="rules-panel-list">
-              You can attempt the assessment anytime between the provided
-              assessment window.
-            </li>
-            <li className="rules-panel-list">
-              Please ensure that you attempt the assessment in one sitting as
-              once you start the assessment, the timer won’t stop.
-            </li>
-            <li className="rules-panel-list">
-              You will have to finish the assessment before 22 Nov 22, 09:08 PM
-              IST. To get the complete assessment duration, you need to start
-              the assessment latest by 22 Nov 22, 08:38 PM IST. Otherwise,
-              you’ll get less time to complete the assessment.
-            </li>
-          </ul>
-        </div>
-      </Drawer>
+            <h2 style={{ color: '#1c4980', fontSize: '18px' }}>
+              Assessment Guidelines
+            </h2>
+            <p>
+              Kindly read through the following key instructions and important
+              guidelines for this assessment:
+            </p>
+          </div>
+          <div style={{}}>
+            <h4
+              style={{
+                color: '#1c4980',
+                fontSize: '16px',
+                borderLeft: '2px solid #1c4980',
+                paddingLeft: '16px'
+              }}
+            >
+              Assessment Guidelines
+            </h4>
+            <ul className="browser-default" style={{ paddingLeft: '33px' }}>
+              <li className="rules-panel-list">
+                <strong>Assessment Window: </strong> 16 Nov 22, 09:08 PM IST to
+                22 Nov 22, 09:08 PM IST
+              </li>
+              <li className="rules-panel-list">
+                <strong> Assessment Duration: </strong> 00:30:00 (hh:mm:ss)
+              </li>
+              <li className="rules-panel-list">
+                <strong>Total Questions to be answered:</strong> 20 Questions
+              </li>
+              <li className="rules-panel-list">
+                You can attempt the assessment anytime between the provided
+                assessment window.
+              </li>
+              <li className="rules-panel-list">
+                Please ensure that you attempt the assessment in one sitting as
+                once you start the assessment, the timer won’t stop.
+              </li>
+              <li className="rules-panel-list">
+                You will have to finish the assessment before 22 Nov 22, 09:08
+                PM IST. To get the complete assessment duration, you need to
+                start the assessment latest by 22 Nov 22, 08:38 PM IST.
+                Otherwise, you’ll get less time to complete the assessment.
+              </li>
+            </ul>
+          </div>
+        </Drawer>
+        {/* intial modal */}
+        <Modal title="Vertically centered modal dialog" centered open={true}>
+          <p>some contents...</p>
+          <p>some contents...</p>
+          <p>some contents...</p>
+        </Modal>
+      </div>
     </PageLayout>
   )
 }
