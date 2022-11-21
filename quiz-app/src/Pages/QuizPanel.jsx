@@ -97,7 +97,7 @@ const QuizPanel = () => {
 
   useEffect(() => {
     function onFullscreenChange() {
-      setIsFullscreen(Boolean(document.fullscreenElement))
+      console.log('changed nm ')
     }
 
     document.addEventListener('fullscreenchange', onFullscreenChange)
@@ -246,14 +246,7 @@ const QuizPanel = () => {
             </Card>
           </Col>
           <Col span={20}>
-            <Card>
-              <Button
-                id="fullscreen"
-                onClick={() => document.documentElement.requestFullscreen()}
-              >
-                go full screen
-              </Button>
-            </Card>
+            <Card>here is the questions</Card>
           </Col>
         </Row>
         {/* drawer */}
@@ -318,10 +311,13 @@ const QuizPanel = () => {
           </div>
         </Drawer>
         {/* intial modal */}
-        <Modal title="Vertically centered modal dialog" centered open={true}>
-          <p>some contents...</p>
-          <p>some contents...</p>
-          <p>some contents...</p>
+        <Modal title="Vertically centered modal dialog" centered open={false}>
+          <Button
+            id="fullscreen"
+            onClick={() => document.documentElement.requestFullscreen()}
+          >
+            go full screen
+          </Button>
         </Modal>
       </div>
     </PageLayout>

@@ -141,7 +141,8 @@ const App = () => {
         theme={{
           token: {
             colorPrimary: '#ef78b9',
-            colorInfo: '#ce69a0'
+            colorInfo: '#ce69a0',
+            borderRadius: '6px'
           }
         }}
       >
