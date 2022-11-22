@@ -14,18 +14,6 @@ const PORT = 4000
 const ACCESS_TOKEN_EXPIRE_TIME = 3600
 const JWT_ACCESS_SECRET = 'access_secret_HH'
 
-// app.use(function (req, res, next) {
-//   res.header('Access-Control-Allow-Origin', '*')
-//   res.header(
-//     'Access-Control-Allow-Methods',
-//     'GET, POST, OPTIONS, PUT, PATCH, DELETE'
-//   )
-//   res.header(
-//     'Access-Control-Allow-Headers',
-//     'x-access-token, Origin, X-Requested-With, Content-Type, Accept'
-//   )
-//   next()
-// })
 const authTokenMiddleware = secret => {
   return (req, res, next) => {
     const token = req.headers['authorization']
@@ -48,7 +36,6 @@ app.use(authTokenMiddleware(JWT_ACCESS_SECRET))
 
 app.disable('x-powered-by')
 
-// app.use('/', require('./Routes'))
 app.use('/api', APIRoutes)
 
 app.get('/', (req, res) => {
