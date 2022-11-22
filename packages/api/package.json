@@ -1,5 +1,6 @@
 {
-  "name": "quizzer",
+  "name": "@musical-octo-winner/quiz-app",
+  "private": true,
   "version": "1.0.0",
   "main": "server.js",
   "author": "",
