@@ -1,4 +1,5 @@
 import {
+  Alert,
   Avatar,
   Button,
   Card,
@@ -17,16 +18,20 @@ import {
 } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getRequest } from '../axios/axiosMethods'
+import { getRequest, postRequest } from '../axios/axiosMethods'
 import DropOptions from '../components/DropOptions'
 import PageLayout from '../components/PageLayout'
 const Users = () => {
+  //? states
   const [usersData, setUsers] = useState(null)
   const [loading, setLoading] = useState(true)
   const [open, setOpen] = useState(false)
   const [role, setRole] = useState(null)
   const [colleges, setColleges] = useState(null)
   const [specialization, setSpecialization] = useState(null)
+  const [error, setError] = useState(null)
+
+  //? refs
   const [form] = Form.useForm()
 
   const columns = [
@@ -159,8 +164,7 @@ const Users = () => {
       name: 'Users'
     }
   ]
-
-  useEffect(() => {
+  const getUsers = () => {
     getRequest('users')
       .then(response => {
         if (response.status === 200) {
@@ -175,9 +179,10 @@ const Users = () => {
         setLoading(false)
         message.error('internal server error please try agin later')
       })
-  }, [])
+  }
 
   useEffect(() => {
+    getUsers()
     getRequest('colleges')
       .then(response => {
         if (response.status === 200) {
@@ -191,6 +196,7 @@ const Users = () => {
         message.error('internal server error please try agin later')
       })
   }, [])
+
   const getSpecializations = collegeId => {
     setSpecialization(
       colleges.find(college => college.id === collegeId).specializations
@@ -258,12 +264,48 @@ const Users = () => {
       >
         <Form
           layout="vertical"
+          initialValues={{ role: 'student' }}
           form={form}
           onFinish={values => {
-            console.log(values)
+            postRequest('users', {
+              ...values,
+              semester: parseInt(values.semester),
+              enrollmentYear: parseInt(values.enrollmentYear)
+            })
+              .then(response => {
+                if (response.status === 200) {
+                  if (response.data.status === 200) {
+                    message.success(response.data.result)
+                    getUsers()
+                  }
+                  if (response.data.status === 400) {
+                    console.log(response.data.error)
+                    setError(response.data.error)
+                  }
+                }
+              })
+              .catch(err => {
+                message.error('internal server error please try agin later')
+              })
           }}
         >
           <Row gutter={16}>
+            <Col span={24}>
+              {error !== null ? (
+                <Alert
+                  message="already exists"
+                  showIcon
+                  description={
+                    <div>
+                      {error.map(err => (
+                        <p key={err}>{err}</p>
+                      ))}
+                    </div>
+                  }
+                  type="error"
+                />
+              ) : null}
+            </Col>
             <Col span={24}>
               <Form.Item name="role" label="Role">
                 <Radio.Group onChange={role => setRole(role.target.value)}>
@@ -310,7 +352,7 @@ const Users = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="college" label="College">
+              <Form.Item name="collegeId" label="College">
                 <Select
                   placeholder="Please select college"
                   options={colleges?.map(college => {
@@ -324,7 +366,7 @@ const Users = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="specialization" label="Specialization">
+              <Form.Item name="specializationId" label="Specialization">
                 <Select
                   placeholder="Please select a specialization"
                   options={specialization?.map(spec => {
@@ -337,7 +379,7 @@ const Users = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="contact" label="Contact Number">
+              <Form.Item name="contactNumber" label="Contact Number">
                 <Input
                   type="number"
                   placeholder="Please enter user mobile number"
