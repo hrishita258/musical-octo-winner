@@ -26,7 +26,7 @@ const Users = () => {
   const [usersData, setUsers] = useState(null)
   const [loading, setLoading] = useState(true)
   const [open, setOpen] = useState(false)
-  const [role, setRole] = useState(null)
+  const [role, setRole] = useState('student')
   const [colleges, setColleges] = useState(null)
   const [specialization, setSpecialization] = useState(null)
   const [error, setError] = useState(null)
@@ -249,6 +249,7 @@ const Users = () => {
                 form.resetFields()
                 setSpecialization(null)
                 setRole(null)
+                setError(null)
               }}
               okText="Yes"
               cancelText="No"

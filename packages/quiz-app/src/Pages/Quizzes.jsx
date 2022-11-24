@@ -59,14 +59,14 @@ const images = [
 
 const Quizzes = () => {
   const [quizzesData, setQuizzesData] = useState(null)
-
   const [loading, setLoading] = useState(true)
-
+  const [query, setQuery] = useState(() => null)
   useEffect(() => {
-    getRequest('quizzes')
+    getRequest('quizzes?' + serialize(query))
       .then(response => {
         if (response.status === 200) {
           if (response.data.status) {
+            console.log(response.data.result)
             setQuizzesData(response.data.result)
           }
           setLoading(false)
@@ -78,7 +78,7 @@ const Quizzes = () => {
         console.log(err)
         message.error('internal server error please try agin later')
       })
-  }, [])
+  }, [query])
 
   let i = 0
   const roundArray = index => {
@@ -86,6 +86,19 @@ const Quizzes = () => {
     for (let counter = 0; counter < 13; ++counter) {
       return (i = (i + 1) % images.length)
     }
+  }
+  const serialize = function (obj) {
+    const query = obj
+    if (query)
+      Object.keys(query).forEach(key =>
+        query[key] === undefined ? delete query[key] : console.log(key)
+      )
+    var str = []
+    for (var p in query)
+      if (query.hasOwnProperty(p)) {
+        str.push(encodeURIComponent(p) + '=' + encodeURIComponent(query[p]))
+      }
+    return str.join('&')
   }
   return (
     <PageLayout breadcrumbs={BREADCRUMBS} loading={loading}>
@@ -105,13 +118,17 @@ const Quizzes = () => {
             <Col span={6}>
               <Form.Item
                 style={{ width: '100%' }}
-                name="Specialization"
+                name="specializationId"
                 label="Specialization"
-                // rules={[{ required: true }]}
               >
                 <Select
                   placeholder="select specialization"
                   allowClear
+                  onChange={e => {
+                    setQuery(prev => {
+                      return { ...prev, specializationId: e }
+                    })
+                  }}
                   optionFilterProp="children"
                   filterOption={(input, option) =>
                     (option?.children ?? '').includes(input)
@@ -144,7 +161,6 @@ const Quizzes = () => {
                 style={{ width: '100%' }}
                 name="College"
                 label="College"
-                // rules={[{ required: true }]}
               >
                 <Select
                   placeholder="select College"
@@ -185,6 +201,11 @@ const Quizzes = () => {
                 <Select
                   placeholder="select faculty"
                   allowClear
+                  onChange={e => {
+                    setQuery(prev => {
+                      return { ...prev, createdById: e }
+                    })
+                  }}
                   optionFilterProp="children"
                   filterOption={(input, option) =>
                     (option?.children ?? '').includes(input)

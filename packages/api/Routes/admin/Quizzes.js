@@ -4,7 +4,9 @@ import postgres from '../../db/Prisma.js'
 const router = express.Router()
 
 router.get('/', async (req, res) => {
+  let query = req.query
   const result = await postgres.quiz.findMany({
+    where: query,
     select: {
       _count: true,
       name: true,
