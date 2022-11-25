@@ -1,4 +1,5 @@
 import express from 'express'
+import puppeteer from 'puppeteer'
 import postgres from '../../db/Prisma.js'
 
 const router = express.Router()
@@ -80,6 +81,26 @@ router.get('/:id', async (req, res) => {
     }
   })
   res.status(200).json({ result: quiz, msg: 'done', status: 200 })
+})
+
+router.get('/hackathons/get', async (req, res) => {
+  try {
+    const pageN = req.query.page || 1
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+
+    await page.goto('https://devpost.com/api/hackathons?page=' + pageN)
+
+    await page.waitForSelector('pre')
+    let element = await page.$('pre')
+    let value = await page.evaluate(el => el.textContent, element)
+    await browser.close()
+    if (value)
+      return res.status(200).json({ result: value, msg: 'done', status: 200 })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ result: null, msg: 'error', status: 500 })
+  }
 })
 
 export default router

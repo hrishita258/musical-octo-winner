@@ -3,6 +3,7 @@ import { Route, Routes as HHRoutes } from 'react-router-dom'
 import ActiveSessions from '../Pages/ActiveSessions'
 import Colleges from '../Pages/Colleges'
 import Dashboard from '../Pages/Dashboard'
+import Hackathons from '../Pages/Hackathons'
 import Quiz from '../Pages/Quiz'
 import QuizPanel from '../Pages/QuizPanel'
 import Quizzes from '../Pages/Quizzes'
@@ -21,6 +22,7 @@ export const Routes = () => {
         path="/account/activeSessions"
         element={<ActiveSessions />}
       ></Route>
+      <Route path="/hackathons" element={<Hackathons />}></Route>
     </HHRoutes>
   )
 }
