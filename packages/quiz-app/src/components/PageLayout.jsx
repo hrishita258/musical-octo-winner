@@ -3,12 +3,12 @@ import { Breadcrumb, Layout, Skeleton } from 'antd'
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import Sidebar from './Sidebar'
-const { Header, Content } = Layout
+const { Content } = Layout
 
 const PageLayout = ({ children, breadcrumbs, loading, noStyle = false }) => {
-  const [collapsed, setCollapsed] = useState(true)
+  const [collapsed, setCollapsed] = useState(false)
   return (
-    <Layout style={{ backgroundColor: '#fafafa' }}>
+    <Layout>
       {noStyle ? (
         loading ? (
           <Skeleton active />
@@ -20,11 +20,10 @@ const PageLayout = ({ children, breadcrumbs, loading, noStyle = false }) => {
           <Sidebar collapsed={collapsed} />
           <Layout
             style={{
-              paddingTop: '72px',
-              background: '#fafafa'
+              paddingTop: '72px'
             }}
           >
-            <Header
+            <Layout.Header
               style={{
                 padding: 0,
                 position: 'fixed',
@@ -35,7 +34,6 @@ const PageLayout = ({ children, breadcrumbs, loading, noStyle = false }) => {
                 width: collapsed ? 'calc(100% - 80px)' : 'calc(100% - 200px)',
                 zIndex: 29,
                 alignItems: 'center',
-                backgroundColor: '#FFF',
                 justifyContent: 'space-between',
                 boxShadow: '4px 4px 40px 0 rgb(0 0 0 / 5%)',
                 transition: 'width .2s'
@@ -56,7 +54,7 @@ const PageLayout = ({ children, breadcrumbs, loading, noStyle = false }) => {
                   }
                 )}
               </div>
-            </Header>
+            </Layout.Header>
             <Content
               style={{
                 margin: '12px 12px 0px',

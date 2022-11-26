@@ -66,7 +66,6 @@ const Quizzes = () => {
       .then(response => {
         if (response.status === 200) {
           if (response.data.status) {
-            console.log(response.data.result)
             setQuizzesData(response.data.result)
           }
           setLoading(false)

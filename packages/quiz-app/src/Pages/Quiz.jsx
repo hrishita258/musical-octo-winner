@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Card,
   Col,
   Descriptions,
   Divider,
@@ -37,7 +38,7 @@ const Quiz = () => {
         key: 2
       }
     },
-    { name: quizData ? quizData?.name : params.id }
+    { name: quizData ? quizData?.name : params.quizId }
   ]
 
   useEffect(() => {
@@ -139,7 +140,7 @@ const Quiz = () => {
               </small>
             </Descriptions.Item>
           </Descriptions>
-          <div style={{ background: 'rgb(244 246 248)', padding: '1rem' }}>
+          <Card style={{ padding: '1rem' }}>
             <Form
               layout="vertical"
               form={form}
@@ -177,18 +178,14 @@ const Quiz = () => {
                 </Col>
               </Row>
             </Form>
-          </div>
+          </Card>
           <Divider orientation="left">Questions</Divider>
           <div style={{}}>
             {quizData.Questions?.map((q, i) => (
-              <div
+              <Card
                 key={q.id}
                 style={{
-                  marginBottom: '25px',
-                  padding: '2rem 6rem',
-                  backgroundColor: '#FFF',
-                  boxShadow: '0 4px 24px 0 rgb(34 41 47 / 4%)',
-                  border: '1px solid #f0f0f0'
+                  padding: '.5rem 6rem'
                 }}
               >
                 <div
@@ -201,7 +198,7 @@ const Quiz = () => {
                   <small>Question {i + 1}</small>
                 </div>
                 <p
-                  style={{ fontWeight: 600, fontSize: '1rem', color: 'black' }}
+                  style={{ fontWeight: 600, fontSize: '1rem' }}
                   dangerouslySetInnerHTML={{ __html: q.question }}
                 ></p>
                 {q.Choices?.map((choice, j) => (
@@ -239,7 +236,7 @@ const Quiz = () => {
                     ></p>
                   </div>
                 ))}
-              </div>
+              </Card>
             ))}
           </div>
         </div>

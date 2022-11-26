@@ -1,4 +1,4 @@
-import { ConfigProvider, Result, Spin } from 'antd'
+import { ConfigProvider, Result, Spin, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { fetchRefreshToken } from './auth/fetchRefreshToken'
 import MainLayout from './components/MainLayout'
@@ -143,6 +143,12 @@ const App = () => {
             colorPrimary: '#ef78b9',
             colorInfo: '#ce69a0',
             borderRadius: '6px'
+          },
+          algorithm: [theme.defaultAlgorithm],
+          components: {
+            Layout: {
+              colorBgHeader: 'light' === 'dark' ? '#141414' : '#fff'
+            }
           }
         }}
       >

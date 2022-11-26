@@ -109,7 +109,7 @@ const QuizPanel = () => {
   const twoDigits = num => String(num).padStart(2, '0')
   return (
     <PageLayout noStyle loading={loading}>
-      <div className="quiz-panel-pageheader">
+      <Card className="quiz-panel-pageheader" bodyStyle={{ padding: 2 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div
             style={{
@@ -194,7 +194,7 @@ const QuizPanel = () => {
             </div>
           </div>
         </div>
-      </div>
+      </Card>
       <div style={{ padding: '0.5rem' }}>
         <Row gutter={5} style={{ height: 'calc(100vh - 100px)' }}>
           <Col span={4}>
