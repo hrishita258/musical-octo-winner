@@ -1,4 +1,12 @@
-import { Button, Card, Col, Image, Row } from 'antd'
+import {
+  CalendarTwoTone,
+  FlagTwoTone,
+  GlobalOutlined,
+  HomeTwoTone,
+  TagsTwoTone
+} from '@ant-design/icons'
+import { Button, Card, Col, Image, Row, Tag } from 'antd'
+import { convert } from 'html-to-text'
 import React, { useEffect, useState } from 'react'
 import { getRequest } from '../axios/axiosMethods'
 import PageLayout from '../components/PageLayout'
@@ -32,7 +40,6 @@ const Hackathons = () => {
         }
     })
   }, [page])
-
   return (
     <PageLayout breadcrumbs={BREADCRUMBS} loading={loading}>
       <h1>Hackathons</h1>
@@ -50,31 +57,124 @@ const Hackathons = () => {
                       style={{
                         display: 'flex',
                         gap: 20,
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        minWidth: '70%',
+                        borderRight: '1px solid #e8e8e8',
+                        paddingRight: 10
                       }}
                     >
                       <Image
-                        width={130}
+                        width={200}
                         preview={false}
                         src={hackathon.thumbnail_url}
                       />
-                      <div>
-                        <h3>{hackathon.title}</h3>
+                      <div style={{ width: '100%' }}>
+                        <h3 style={{ fontSize: '1.2rem' }}>
+                          {hackathon.title}
+                        </h3>
                         <div
                           style={{
                             display: 'flex',
-                            justifyContent: 'space-between'
+                            justifyContent: 'space-between',
+                            marginTop: 10
                           }}
-                        ></div>
-                        <div
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'space-between'
-                          }}
-                        ></div>
+                        >
+                          <div style={{ width: '100%' }}>
+                            <div style={{ marginBottom: 20 }}>
+                              {hackathon.open_state === 'open' ? (
+                                <Tag color="green">
+                                  {hackathon.time_left_to_submission}
+                                </Tag>
+                              ) : hackathon.open_state === 'upcoming' ? (
+                                <Tag color={'orange'}>Upcoming</Tag>
+                              ) : (
+                                <Tag color="red">Ended</Tag>
+                              )}
+                            </div>
+                            <div
+                              style={{
+                                fontWeight: 700,
+                                fontSize: '1rem',
+                                marginLeft: '2px'
+                              }}
+                            >
+                              {convert(hackathon.prize_amount)}{' '}
+                              <span
+                                style={{ fontWeight: 'normal', color: 'gray' }}
+                              >
+                                in prizes
+                              </span>
+                            </div>
+                          </div>
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'flex-start',
+                              flexDirection: 'column',
+                              justifyContent: 'center',
+                              width: '100%'
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: 'flex',
+                                gap: 7,
+                                marginBottom: 20
+                              }}
+                            >
+                              {hackathon.displayed_location.icon === 'globe' ? (
+                                <GlobalOutlined />
+                              ) : (
+                                <HomeTwoTone />
+                              )}
+                              <span>
+                                {hackathon.displayed_location.location}
+                              </span>
+                            </div>
+                            <div>
+                              <b>{hackathon.registrations_count}</b>
+                              <span style={{ marginLeft: 10 }}>
+                                participant
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div></div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        gap: 15
+                      }}
+                    >
+                      <div>
+                        <FlagTwoTone />
+                        <Tag color="blue" style={{ marginLeft: 10 }}>
+                          {hackathon.organization_name}
+                        </Tag>
+                      </div>
+                      <div>
+                        <CalendarTwoTone />
+                        <span style={{ marginLeft: 10 }}>
+                          {hackathon.submission_period_dates}
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', gap: 10 }}>
+                        <TagsTwoTone />
+                        <div
+                          style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}
+                        >
+                          {hackathon.themes.map(tag => (
+                            <Tag key={tag.id} color="magenta">
+                              {tag.name}
+                            </Tag>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </Card>
               </a>
