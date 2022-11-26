@@ -27,7 +27,7 @@ const Hackathons = () => {
       const { result } = res.data
       if (res.status === 200)
         if (res.data.status === 200) {
-          setHackathons(JSON.parse(result)?.hackathons)
+          setHackathons([...hackathons, ...JSON.parse(result)?.hackathons])
           setLoading(false)
         }
     })
