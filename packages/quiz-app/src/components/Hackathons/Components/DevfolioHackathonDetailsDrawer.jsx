@@ -1,4 +1,4 @@
-import { Collapse, Divider, Drawer, Image, Tabs } from 'antd'
+import { Card, Col, Collapse, Divider, Drawer, Image, Row, Tabs } from 'antd'
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
 
@@ -28,8 +28,9 @@ const DevfolioHackathonDetailsDrawer = ({
             background: hackathon?._source?.hackathon_setting?.primary_color
           }}
         >
-          <img
+          <Image
             width={250}
+            preview={false}
             src={hackathon?._source?.hackathon_setting?.logo}
             alt="logo"
           />
@@ -47,7 +48,7 @@ const DevfolioHackathonDetailsDrawer = ({
                 label: `Overview`,
                 key: '1',
                 children: (
-                  <div style={{ maxWidth: '70em', margin: '0px auto' }}>
+                  <div style={{ margin: '0px auto', width: '80%' }}>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <Image
                         src={hackathon?._source.cover_img}
@@ -57,23 +58,39 @@ const DevfolioHackathonDetailsDrawer = ({
                     </div>
                     <div
                       style={{
-                        margin: '4rem 0px 0.75rem',
+                        margin: '4rem 0px',
                         fontSize: '20px',
-                        color: 'rgb(39, 51, 57)',
                         fontWeight: 400,
                         lineHeight: '32px'
                       }}
                     >
                       <ReactMarkdown>{hackathon?._source?.desc}</ReactMarkdown>
                     </div>
-                    <Divider></Divider>
-                    <Collapse defaultActiveKey={['1']}>
+                    <Divider orientation="left" orientationMargin={0}>
+                      <h1>FAQs</h1>
+                    </Divider>
+                    <Collapse
+                      defaultActiveKey={['1']}
+                      style={{ marginBottom: '4rem', width: '100%' }}
+                    >
                       {hackathon?._source?.hackathon_faqs?.map((faq, index) => (
-                        <Collapse.Panel header={faq?.question} key={faq.uuid}>
+                        <Collapse.Panel
+                          header={
+                            <h3
+                              style={{
+                                fontSize: '16px',
+                                fontWeight: 500,
+                                lineHeight: '28px'
+                              }}
+                            >
+                              {faq?.question}
+                            </h3>
+                          }
+                          key={faq.uuid}
+                        >
                           <div
                             style={{
                               fontSize: '17px',
-                              color: 'rgb(39, 51, 57)',
                               fontWeight: 400,
                               lineHeight: '32px'
                             }}
@@ -83,11 +100,45 @@ const DevfolioHackathonDetailsDrawer = ({
                         </Collapse.Panel>
                       ))}
                     </Collapse>
+                    {hackathon?._source?.sponsor_tiers.length ? (
+                      <>
+                        <Divider orientation="left" orientationMargin={0}>
+                          <h1>Sponsors</h1>
+                        </Divider>
+                        {hackathon?._source?.sponsor_tiers?.map(tier =>
+                          tier?.sponsors.length ? (
+                            <Card key={tier.uuid}>
+                              <h2>{tier?.name}</h2>
+                              <Row gutter={25}>
+                                {tier?.sponsors?.map(sponsor => (
+                                  <Col
+                                    span={8}
+                                    key={sponsor.uuid}
+                                    style={{
+                                      padding: 15,
+                                      display: 'flex',
+                                      justifyContent: 'center',
+                                      alignItems: 'center'
+                                    }}
+                                  >
+                                    <Image
+                                      preview={false}
+                                      src={sponsor.logo}
+                                      width={tier.width - 19}
+                                    />
+                                  </Col>
+                                ))}
+                              </Row>
+                            </Card>
+                          ) : null
+                        )}
+                      </>
+                    ) : null}
                   </div>
                 )
               },
               {
-                label: `Tab 2`,
+                label: `Prizzes`,
                 key: '2',
                 children: `Content of Tab Pane 2`
               },
