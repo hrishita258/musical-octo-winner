@@ -119,7 +119,9 @@ const DevfolioHackathonDetailsDrawer = ({
                                       )?.color,
                                       color: '#FFF',
                                       fontSize: '3rem',
-                                      borderRadius: '10%'
+                                      borderRadius: '10%',
+                                      boxShadow:
+                                        'rgb(3 0 92 / 36%) 0px 1px 5px, rgb(3 0 92 / 48%) 0px 6px 16px'
                                     }}
                                   >
                                     {
@@ -262,7 +264,16 @@ const DevfolioHackathonDetailsDrawer = ({
                 label: `Prizzes`,
                 key: '2',
                 children: hackathon?._source?.prizes?.length ? (
-                  <Row gutter={16}></Row>
+                  <Row gutter={[20, 25]}>
+                    {hackathon?._source?.prizes?.map(prize => (
+                      <Col span={12} key={prize.uuid}>
+                        <h2>{prize.name}</h2>
+                        <Card>
+                          <ReactMarkdown>{prize.desc}</ReactMarkdown>
+                        </Card>
+                      </Col>
+                    ))}
+                  </Row>
                 ) : (
                   <div
                     style={{
