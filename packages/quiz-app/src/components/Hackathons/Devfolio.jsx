@@ -1,15 +1,13 @@
-import {
-  CheckCircleTwoTone,
-  FacebookFilled,
-  GlobalOutlined,
-  InstagramFilled,
-  LinkedinFilled,
-  SlackCircleFilled,
-  TwitterCircleFilled
-} from '@ant-design/icons'
+import { CheckCircleTwoTone, GlobalOutlined } from '@ant-design/icons'
 import { Avatar, Button, Card, Col, Rate, Row, Space, Spin, Tag } from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
+import { FaLinkedinIn, FaSlackHash, FaTelegramPlane } from 'react-icons/fa'
+import { GrInstagram, GrMedium } from 'react-icons/gr'
+import { HiOutlineMail } from 'react-icons/hi'
+import { ImFacebook } from 'react-icons/im'
+import { IoLogoTwitter } from 'react-icons/io'
+import { SiDiscord } from 'react-icons/si'
 import { getRequest } from '../../axios/axiosMethods'
 import DevfolioHackathonDetailsDrawer from './Components/DevfolioHackathonDetailsDrawer'
 
@@ -18,16 +16,18 @@ const Devfolio = () => {
   const [loading, setLoading] = useState(true)
   const [selectedDevFolioHackathonId, setSelectedDevFolioHackathonId] =
     useState(null)
-  // const [showDevFolioHackathonDetails, setShowDevFolioHackathonDetails] =
-  //   useState(fasle)
 
   const socialLinks = [
-    { name: 'facebook', icon: <FacebookFilled /> },
-    { name: 'instagram', icon: <InstagramFilled /> },
-    { name: 'twitter', icon: <TwitterCircleFilled /> },
-    { name: 'linkedin', icon: <LinkedinFilled /> },
-    { name: 'slack', icon: <SlackCircleFilled /> },
-    { name: 'site', icon: <GlobalOutlined /> }
+    { name: 'facebook', icon: <ImFacebook />, color: '#1778F2' },
+    { name: 'telegram', icon: <FaTelegramPlane />, color: '#0088cc' },
+    { name: 'medium', icon: <GrMedium />, color: '#66cdaa' },
+    { name: 'discord', icon: <SiDiscord />, color: '#7289da' },
+    { name: 'contact_email', icon: <HiOutlineMail />, color: '#00ab6c' },
+    { name: 'instagram', icon: <GrInstagram />, color: '#e1306c' },
+    { name: 'twitter', icon: <IoLogoTwitter />, color: '#00acee' },
+    { name: 'linkedin', icon: <FaLinkedinIn />, color: '#0e76a8' },
+    { name: 'slack', icon: <FaSlackHash />, color: '#4a154b' },
+    { name: 'site', icon: <GlobalOutlined />, color: '#00ab6c' }
   ]
 
   useEffect(() => {
@@ -290,6 +290,7 @@ const Devfolio = () => {
         )}
         open={selectedDevFolioHackathonId !== null ? true : false}
         setSelectedDevFolioHackathonId={setSelectedDevFolioHackathonId}
+        socialLinks={socialLinks}
       />
     </div>
   )
