@@ -147,7 +147,7 @@ const App = () => {
           algorithm: [theme.defaultAlgorithm],
           components: {
             Layout: {
-              colorBgHeader: 'dark' === 'dark' ? '#141414' : '#fff'
+              colorBgHeader: 'light' === 'dark' ? '#141414' : '#fff'
             }
           }
         }}

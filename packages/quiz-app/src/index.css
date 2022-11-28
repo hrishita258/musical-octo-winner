@@ -220,3 +220,43 @@ code {
   color: #1c4980;
   font-weight: 500;
 }
+
+.feat {
+  display: flex;
+  background: #243036;
+  position: absolute;
+  left: 0px;
+  top: 0;
+  bottom: 0;
+  margin: -1px 0;
+  width: 28px;
+  border-radius: 3px 0 0 3px;
+  align-items: center;
+}
+
+.feat-child {
+  transform: rotate(-90deg);
+  display: block;
+  white-space: nowrap;
+  margin-left: -25px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.8125rem;
+  color: #fff;
+  font-weight: 500;
+}
+
+.devfolio-social-links {
+  padding: 12px;
+  margin: 0px;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  border: none;
+  border-radius: 24px;
+  background-color: rgb(240, 244, 255);
+  cursor: pointer;
+  outline: none;
+}
