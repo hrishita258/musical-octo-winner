@@ -261,7 +261,9 @@ const DevfolioHackathonDetailsDrawer = ({
               {
                 label: `Prizzes`,
                 key: '2',
-                children: hackathon?._source?.prizes?.length ? null : (
+                children: hackathon?._source?.prizes?.length ? (
+                  <Row gutter={16}></Row>
+                ) : (
                   <div
                     style={{
                       display: 'flex',
@@ -271,7 +273,7 @@ const DevfolioHackathonDetailsDrawer = ({
                     }}
                   >
                     <Empty
-                      image="https://cdni.iconscout.com/illustration/premium/thumb/first-prize-trophy-5627330-4688084.png"
+                      image="https://cdni.iconscout.com/illustration/premium/thumb/reward-4040469-3354555.png"
                       imageStyle={{
                         height: 300
                       }}
@@ -288,7 +290,93 @@ const DevfolioHackathonDetailsDrawer = ({
               {
                 label: `Speaker and Judges`,
                 key: '3',
-                children: `Content of Tab Pane 3`
+                children: hackathon?._source?.judges?.length ? (
+                  <Row gutter={16}>
+                    {hackathon?._source?.judges?.map(judge => (
+                      <Col span={6} key={judge.uuid}>
+                        <Card
+                          cover={
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                padding: 15
+                              }}
+                            >
+                              <Image
+                                preview={false}
+                                width={200}
+                                height={200}
+                                src={judge.profile_img}
+                                alt="Judge profile image"
+                              />
+                            </div>
+                          }
+                        >
+                          <Card.Meta
+                            title={judge.name}
+                            description={judge.job_title}
+                          />
+                          <div
+                            style={{
+                              display: 'flex',
+                              gap: 8,
+                              fontSize: 25,
+                              color: '#ef78b9',
+                              marginTop: 20
+                            }}
+                          >
+                            {Object.keys(judge).map(key =>
+                              judge[key] !== null &&
+                              [
+                                'instagram',
+                                'twitter',
+                                'telegram',
+                                'linkedin',
+                                'medium',
+                                'discord',
+                                'slack',
+                                'facebook'
+                              ].includes(key) ? (
+                                <a
+                                  href={judge[key]}
+                                  className="devfolio-social-links"
+                                  key={key}
+                                  target="_blank"
+                                >
+                                  {socialLinks.find(l => l.name === key)?.icon}
+                                </a>
+                              ) : null
+                            )}
+                          </div>
+                        </Card>
+                      </Col>
+                    ))}
+                  </Row>
+                ) : (
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: '50vh'
+                    }}
+                  >
+                    <Empty
+                      image="https://cdni.iconscout.com/illustration/premium/thumb/error-404-4344461-3613889.png"
+                      imageStyle={{
+                        height: 300
+                      }}
+                      description={
+                        <span>
+                          No prizes have been added to this hackathon yet. Check
+                          back later!
+                        </span>
+                      }
+                    />
+                  </div>
+                )
               },
               {
                 label: `Projects`,
