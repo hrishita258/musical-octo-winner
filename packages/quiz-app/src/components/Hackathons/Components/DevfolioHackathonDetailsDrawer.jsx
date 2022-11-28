@@ -295,7 +295,8 @@ const DevfolioHackathonDetailsDrawer = ({
                     {hackathon?._source?.judges?.map(judge => (
                       <Col span={6} key={judge.uuid}>
                         <Card
-                          style={{ height: '26rem' }}
+                          hoverable
+                          style={{ height: '26.2rem' }}
                           cover={
                             <div
                               style={{
@@ -317,8 +318,23 @@ const DevfolioHackathonDetailsDrawer = ({
                         >
                           <Card.Meta
                             title={judge.name}
-                            description={judge.job_title}
+                            description={<span>{judge.company.name}</span>}
                           />
+                          <p
+                            style={{
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              overflowWrap: 'anywhere',
+                              overflow: 'hidden',
+                              marginTop: 7,
+                              color:
+                                hackathon?._source?.hackathon_setting
+                                  .primary_color
+                            }}
+                          >
+                            {judge.job_title}
+                          </p>
                           <div
                             style={{
                               display: 'flex',
