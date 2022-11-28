@@ -295,6 +295,7 @@ const DevfolioHackathonDetailsDrawer = ({
                     {hackathon?._source?.judges?.map(judge => (
                       <Col span={6} key={judge.uuid}>
                         <Card
+                          style={{ height: '26rem' }}
                           cover={
                             <div
                               style={{
@@ -324,7 +325,9 @@ const DevfolioHackathonDetailsDrawer = ({
                               gap: 8,
                               fontSize: 25,
                               color: '#ef78b9',
-                              marginTop: 20
+                              marginTop: 15,
+                              position: 'absolute',
+                              bottom: 10
                             }}
                           >
                             {Object.keys(judge).map(key =>
@@ -370,7 +373,7 @@ const DevfolioHackathonDetailsDrawer = ({
                       }}
                       description={
                         <span>
-                          No prizes have been added to this hackathon yet. Check
+                          No prizes have been added to this Judges yet. Check
                           back later!
                         </span>
                       }
