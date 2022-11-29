@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { getRequest } from '../axios/axiosMethods'
 import Devfolio from '../components/Hackathons/Devfolio'
 import DevPost from '../components/Hackathons/DevPost'
+import Unstop from '../components/Hackathons/Unstop'
 import PageLayout from '../components/PageLayout'
 
 const Hackathons = () => {
@@ -74,7 +75,7 @@ const Hackathons = () => {
             {
               label: 'Unstop',
               key: 'unstop',
-              children: `Content of Tab Pane 3`
+              children: <Unstop />
             },
             {
               label: 'HackerEarth',

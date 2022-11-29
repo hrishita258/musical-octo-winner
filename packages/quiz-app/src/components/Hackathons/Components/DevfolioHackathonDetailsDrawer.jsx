@@ -400,7 +400,7 @@ const DevfolioHackathonDetailsDrawer = ({
                       }}
                       description={
                         <span>
-                          No prizes have been added to this Judges yet. Check
+                          No Judges have been added to this hackathon yet. Check
                           back later!
                         </span>
                       }
