@@ -71,8 +71,25 @@ router.get('/hackathons/unstop', async (req, res) => {
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
     await page.goto(
-      'https://unstop.com/api/public/opportunity/search-new?opportunity=all&filters=Open&types=oppstatus&atype=explore&showOlderResultForSearch=true'
+      'https://unstop.com/api/public/opportunity/search-new?opportunity=all&sort=&dir=&filters=Open,,All,All&types=oppstatus,teamsize,payment,eligible&atype=explore&page=1&showOlderResultForSearch=true'
     )
+    await page.waitForSelector('pre')
+    let element = await page.$('pre')
+    let value = await page.evaluate(el => el.textContent, element)
+    await browser.close()
+    if (value)
+      return res.status(200).json({ result: value, msg: 'done', status: 200 })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ result: null, msg: 'error', status: 500 })
+  }
+})
+
+router.get('/hackathons/unstop/featured', async (req, res) => {
+  try {
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+    await page.goto('https://unstop.com/api/public/get-all-featured')
     await page.waitForSelector('pre')
     let element = await page.$('pre')
     let value = await page.evaluate(el => el.textContent, element)
