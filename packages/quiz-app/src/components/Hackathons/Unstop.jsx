@@ -1,4 +1,14 @@
-import { Badge, Button, Card, Col, Image, Row, Tag } from 'antd'
+import {
+  Badge,
+  Button,
+  Card,
+  Col,
+  Image,
+  Input,
+  Row,
+  Segmented,
+  Tag
+} from 'antd'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineEye, AiOutlineUsergroupAdd } from 'react-icons/ai'
 import { BiTimeFive } from 'react-icons/bi'
@@ -28,24 +38,65 @@ const Unstop = () => {
       })
   }, [])
 
-  const Tags = [
-    {
-      name: 'Hackathon',
-      color: '#f50'
-    },
-    {
-      name: ''
-    }
+  const filters = [
+    { name: 'All' },
+    { name: 'Competitions' },
+    { name: 'Hiring Challenges' },
+    { name: 'Quizzes' },
+    { name: 'Hackathons' },
+    { name: 'Internships' },
+    { name: 'Scholarships' },
+    { name: 'Workshops' },
+    { name: 'Jobs' },
+    { name: 'Conferences' },
+    { name: 'Cultural Events' },
+    { name: 'College Festivals' },
+    { name: 'Articals' }
   ]
 
   console.log(featured)
   return (
-    <div style={{ maxWidth: '1500px', margin: '0px auto' }}>
+    <div
+      style={{ maxWidth: '1500px', margin: '0px auto', position: 'relative' }}
+    >
+      <Card
+        style={{ position: 'sticky', top: 0, zIndex: 1000, padding: 0 }}
+        bodyStyle={{ padding: 10 }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div style={{ width: '40%' }}>
+            <Input.Search
+              placeholder="input search text"
+              allowClear
+              enterButton="Search"
+              size="large"
+            />
+          </div>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            position: 'relative',
+            marginTop: 13,
+            overflowX: 'scroll'
+          }}
+        >
+          <Segmented options={filters.map(f => f.name)} size="large" />
+        </div>
+      </Card>
       <Row gutter={30} style={{ position: 'relative' }}>
         <Col span={6}>
           <Card
             bodyStyle={{ padding: 7 }}
-            style={{ position: 'sticky', top: 15, width: '100%' }}
+            style={{
+              position: 'sticky',
+              top: 135,
+              width: '100%',
+              right: 0,
+              height: 'calc(100vh - 150px)',
+              overflowY: 'scroll'
+            }}
           >
             <div
               style={{
@@ -178,15 +229,19 @@ const Unstop = () => {
           <Card
             style={{
               position: 'sticky',
-              top: 15,
+              top: 135,
               width: '100%',
               right: 0,
-              background: '#f8f9fa'
+              height: 'calc(100vh - 150px)',
+              overflowY: 'scroll'
             }}
-            bodyStyle={{ padding: 10 }}
+            bodyStyle={{ padding: 7 }}
           >
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <h2>Featured</h2>
+            </div>
             {featured?.data.map(feature => (
-              <div key={feature.id} style={{ padding: 5, marginBottom: 20 }}>
+              <div key={feature.id} style={{ padding: 7, marginBottom: 7 }}>
                 <div style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
                   <div
                     style={{
