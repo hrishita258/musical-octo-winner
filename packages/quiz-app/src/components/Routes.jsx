@@ -8,6 +8,7 @@ import Quiz from '../Pages/Quiz'
 import QuizPanel from '../Pages/QuizPanel'
 import QuizQuestionEdit from '../Pages/QuizQuestionsEdit'
 import Quizzes from '../Pages/Quizzes'
+import UnstopOpportunity from '../Pages/UnstopOpportunity'
 import Users from '../Pages/Users'
 
 export const Routes = () => {
@@ -27,7 +28,11 @@ export const Routes = () => {
         path="/account/activeSessions"
         element={<ActiveSessions />}
       ></Route>
-      <Route path="/hackathons" element={<Hackathons />}></Route>
+      <Route path="/opportunities" element={<Hackathons />}></Route>
+      <Route
+        path="/opportunities/unstop/:opportunityId"
+        element={<UnstopOpportunity />}
+      ></Route>
     </HHRoutes>
   )
 }

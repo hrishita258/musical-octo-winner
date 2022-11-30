@@ -102,4 +102,22 @@ router.get('/hackathons/unstop/featured', async (req, res) => {
   }
 })
 
+router.get('/unstop/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+    await page.goto('https://unstop.com/api/public/competition/' + id)
+    await page.waitForSelector('pre')
+    let element = await page.$('pre')
+    let value = await page.evaluate(el => el.textContent, element)
+    await browser.close()
+    if (value)
+      return res.status(200).json({ result: value, msg: 'done', status: 200 })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ result: null, msg: 'error', status: 500 })
+  }
+})
+
 export default router

@@ -1,5 +1,5 @@
 export const fetchRefreshToken = async token => {
-  const response = await fetch('http://localhost:4000/refresh', {
+  const response = await fetch('http://192.168.2.155:4000/refresh', {
     method: 'POST',
     body: JSON.stringify({ token }),
     headers: { 'Content-Type': 'application/json' }
