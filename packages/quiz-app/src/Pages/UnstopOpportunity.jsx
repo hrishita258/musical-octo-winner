@@ -1,4 +1,4 @@
-import { Carousel, Image } from 'antd'
+import { Card, Carousel, Image } from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { BiRupee } from 'react-icons/bi'
@@ -160,7 +160,8 @@ const themeColors = [
 
 const UnstopOpportunity = () => {
   const { opportunityId } = useParams()
-  const [opportunity, setOpportunity] = useState(null)
+  const [opportunity, setOpportunity] = useState({})
+  const [featured, setFeatured] = useState([])
   const [loading, setLoading] = useState(true)
   const [themeColor, setThemeColor] = useState('blue')
 
@@ -185,6 +186,17 @@ const UnstopOpportunity = () => {
         console.log(err)
       })
   }, [opportunityId])
+
+  useEffect(() => {
+    getRequest('opportunity/hackathons/unstop/featured')
+      .then(res => {
+        setFeatured(JSON.parse(res.data.result))
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }, [])
+
   console.log(opportunity)
 
   if (loading) return <div>Loading...</div>
@@ -193,7 +205,7 @@ const UnstopOpportunity = () => {
     <div
       style={{
         position: 'relative',
-        maxWidth: '1550px',
+        maxWidth: '1600px',
         margin: '0px auto',
         color: themeColor.color,
         backgroundColor: '#FFF'
@@ -414,16 +426,18 @@ const UnstopOpportunity = () => {
       </div>
 
       {/* second */}
-      <div style={{ maxWidth: '1550px' }}>
+      <div style={{ maxWidth: '1550px', display: 'flex', margin: '0px auto' }}>
         <div
           style={{
             maxWidth: '1180px',
-            margin: '0px auto'
+            margin: '0px auto',
+            width: 'calc(100% - 300px)',
+            paddingRight: '60px'
           }}
         >
           <div
             style={{
-              padding: '30px 0'
+              padding: '40px'
             }}
           >
             <div style={{ maxWidth: '1180px', margin: '0px auto' }}>
@@ -537,7 +551,8 @@ const UnstopOpportunity = () => {
           </div>
           <div
             style={{
-              padding: '30px 0'
+              padding: '40px',
+              background: 'rgba(236,239,243,.2)'
             }}
           >
             <div style={{ maxWidth: '1180px', margin: '0px auto' }}>
@@ -559,6 +574,164 @@ const UnstopOpportunity = () => {
               ></div>
             </div>
           </div>
+          <div
+            style={{
+              padding: '40px',
+              background: 'rgba(236,239,243,.2)'
+            }}
+          >
+            <div
+              style={{ maxWidth: '1180px', margin: '0px auto', width: '100%' }}
+            >
+              <h2
+                style={{
+                  borderLeft: `10px solid ${themeColor.color}`,
+                  color: '#1c4980',
+                  paddingLeft: 30,
+                  fontSize: '20px',
+                  margin: '30px 0px'
+                }}
+              >
+                Rewards and Prizes
+              </h2>
+              <div
+                style={{
+                  margin: 0,
+                  padding: 0,
+                  display: 'flex',
+                  flexWrap: 'wrap'
+                }}
+                gutter={10}
+              >
+                {opportunity.prizes.map(reward => (
+                  <div
+                    style={{
+                      position: 'relative',
+                      width: 'calc(50% - 20px)',
+                      margin: '10px',
+                      overflow: 'hidden',
+                      zIndex: '9',
+                      background: '#ffffff',
+                      boxShadow: '0.67px 3.67px 8px #186edf3b',
+                      borderRadius: '13px',
+                      padding: '20px 20px 10px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      minHeight: '170px',
+                      color: '#1c4980'
+                    }}
+                  >
+                    <div style={{ paddingRight: '70px' }}>
+                      <h3 style={{ fontSize: '18px' }}>{reward.rank}</h3>
+                      <p
+                        style={{
+                          fontSize: '12px',
+                          margin: '12px 0 0',
+                          lineHeight: '18px'
+                        }}
+                      >
+                        {reward.others}
+                      </p>
+                    </div>
+                    {reward.cash ? (
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          height: '80px',
+                          color: themeColor.color,
+                          fontSize: '20px',
+                          fontWeight: '500'
+                        }}
+                      >
+                        <strong>{reward.cash}</strong>
+                      </div>
+                    ) : null}
+
+                    <Image
+                      style={{
+                        display: 'block',
+                        width: '60px',
+                        height: 'auto',
+                        position: 'absolute',
+                        right: '0px',
+                        bottom: '10px'
+                      }}
+                      src={
+                        reward.pre_placement_internship
+                          ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/svg-images/ppi-icon.png'
+                          : 'https://d8it4huxumps7.cloudfront.net/uploads/images/svg-images/unstop-trophy.png'
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style={{ paddingRight: '30px' }}>
+          <Card
+            style={{
+              position: 'sticky',
+              top: 10,
+              width: '360px',
+              right: 0,
+              height: 'calc(100vh - 120px)',
+              overflowY: 'scroll'
+            }}
+            bodyStyle={{ padding: 7 }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <h2>Featured</h2>
+            </div>
+            {featured?.data.map(feature => (
+              <div key={feature.id} style={{ padding: 7, marginBottom: 7 }}>
+                <div style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
+                  <div
+                    style={{
+                      padding: 7,
+                      width: '80px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '80px',
+                      overflow: 'hidden',
+                      transition: '.3s',
+                      position: 'relative',
+                      zIndex: 0,
+                      background: '#FFFFFF',
+                      border: '1px solid rgba(114,131,161,.1)',
+                      boxSizing: 'border-box',
+                      boxShadow: '0 0 10px #186edf1a',
+                      borderRadius: '8px'
+                    }}
+                  >
+                    <Image src={feature.logoUrl2} preview={false} />
+                  </div>
+                  <span
+                    style={{
+                      width: '70%',
+                      marginBottom: 0,
+                      transition: '.3s',
+                      color: '#455368',
+                      fontWeight: 500,
+                      fontSize: '13px',
+                      lineHeight: '140%',
+                      WebkitLineClamp: 4
+                    }}
+                  >
+                    {feature.featured_title
+                      ? feature.featured_title
+                      : feature.type
+                      ? feature.title
+                      : feature.name}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </Card>
         </div>
       </div>
     </div>
