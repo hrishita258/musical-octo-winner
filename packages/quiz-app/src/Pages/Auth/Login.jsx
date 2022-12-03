@@ -9,7 +9,7 @@ const Login = () => {
   const onFinish = async values => {
     setLoading(true)
     try {
-      const loginPromise = await fetch('http://192.168.2.155:4000/auth/login', {
+      const loginPromise = await fetch('http://localhost:4000/auth/login', {
         body: JSON.stringify(values),
         headers: { 'Content-Type': 'application/json' },
         method: 'POST'

@@ -686,7 +686,7 @@ const UnstopOpportunity = () => {
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <h2>Featured</h2>
             </div>
-            {featured?.data.map(feature => (
+            {featured?.data?.map(feature => (
               <div key={feature.id} style={{ padding: 7, marginBottom: 7 }}>
                 <div style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
                   <div
