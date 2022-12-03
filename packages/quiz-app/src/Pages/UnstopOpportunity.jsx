@@ -1,8 +1,9 @@
-import { Card, Carousel, Image } from 'antd'
+import { Badge, Card, Carousel, Col, Image, Row } from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
+import { AiOutlineFileImage } from 'react-icons/ai'
 import { BiRupee } from 'react-icons/bi'
-import { BsCircleFill } from 'react-icons/bs'
+import { BsCircleFill, BsDownload } from 'react-icons/bs'
 import { FaCalendarAlt } from 'react-icons/fa'
 import { ImUsers } from 'react-icons/im'
 import { IoLocationOutline } from 'react-icons/io5'
@@ -576,6 +577,156 @@ const UnstopOpportunity = () => {
           </div>
           <div
             style={{
+              padding: '40px'
+            }}
+          >
+            <div style={{ maxWidth: '1180px', margin: '0px auto' }}>
+              <Row gutter={25}>
+                <Col span={12}>
+                  <h2
+                    style={{
+                      borderLeft: `10px solid ${themeColor.color}`,
+                      color: '#1c4980',
+                      paddingLeft: 30,
+                      fontSize: '20px',
+                      margin: '30px 0px'
+                    }}
+                  >
+                    What are the important dates & deadlines?
+                  </h2>
+                  <ul
+                    style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      margin: '-15px -43px'
+                    }}
+                  >
+                    {opportunity.datesToshow.map(date => (
+                      <li
+                        key={date.id}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          margin: '15px 5px',
+                          width: 'calc(50% - 10px)',
+                          gap: 10
+                        }}
+                      >
+                        <div
+                          style={{
+                            height: '32px',
+                            width: '32px',
+                            background: themeColor.light,
+                            boxShadow: '0 1px 4px #54545426',
+                            borderRadius: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: themeColor.color,
+                            fontSize: '20px'
+                          }}
+                        >
+                          <FaCalendarAlt />
+                        </div>
+                        <div>
+                          <span
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              fontSize: '12px',
+                              color: '#27497dd9'
+                            }}
+                          >
+                            <strong
+                              style={{
+                                fontSize: '13px',
+                                display: 'block',
+                                color: '#1c4980',
+                                fontWeight: 500
+                              }}
+                            >
+                              {date.title}
+                            </strong>
+                            {moment(date.important_date).format(
+                              'MMM Do YYYY, h:mm:ss a'
+                            )}
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </Col>
+                <Col span={12}>
+                  <h2
+                    style={{
+                      borderLeft: `10px solid ${themeColor.color}`,
+                      color: '#1c4980',
+                      paddingLeft: 30,
+                      fontSize: '20px',
+                      margin: '30px 0px'
+                    }}
+                  >
+                    Contact the organisers
+                  </h2>
+                </Col>
+                <Col span={12}>
+                  <h2
+                    style={{
+                      borderLeft: `10px solid ${themeColor.color}`,
+                      color: '#1c4980',
+                      paddingLeft: 30,
+                      fontSize: '20px',
+                      margin: '30px 0px'
+                    }}
+                  >
+                    Download attachments
+                  </h2>
+                  <ul
+                    style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      margin: '-15px -43px'
+                    }}
+                  >
+                    {opportunity.attachment.map(res => (
+                      <li
+                        key={res.id}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          margin: '15px 5px',
+                          width: 'calc(50% - 10px)',
+                          gap: 10
+                        }}
+                      >
+                        <div
+                          style={{
+                            height: '32px',
+                            width: '32px',
+                            background: themeColor.light,
+                            boxShadow: '0 1px 4px #54545426',
+                            borderRadius: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: themeColor.color,
+                            fontSize: '20px'
+                          }}
+                        >
+                          <AiOutlineFileImage />
+                        </div>
+                        <span>{res.title}</span>
+                        <BsDownload />
+                      </li>
+                    ))}
+                  </ul>
+                </Col>
+              </Row>
+            </div>
+          </div>
+          <div
+            style={{
               padding: '40px',
               background: 'rgba(236,239,243,.2)'
             }}
@@ -599,72 +750,112 @@ const UnstopOpportunity = () => {
                   margin: 0,
                   padding: 0,
                   display: 'flex',
-                  flexWrap: 'wrap'
+                  flexWrap: 'wrap',
+                  alignItems: 'center'
                 }}
-                gutter={10}
               >
                 {opportunity.prizes.map(reward => (
                   <div
                     style={{
-                      position: 'relative',
-                      width: 'calc(50% - 20px)',
+                      width: 'calc(33.33% - 20px)',
                       margin: '10px',
-                      overflow: 'hidden',
-                      zIndex: '9',
-                      background: '#ffffff',
-                      boxShadow: '0.67px 3.67px 8px #186edf3b',
-                      borderRadius: '13px',
-                      padding: '20px 20px 10px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'space-between',
-                      minHeight: '170px',
-                      color: '#1c4980'
+                      position: 'relative'
                     }}
+                    key={reward.id}
                   >
-                    <div style={{ paddingRight: '70px' }}>
-                      <h3 style={{ fontSize: '18px' }}>{reward.rank}</h3>
-                      <p
-                        style={{
-                          fontSize: '12px',
-                          margin: '12px 0 0',
-                          lineHeight: '18px'
-                        }}
-                      >
-                        {reward.others}
-                      </p>
-                    </div>
-                    {reward.cash ? (
+                    <Badge.Ribbon
+                      text={
+                        reward.certificate
+                          ? 'certificate'
+                          : reward.pre_placement_internship
+                          ? `PPI's`
+                          : reward.pre_placement_opportunity
+                          ? `PPO's`
+                          : ''
+                      }
+                      color={
+                        reward.pre_placement_internship ||
+                        reward.pre_placement_opportunity
+                          ? 'pink'
+                          : 'green'
+                      }
+                      key={reward.id}
+                      style={{
+                        display:
+                          reward.certificate ||
+                          reward.pre_placement_internship ||
+                          reward.pre_placement_opportunity
+                            ? 'block'
+                            : 'none'
+                      }}
+                    >
                       <div
                         style={{
+                          overflow: 'hidden',
+                          background: '#ffffff',
+                          boxShadow: '0.67px 3.67px 8px #186edf3b',
+                          borderRadius: '13px',
+                          padding: '20px 20px 10px',
                           display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          height: '80px',
-                          color: themeColor.color,
-                          fontSize: '20px',
-                          fontWeight: '500'
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          minHeight: '180px',
+                          color: '#1c4980'
                         }}
                       >
-                        <strong>{reward.cash}</strong>
-                      </div>
-                    ) : null}
+                        <div style={{ paddingRight: '70px' }}>
+                          <h3 style={{ fontSize: '18px' }}>{reward.rank}</h3>
+                          <p
+                            style={{
+                              fontSize: '12px',
+                              margin: '12px 0 0',
+                              lineHeight: '18px'
+                            }}
+                          >
+                            {reward.others}
+                          </p>
+                        </div>
+                        {reward.cash ? (
+                          <div
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              height: '80px',
+                              color: themeColor.color,
+                              fontSize: '20px',
+                              fontWeight: '500'
+                            }}
+                          >
+                            <strong>
+                              {reward.cash.toLocaleString('en-US', {
+                                style: 'currency',
+                                currency: reward.currencyCode
+                              })}
+                            </strong>
+                          </div>
+                        ) : null}
 
-                    <Image
-                      style={{
-                        display: 'block',
-                        width: '60px',
-                        height: 'auto',
-                        position: 'absolute',
-                        right: '0px',
-                        bottom: '10px'
-                      }}
-                      src={
-                        reward.pre_placement_internship
-                          ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/svg-images/ppi-icon.png'
-                          : 'https://d8it4huxumps7.cloudfront.net/uploads/images/svg-images/unstop-trophy.png'
-                      }
-                    />
+                        <Image
+                          style={{
+                            display: 'block',
+                            width: '60px',
+                            height: 'auto',
+                            position: 'absolute',
+                            right: '10px',
+                            bottom: '10px',
+                            display: 'block'
+                          }}
+                          preview={false}
+                          src={
+                            reward.pre_placement_internship ||
+                            reward.pre_placement_opportunity
+                              ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/svg-images/ppi-icon.png'
+                              : 'https://d8it4huxumps7.cloudfront.net/uploads/images/svg-images/unstop-trophy.png'
+                          }
+                        />
+                      </div>
+                    </Badge.Ribbon>
                   </div>
                 ))}
               </div>
