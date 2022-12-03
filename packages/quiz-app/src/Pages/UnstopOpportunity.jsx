@@ -1,11 +1,11 @@
-import { Badge, Card, Carousel, Col, Image, Row } from 'antd'
+import { Badge, Carousel, Col, Image, Row } from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineFileImage } from 'react-icons/ai'
 import { BiRupee } from 'react-icons/bi'
-import { BsCircleFill, BsDownload } from 'react-icons/bs'
+import { BsCircleFill } from 'react-icons/bs'
 import { FaCalendarAlt } from 'react-icons/fa'
-import { ImUsers } from 'react-icons/im'
+import { ImDownload3, ImUsers } from 'react-icons/im'
 import { IoLocationOutline } from 'react-icons/io5'
 import { useParams } from 'react-router-dom'
 import { getRequest } from '../axios/axiosMethods'
@@ -430,10 +430,9 @@ const UnstopOpportunity = () => {
       <div style={{ maxWidth: '1550px', display: 'flex', margin: '0px auto' }}>
         <div
           style={{
-            maxWidth: '1180px',
+            maxWidth: '1330px',
             margin: '0px auto',
-            width: 'calc(100% - 300px)',
-            paddingRight: '60px'
+            paddingRight: '40px'
           }}
         >
           <div
@@ -441,7 +440,7 @@ const UnstopOpportunity = () => {
               padding: '40px'
             }}
           >
-            <div style={{ maxWidth: '1180px', margin: '0px auto' }}>
+            <div style={{ maxWidth: '1330px', margin: '0px auto' }}>
               <h2
                 style={{
                   borderLeft: `10px solid ${themeColor.color}`,
@@ -556,7 +555,7 @@ const UnstopOpportunity = () => {
               background: 'rgba(236,239,243,.2)'
             }}
           >
-            <div style={{ maxWidth: '1180px', margin: '0px auto' }}>
+            <div style={{ maxWidth: '1330px', margin: '0px auto' }}>
               <h2
                 style={{
                   borderLeft: `10px solid ${themeColor.color}`,
@@ -580,7 +579,7 @@ const UnstopOpportunity = () => {
               padding: '40px'
             }}
           >
-            <div style={{ maxWidth: '1180px', margin: '0px auto' }}>
+            <div style={{ maxWidth: '1330px', margin: '0px auto' }}>
               <Row gutter={25}>
                 <Col span={12}>
                   <h2
@@ -685,7 +684,7 @@ const UnstopOpportunity = () => {
                     style={{
                       display: 'flex',
                       flexWrap: 'wrap',
-                      margin: '-15px -43px'
+                      margin: '-15px -40px'
                     }}
                   >
                     {opportunity.attachment.map(res => (
@@ -695,29 +694,41 @@ const UnstopOpportunity = () => {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between',
-                          margin: '15px 5px',
+                          margin: '5px',
                           width: 'calc(50% - 10px)',
-                          gap: 10
+                          gap: 10,
+                          padding: '10px 20px',
+                          border: '1px solid #ebebeb'
                         }}
                       >
                         <div
                           style={{
-                            height: '32px',
-                            width: '32px',
-                            background: themeColor.light,
-                            boxShadow: '0 1px 4px #54545426',
-                            borderRadius: '4px',
                             display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: themeColor.color,
-                            fontSize: '20px'
+                            gap: 10,
+                            alignItems: 'center'
                           }}
                         >
-                          <AiOutlineFileImage />
+                          <div
+                            style={{
+                              height: '32px',
+                              width: '32px',
+                              background: themeColor.light,
+                              boxShadow: '0 1px 4px #54545426',
+                              borderRadius: '4px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: themeColor.color,
+                              fontSize: '20px'
+                            }}
+                          >
+                            <AiOutlineFileImage />
+                          </div>
+                          <span>{res.title}</span>
                         </div>
-                        <span>{res.title}</span>
-                        <BsDownload />
+                        <ImDownload3
+                          style={{ fontSize: '20px', color: themeColor.color }}
+                        />
                       </li>
                     ))}
                   </ul>
@@ -732,7 +743,7 @@ const UnstopOpportunity = () => {
             }}
           >
             <div
-              style={{ maxWidth: '1180px', margin: '0px auto', width: '100%' }}
+              style={{ maxWidth: '1330px', margin: '0px auto', width: '100%' }}
             >
               <h2
                 style={{
@@ -836,7 +847,7 @@ const UnstopOpportunity = () => {
                           </div>
                         ) : null}
 
-                        <Image
+                        <img
                           style={{
                             display: 'block',
                             width: '60px',
@@ -846,7 +857,7 @@ const UnstopOpportunity = () => {
                             bottom: '10px',
                             display: 'block'
                           }}
-                          preview={false}
+                          alt="logo"
                           src={
                             reward.pre_placement_internship ||
                             reward.pre_placement_opportunity
@@ -861,68 +872,6 @@ const UnstopOpportunity = () => {
               </div>
             </div>
           </div>
-        </div>
-        <div style={{ paddingRight: '30px' }}>
-          <Card
-            style={{
-              position: 'sticky',
-              top: 10,
-              width: '360px',
-              right: 0,
-              height: 'calc(100vh - 120px)',
-              overflowY: 'scroll'
-            }}
-            bodyStyle={{ padding: 7 }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <h2>Featured</h2>
-            </div>
-            {featured?.data?.map(feature => (
-              <div key={feature.id} style={{ padding: 7, marginBottom: 7 }}>
-                <div style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
-                  <div
-                    style={{
-                      padding: 7,
-                      width: '80px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      height: '80px',
-                      overflow: 'hidden',
-                      transition: '.3s',
-                      position: 'relative',
-                      zIndex: 0,
-                      background: '#FFFFFF',
-                      border: '1px solid rgba(114,131,161,.1)',
-                      boxSizing: 'border-box',
-                      boxShadow: '0 0 10px #186edf1a',
-                      borderRadius: '8px'
-                    }}
-                  >
-                    <Image src={feature.logoUrl2} preview={false} />
-                  </div>
-                  <span
-                    style={{
-                      width: '70%',
-                      marginBottom: 0,
-                      transition: '.3s',
-                      color: '#455368',
-                      fontWeight: 500,
-                      fontSize: '13px',
-                      lineHeight: '140%',
-                      WebkitLineClamp: 4
-                    }}
-                  >
-                    {feature.featured_title
-                      ? feature.featured_title
-                      : feature.type
-                      ? feature.title
-                      : feature.name}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </Card>
         </div>
       </div>
     </div>
