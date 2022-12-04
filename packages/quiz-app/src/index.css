@@ -344,3 +344,16 @@ code {
   border-color: inherit;
   opacity: 0.35;
 }
+
+.slick-dots {
+  transform: translateY(1em) !important;
+}
+.slick-dots li button {
+  transition: 0.2s !important;
+  background: #0073e6 !important;
+}
+
+.slick-arrow {
+  background-color: cyan !important;
+  color: white !important;
+}

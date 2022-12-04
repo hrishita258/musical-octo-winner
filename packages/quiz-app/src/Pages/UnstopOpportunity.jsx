@@ -430,7 +430,7 @@ const UnstopOpportunity = () => {
       <div style={{ maxWidth: '1550px', display: 'flex', margin: '0px auto' }}>
         <div
           style={{
-            maxWidth: '1330px',
+            maxWidth: '1280px',
             margin: '0px auto',
             paddingRight: '40px'
           }}
@@ -440,7 +440,7 @@ const UnstopOpportunity = () => {
               padding: '40px'
             }}
           >
-            <div style={{ maxWidth: '1330px', margin: '0px auto' }}>
+            <div style={{ maxWidth: '1280px', margin: '0px auto' }}>
               <h2
                 style={{
                   borderLeft: `10px solid ${themeColor.color}`,
@@ -555,7 +555,7 @@ const UnstopOpportunity = () => {
               background: 'rgba(236,239,243,.2)'
             }}
           >
-            <div style={{ maxWidth: '1330px', margin: '0px auto' }}>
+            <div style={{ maxWidth: '1280px', margin: '0px auto' }}>
               <h2
                 style={{
                   borderLeft: `10px solid ${themeColor.color}`,
@@ -579,7 +579,7 @@ const UnstopOpportunity = () => {
               padding: '40px'
             }}
           >
-            <div style={{ maxWidth: '1330px', margin: '0px auto' }}>
+            <div style={{ maxWidth: '1280px', margin: '0px auto' }}>
               <Row gutter={25}>
                 <Col span={12}>
                   <h2
@@ -743,7 +743,7 @@ const UnstopOpportunity = () => {
             }}
           >
             <div
-              style={{ maxWidth: '1330px', margin: '0px auto', width: '100%' }}
+              style={{ maxWidth: '1280px', margin: '0px auto', width: '100%' }}
             >
               <h2
                 style={{
