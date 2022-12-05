@@ -1,6 +1,7 @@
 import { Avatar, Card, Carousel, Image, Tag } from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
+import { FaCalendarAlt, FaUsers } from 'react-icons/fa'
 import { getRequest } from '../axios/axiosMethods'
 import PageLayout from '../components/PageLayout'
 
@@ -27,7 +28,7 @@ const Dashboard = () => {
     getRequest('opportunity/home/posts?per_page=16')
       .then(s => {
         console.log(s)
-        setPostsData(JSON.parse(s.data.result)[0].data.tagFeed.items)
+        setPostsData(JSON.parse(s.data.result)[0].data.tagFeed?.items)
         setPostsDataLoading(false)
       })
       .catch(e => console.log(e))
@@ -86,41 +87,7 @@ const Dashboard = () => {
           ))}
         </Carousel>
       </div>
-      <h2
-        style={{
-          borderLeft: `olid #1c4980`,
-          color: '#1c4980',
-          paddingLeft: 30,
-          fontSize: '20px',
-          margin: '30px 0px'
-        }}
-      >
-        Featured opportunities for you
-      </h2>
-      <Card
-        style={{
-          marginBottom: '4rem'
-        }}
-      >
-        <Carousel arrows slidesToShow={3}>
-          {featuredOpportunities?.map(banner => (
-            <div key={banner.id}>
-              <Image
-                style={{
-                  borderRadius: '12px',
-                  boxShadow: '0 0 10px #0080ff40',
-                  background: '#fff',
-                  maxWidth: 'calc(100% - 1rem)',
-                  margin: '2rem 6px'
-                }}
-                preview={false}
-                src={banner.bannerImage.image_url}
-                alt="something is coming here"
-              />
-            </div>
-          ))}
-        </Carousel>
-      </Card>
+
       <h2
         style={{
           borderLeft: `10px solid #1c4980`,
@@ -222,6 +189,111 @@ const Dashboard = () => {
                 </div>
               </div>
             </a>
+          ))}
+        </Carousel>
+      </Card>
+      <h2
+        style={{
+          borderLeft: `10px solid #1c4980`,
+          color: '#1c4980',
+          paddingLeft: 30,
+          fontSize: '20px',
+          margin: '30px 0px'
+        }}
+      >
+        Featured opportunities for you
+      </h2>
+      <Card
+        style={{
+          marginBottom: '4rem'
+        }}
+      >
+        <Carousel arrows slidesToShow={4}>
+          {featuredOpportunities?.map(fo => (
+            <Card
+              key={fo.id}
+              style={{ backgroundColor: 'transparent' }}
+              bodyStyle={{ padding: 7 }}
+            >
+              <div style={{ position: 'relative' }}>
+                <Image
+                  style={{
+                    borderRadius: '12px',
+                    boxShadow: '0 0 10px #0080ff40'
+                  }}
+                  preview={false}
+                  src={fo?.banner_mobile?.image_url}
+                  alt="something is coming here"
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: '0',
+                    padding: '60px 12px 10px',
+                    background: 'linear-gradient(to top,#000000,rgba(0,0,0,0))',
+                    left: '0',
+                    width: '100%',
+                    borderRadius: '12px',
+                    color: '#fff',
+                    fontSize: '15px',
+                    fontWeight: 600
+                  }}
+                >
+                  <div
+                    style={{
+                      WebkitLineClamp: 2,
+                      display: '-webkit-box',
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                      marginBottom: '0px'
+                    }}
+                  >
+                    {fo.title}
+                  </div>
+                  <p style={{ margin: 0 }}>{fo?.organisation?.name}</p>
+                </div>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: 10,
+                  height: 40,
+                  background: '#e8e8e8',
+                  borderRadius: '50px',
+                  padding: '0px 10px',
+                  gap: 10
+                }}
+              >
+                <span
+                  style={{
+                    width: 'calc(50% - 10px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    color: '#1c4980',
+                    justifyContent: 'flex-start'
+                  }}
+                >
+                  <FaCalendarAlt style={{ fontSize: 20 }} />
+                  {fo?.registerCount + ' registered'}
+                </span>
+                <span
+                  style={{
+                    width: 'calc(50% - 10px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    color: '#1c4980',
+                    justifyContent: 'flex-end'
+                  }}
+                >
+                  <FaUsers style={{ fontSize: 25 }} />
+                  {fo?.regnRequirements?.remain_days}
+                </span>
+              </div>
+            </Card>
           ))}
         </Carousel>
       </Card>
