@@ -65,7 +65,6 @@ const Hackathons = () => {
           size="large"
           onChange={e => {
             setActiveTab(e)
-            history.push('/opportunities/' + e)
           }}
           items={[
             {

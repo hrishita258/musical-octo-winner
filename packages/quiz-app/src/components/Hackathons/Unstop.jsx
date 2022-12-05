@@ -39,8 +39,6 @@ const Unstop = () => {
       })
   }, [])
 
-  console.log(opportunities)
-
   const filters = [
     { name: 'All' },
     { name: 'Competitions' },
