@@ -9,6 +9,7 @@ import PageLayout from '../components/PageLayout'
 const Hackathons = () => {
   const [page, setPage] = useState(() => 1)
   const [devpostHackathons, setDevpostHackathons] = useState(() => [])
+  const [activeTab, setActiveTab] = useState(() => 'devpost')
   const [loading, setLoading] = useState(() => true)
 
   const BREADCRUMBS = [
@@ -25,7 +26,6 @@ const Hackathons = () => {
   ]
 
   useEffect(() => {
-    document.title = 'Hackathons'
     getRequest('opportunity/hackathons/devpost?page=' + page).then(res => {
       const { result } = res.data
       if (res.status === 200)
@@ -38,6 +38,11 @@ const Hackathons = () => {
         }
     })
   }, [page])
+
+  useEffect(() => {
+    document.title = activeTab
+  }, [activeTab])
+
   return (
     <PageLayout breadcrumbs={BREADCRUMBS} loading={loading} noStyle>
       <div
@@ -56,9 +61,12 @@ const Hackathons = () => {
       </div>
       <div style={{ margin: '0px 2rem' }}>
         <Tabs
-          defaultActiveKey="1"
+          defaultActiveKey="devpost"
           size="large"
-          onChange={e => console.log(e)}
+          onChange={e => {
+            setActiveTab(e)
+            history.push('/opportunities/' + e)
+          }}
           items={[
             {
               label: 'Devpost',
