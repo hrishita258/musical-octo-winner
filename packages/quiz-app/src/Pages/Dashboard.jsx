@@ -225,33 +225,39 @@ const Dashboard = () => {
                   src={fo?.banner_mobile?.image_url}
                   alt="something is coming here"
                 />
-                <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '0',
-                    padding: '60px 12px 10px',
-                    background: 'linear-gradient(to top,#000000,rgba(0,0,0,0))',
-                    left: '0',
-                    width: '100%',
-                    borderRadius: '12px',
-                    color: '#fff',
-                    fontSize: '15px',
-                    fontWeight: 600
-                  }}
+                <a
+                  href={'https://unstop.com/' + fo.public_url}
+                  target="__blank"
                 >
                   <div
                     style={{
-                      WebkitLineClamp: 2,
-                      display: '-webkit-box',
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                      marginBottom: '0px'
+                      position: 'absolute',
+                      bottom: '0',
+                      padding: '60px 12px 10px',
+                      background:
+                        'linear-gradient(to top,#000000,rgba(0,0,0,0))',
+                      left: '0',
+                      width: '100%',
+                      borderRadius: '12px',
+                      color: '#fff',
+                      fontSize: '15px',
+                      fontWeight: 600
                     }}
                   >
-                    {fo.title}
+                    <div
+                      style={{
+                        WebkitLineClamp: 2,
+                        display: '-webkit-box',
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        marginBottom: '0px'
+                      }}
+                    >
+                      {fo.title}
+                    </div>
+                    <p style={{ margin: 0 }}>{fo?.organisation?.name}</p>
                   </div>
-                  <p style={{ margin: 0 }}>{fo?.organisation?.name}</p>
-                </div>
+                </a>
               </div>
               <div
                 style={{
