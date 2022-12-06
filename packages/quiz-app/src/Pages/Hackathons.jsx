@@ -26,17 +26,19 @@ const Hackathons = () => {
   ]
 
   useEffect(() => {
-    getRequest('opportunity/hackathons/devpost?page=' + page).then(res => {
-      const { result } = res.data
-      if (res.status === 200)
-        if (res.data.status === 200) {
-          setDevpostHackathons([
-            ...devpostHackathons,
-            ...JSON.parse(result)?.hackathons
-          ])
-          setLoading(false)
-        }
-    })
+    getRequest('opportunity/hackathons/devpost?page_number=' + page).then(
+      res => {
+        const { result } = res.data
+        if (res.status === 200)
+          if (res.data.status === 200) {
+            setDevpostHackathons([
+              ...devpostHackathons,
+              ...JSON.parse(result)?.hackathons
+            ])
+            setLoading(false)
+          }
+      }
+    )
   }, [page])
 
   useEffect(() => {

@@ -5,11 +5,11 @@ const router = express.Router()
 
 router.get('/hackathons/devpost', async (req, res) => {
   try {
-    const pageN = req.query.page || 1
+    const { page_number } = req.query
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
 
-    await page.goto('https://devpost.com/api/hackathons?page=' + pageN)
+    await page.goto('https://devpost.com/api/hackathons?page=' + page_number)
 
     await page.waitForSelector('pre')
     let element = await page.$('pre')
@@ -68,15 +68,18 @@ router.get('/hackathons/devfolio', async (req, res) => {
 
 router.get('/hackathons/unstop', async (req, res) => {
   try {
+    const { page_number } = req.query
+    console.log(page_number)
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
     await page.goto(
-      'https://unstop.com/api/public/opportunity/search-new?opportunity=all&sort=&dir=&filters=Open,,All,All&types=oppstatus,teamsize,payment,eligible&atype=explore&page=1&showOlderResultForSearch=true'
+      `https://unstop.com/api/public/opportunity/search-new?opportunity=all&sort=&dir=&filters=Open,,All,All&types=oppstatus,teamsize,payment,eligible&atype=explore&page=${page_number}`
     )
     await page.waitForSelector('pre')
     let element = await page.$('pre')
     let value = await page.evaluate(el => el.textContent, element)
     await browser.close()
+    console.log(value)
     if (value)
       return res.status(200).json({ result: value, msg: 'done', status: 200 })
   } catch (error) {

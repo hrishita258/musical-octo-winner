@@ -12,22 +12,14 @@ import {
 import React, { useEffect, useState } from 'react'
 import { AiOutlineEye, AiOutlineUsergroupAdd } from 'react-icons/ai'
 import { BiTimeFive } from 'react-icons/bi'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link } from 'react-router-dom'
 import { getRequest } from '../../axios/axiosMethods'
 
 const Unstop = () => {
   const [opportunities, setOpportunities] = useState([])
   const [featured, setFeatured] = useState()
-  useEffect(() => {
-    document.title = 'Unstop'
-    getRequest('opportunity/hackathons/unstop')
-      .then(res => {
-        setOpportunities(JSON.parse(res.data.result))
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }, [])
+  const [page, setPage] = useState(1)
 
   useEffect(() => {
     getRequest('opportunity/hackathons/unstop/featured')
@@ -38,6 +30,26 @@ const Unstop = () => {
         console.log(err)
       })
   }, [])
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  const fetchData = () => {
+    getRequest('opportunity/hackathons/unstop?page_number=' + page)
+      .then(res => {
+        setOpportunities([
+          ...opportunities,
+          ...JSON.parse(res.data.result)?.data?.data
+        ])
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    setPage(page + 1)
+  }
+
+  const refresh = setItems => {}
 
   const filters = [
     { name: 'All' },
@@ -54,6 +66,8 @@ const Unstop = () => {
     { name: 'College Festivals' },
     { name: 'Articals' }
   ]
+
+  console.log(opportunities.length)
 
   return (
     <div
@@ -119,119 +133,148 @@ const Unstop = () => {
           </Card>
         </Col>
         <Col span={12}>
-          {opportunities?.data?.data?.map(opportunity => (
-            <Link
-              to={`/opportunities/unstop/${opportunity.id}`}
-              key={opportunity.id}
-            >
-              <Badge.Ribbon
-                text="Paid"
+          <InfiniteScroll
+            dataLength={opportunities?.length} //This is important field to render the next data
+            next={() => {
+              fetchData()
+            }}
+            hasMore={true}
+            loader={<h4>Loading...</h4>}
+            endMessage={
+              <p style={{ textAlign: 'center' }}>
+                <b>Yay! You have seen it all</b>
+              </p>
+            }
+            // below props only if you need pull down functionality
+            refreshFunction={refresh}
+            pullDownToRefresh
+            pullDownToRefreshThreshold={50}
+            pullDownToRefreshContent={
+              <h3 style={{ textAlign: 'center' }}>
+                &# 8595; Pull down to refresh
+              </h3>
+            }
+            releaseToRefreshContent={
+              <h3 style={{ textAlign: 'center' }}>
+                &# 8593; Release to refresh
+              </h3>
+            }
+          >
+            {opportunities?.map(opportunity => (
+              <Link
+                to={`/opportunities/unstop/${opportunity.id}`}
                 key={opportunity.id}
-                style={{ display: opportunity.isPaid ? '' : 'none' }}
               >
-                <Card
-                  hoverable
+                <Badge.Ribbon
+                  text="Paid"
                   key={opportunity.id}
-                  bodyStyle={{ padding: 5 }}
-                  style={{ borderRadius: '16px' }}
+                  style={{ display: opportunity.isPaid ? '' : 'none' }}
                 >
-                  <div
-                    style={{ display: 'flex', gap: 15, alignItems: 'center' }}
+                  <Card
+                    hoverable
+                    key={opportunity.id}
+                    bodyStyle={{ padding: 5 }}
+                    style={{ borderRadius: '16px' }}
                   >
-                    <div style={{ padding: 7 }}>
-                      <Image
-                        style={{ borderRadius: '16px' }}
-                        src={opportunity.banner_mobile.image_url}
-                        preview={false}
-                        width={280}
-                        height={160}
-                      />
-                    </div>
                     <div
-                      style={{
-                        display: 'flex',
-                        alignContent: 'space-between',
-                        flexDirection: 'column',
-                        width: '100%',
-                        paddingRight: 10
-                      }}
+                      style={{ display: 'flex', gap: 15, alignItems: 'center' }}
                     >
-                      <div>
-                        <h3>{opportunity.title}</h3>
-                        <p>{opportunity.organisation.name}</p>
+                      <div style={{ padding: 7 }}>
+                        <Image
+                          style={{ borderRadius: '16px' }}
+                          src={opportunity.banner_mobile.image_url}
+                          preview={false}
+                          width={280}
+                          height={160}
+                        />
                       </div>
-                      <div>
-                        <div
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            color: '#ea4c89'
-                          }}
-                        >
-                          {opportunity.viewsCount ||
-                          opportunity.registerCount ? (
-                            <span
-                              style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                gap: 7
-                              }}
-                            >
-                              {!opportunity.registerCount ? (
-                                <>
-                                  <AiOutlineEye style={{ fontSize: 20 }} />
-                                  {opportunity.viewsCount + ' Impressions'}
-                                </>
-                              ) : (
-                                <>
-                                  <AiOutlineUsergroupAdd
-                                    style={{ fontSize: 20 }}
-                                  />
-                                  {opportunity.registerCount + ' Registrations'}
-                                </>
-                              )}
-                            </span>
-                          ) : null}
-                          {opportunity.regnRequirements.remain_days ? (
-                            <span
-                              style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                gap: 7
-                              }}
-                            >
-                              <BiTimeFive style={{ fontSize: 20 }} />
-                              {opportunity.regnRequirements.remain_days}
-                            </span>
-                          ) : null}
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignContent: 'space-between',
+                          flexDirection: 'column',
+                          width: '100%',
+                          paddingRight: 10
+                        }}
+                      >
+                        <div>
+                          <h3>{opportunity.title}</h3>
+                          <p>{opportunity.organisation.name}</p>
                         </div>
-                        <div
-                          style={{
-                            marginTop: 12,
-                            display: 'flex',
-                            rowGap: 7,
-                            flexWrap: 'wrap'
-                          }}
-                        >
-                          <Tag color="red">{opportunity.type}</Tag>
-                          {opportunity.filters
-                            .filter(f => f.type === 'eligible')
-                            .map(tag => (
-                              <Tag key={tag.id} color="blue">
-                                {tag.name}
-                              </Tag>
-                            ))}
+                        <div>
+                          <div
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              color: '#ea4c89'
+                            }}
+                          >
+                            {opportunity.viewsCount ||
+                            opportunity.registerCount ? (
+                              <span
+                                style={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  gap: 7
+                                }}
+                              >
+                                {!opportunity.registerCount ? (
+                                  <>
+                                    <AiOutlineEye style={{ fontSize: 20 }} />
+                                    {opportunity.viewsCount + ' Impressions'}
+                                  </>
+                                ) : (
+                                  <>
+                                    <AiOutlineUsergroupAdd
+                                      style={{ fontSize: 20 }}
+                                    />
+                                    {opportunity.registerCount +
+                                      ' Registrations'}
+                                  </>
+                                )}
+                              </span>
+                            ) : null}
+                            {opportunity.regnRequirements.remain_days ? (
+                              <span
+                                style={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  gap: 7
+                                }}
+                              >
+                                <BiTimeFive style={{ fontSize: 20 }} />
+                                {opportunity.regnRequirements.remain_days}
+                              </span>
+                            ) : null}
+                          </div>
+                          <div
+                            style={{
+                              marginTop: 12,
+                              display: 'flex',
+                              rowGap: 7,
+                              flexWrap: 'wrap'
+                            }}
+                          >
+                            <Tag color="red">{opportunity.type}</Tag>
+                            {opportunity.filters
+                              .filter(f => f.type === 'eligible')
+                              .map(tag => (
+                                <Tag key={tag.id} color="blue">
+                                  {tag.name}
+                                </Tag>
+                              ))}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </Card>
-              </Badge.Ribbon>
-            </Link>
-          ))}
+                  </Card>
+                </Badge.Ribbon>
+              </Link>
+            ))}
+          </InfiniteScroll>
         </Col>
         <Col span={6}>
           <Card
