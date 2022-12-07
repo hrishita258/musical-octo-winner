@@ -18,51 +18,63 @@ const themeColors = [
   },
   {
     name: 'light-blue',
-    color: 'rgb(3, 157, 227)'
+    color: 'rgb(3, 157, 227)',
+    light: '#039de54d'
   },
   {
     name: 'light-blue-dark',
-    color: 'rgb(41, 98, 255)'
+    color: 'rgb(41, 98, 255)',
+    light: '#2962ff4d'
   },
   {
     name: 'blue-dark',
-    color: 'rgb(13, 71, 161)'
+    color: 'rgb(13, 71, 161)',
+    light: '#0d47a14d'
   },
   {
     name: 'cyan-dark',
-    color: 'rgb(0, 96, 100)'
+    color: 'rgb(0, 96, 100)',
+    light: '#0064604d'
   },
   {
     name: 'indigo',
-    color: 'rgb(63, 81, 181)'
+    color: 'rgb(63, 81, 181)',
+    light: '#3f51b54d'
   },
   {
     name: 'indigo-dark',
-    color: 'rgb(26, 35, 126)'
+    color: 'rgb(26, 35, 126)',
+    light: '#1a237e4d'
   },
   {
     name: 'deep-purple',
-    color: 'rgb(103, 58, 183)'
+    color: 'rgb(103, 58, 183)',
+    light: '#673ab74d'
   },
   {
     name: 'purple',
-    color: 'rgb(156, 39, 176)'
+    color: 'rgb(156, 39, 176)',
+    light: '#9c27b04d'
   },
   {
     name: 'purple-dark',
-    color: 'rgb(74, 20, 140)'
+    color: 'rgb(74, 20, 140)',
+    light: '#4a148c4d'
   },
   {
     name: 'deep-purple-dark',
-    color: 'rgb(98, 0, 234)'
+    color: 'rgb(98, 0, 234)',
+    light: '#6200ea4d'
   },
   {
     name: 'amber',
-    color: 'rgb(194, 137, 0)'
+    color: 'rgb(194, 137, 0)',
+    light: '#c289004d'
   },
   {
     name: 'amber-dark',
-    color: 'rgb(235, 0, 0)'
+    color: 'rgb(235, 0, 0)',
+    light: '#eb00004d'
   },
   {
     name: 'orange',
@@ -71,91 +83,113 @@ const themeColors = [
   },
   {
     name: 'dark-orange',
-    color: 'rgb(211, 61, 13)'
+    color: 'rgb(211, 61, 13)',
+    light: '#d33d0d4d'
   },
   {
     name: 'deep-orange',
-    color: 'rgb(214, 53, 0)'
+    color: 'rgb(214, 53, 0)',
+    light: '#d635004d'
   },
   {
     name: 'red',
-    color: 'rgb(214, 53, 0)'
+    color: 'rgb(214, 53, 0)',
+    light: '#d635004d'
   },
   {
     name: 'red-dark',
-    color: 'rgb(183, 28, 28)'
+    color: 'rgb(183, 28, 28)',
+    light: '#b71c1c4d'
   },
   {
     name: 'pink',
-    color: 'rgb(223, 22, 90)'
+    color: 'rgb(223, 22, 90)',
+    light: '#df165a4d'
   },
   {
     name: 'pink-dark',
-    color: 'rgb(136, 14, 79)'
+    color: 'rgb(136, 14, 79)',
+    light: '#880e4f4d'
   },
   {
     name: 'light-green',
-    color: 'rgb(111, 160, 54)'
+    color: 'rgb(111, 160, 54)',
+    light: '#6fa0364d'
   },
   {
     name: 'green',
-    color: 'rgb(56, 132, 59)'
+    color: 'rgb(56, 132, 59)',
+    light: '#38843b4d'
   },
   {
     name: 'green-dark',
-    color: 'rgb(27, 94, 32)'
+    color: 'rgb(27, 94, 32)',
+    light: '#1b5e204d'
   },
   {
     name: 'teal',
-    color: 'rgb(0, 133, 118)'
+    color: 'rgb(0, 133, 118)',
+    light: '#0085764d'
   },
   {
     name: 'teal-dark',
-    color: 'rgb(0, 77, 64)'
+    color: 'rgb(0, 77, 64)',
+    light: '#004d404d'
   },
   {
     name: 'blue-grey',
-    color: 'rgb(96, 120, 139)'
+    color: 'rgb(96, 120, 139)',
+    light: '#60788b4d'
   },
   {
     name: 'brown',
-    color: 'rgb(121, 85, 72)'
+    color: 'rgb(121, 85, 72)',
+    light: '#7955484d'
   },
   {
     name: 'black',
-    color: 'rgb(0, 0, 0)'
+    color: 'rgb(0, 0, 0)',
+    light: '#0000004d'
   },
   {
     name: 'color-bg1',
-    color: 'rgb(184, 20, 78)'
+    color: 'rgb(184, 20, 78)',
+    light: '#b8144e4d'
   },
   {
     name: 'color-bg2',
-    color: 'rgb(1, 127, 78)'
+    color: 'rgb(1, 127, 78)',
+    light: '#017f4e4d'
   },
   {
     name: 'color-bg3',
-    color: 'rgb(34, 13, 140)'
+    color: 'rgb(34, 13, 140)',
+    light: '#220d8c4d'
   },
   {
     name: 'color-bg4',
-    color: 'rgb(170, 87, 19)'
+    color: 'rgb(170, 87, 19)',
+    light: '#aa57134d'
   },
   {
     name: 'color-bg5',
-    color: 'rgb(189, 48, 40)'
+    color: 'rgb(189, 48, 40)',
+    light: '#bd30284d'
   },
   {
     name: 'color-bg6',
-    color: 'rgb(22, 120, 191)'
+    color: 'rgb(22, 120, 191)',
+    light: '#1678bf4d'
   },
   {
     name: 'color-bg7',
-    color: 'rgb(13, 147, 142)'
+    color: 'rgb(13, 147, 142)',
+    light: '#0d938e4d'
   },
   {
     name: 'color-bg8',
-    color: 'rgb(50, 57, 167)'
+    color: 'rgb(50, 57, 167)',
+    light: '#3239a74d'
   }
 ]
 
@@ -316,8 +350,17 @@ const UnstopOpportunity = () => {
                       }}
                     >
                       <strong style={{ fontSize: '14px' }}>Team Size</strong>
-                      {opportunity.regnRequirements.min_team_size} -{' '}
-                      {opportunity.regnRequirements.max_team_size} members
+                      {opportunity.regnRequirements.min_team_size &&
+                      opportunity.regnRequirements.max_team_size === 1
+                        ? 'Individual Participation'
+                        : opportunity.regnRequirements.min_team_size ===
+                          opportunity.regnRequirements.max_team_size
+                        ? opportunity.regnRequirements.min_team_size +
+                          ' Members'
+                        : opportunity.regnRequirements.min_team_size +
+                          ' - ' +
+                          opportunity.regnRequirements.max_team_size +
+                          ' members'}
                     </span>
                   </div>
                 </div>
@@ -391,10 +434,12 @@ const UnstopOpportunity = () => {
                   />
                 </div>
                 <div>
-                  <h1 style={{ margin: 0, color: '#1c4980' }}>
+                  <h1 style={{ margin: 0, color: '#1c4980', fontSize: '22px' }}>
                     {opportunity.title}
                   </h1>
-
+                  {opportunity.festival ? (
+                    <h3>{opportunity.festival?.name}</h3>
+                  ) : null}
                   <span
                     style={{
                       fontSize: '16px',
@@ -415,7 +460,9 @@ const UnstopOpportunity = () => {
                     <IoLocationOutline style={{ fontSize: '20px' }} />
                     {'Location'}
                     <span style={{ fontWeight: 400, color: '#1c4980' }}>
-                      {opportunity.address_with_country_logo.address}
+                      {opportunity.region === 'online'
+                        ? 'online'
+                        : opportunity.address_with_country_logo.address}
                     </span>
                   </h3>
                 </div>
@@ -435,120 +482,124 @@ const UnstopOpportunity = () => {
             paddingRight: '40px'
           }}
         >
-          <div
-            style={{
-              padding: '40px'
-            }}
-          >
-            <div style={{ maxWidth: '1280px', margin: '0px auto' }}>
-              <h2
-                style={{
-                  borderLeft: `10px solid ${themeColor.color}`,
-                  color: '#1c4980',
-                  paddingLeft: 30,
-                  fontSize: '20px',
-                  margin: '30px 0px'
-                }}
-              >
-                {opportunity.title + ': Stages and Timeline'}
-              </h2>
-              <div
-                className="unstop-rounds-container"
-                style={{ color: themeColor.color, maxWidth: '1250px' }}
-              >
-                {opportunity.rounds.map(round => (
-                  <div
-                    key={round.id}
-                    style={{ color: themeColor.color }}
-                    className="unstop-round-list"
-                  >
+          {opportunity.rounds.length > 0 ? (
+            <div
+              style={{
+                padding: '40px'
+              }}
+            >
+              <div style={{ maxWidth: '1280px', margin: '0px auto' }}>
+                <h2
+                  style={{
+                    borderLeft: `10px solid ${themeColor.color}`,
+                    color: '#1c4980',
+                    paddingLeft: 30,
+                    fontSize: '20px',
+                    margin: '30px 0px'
+                  }}
+                >
+                  {opportunity.title + ': Stages and Timeline'}
+                </h2>
+                <div
+                  className="unstop-rounds-container"
+                  style={{ color: themeColor.color, maxWidth: '1250px' }}
+                >
+                  {opportunity.rounds.map(round => (
                     <div
-                      style={{
-                        width: '36px',
-                        height: '36px',
-                        border: `5px solid ${themeColor.light}`,
-                        color: themeColor.color,
-                        borderRadius: '50px',
-                        position: 'absolute',
-                        left: '-12px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '16px',
-                        fontWeight: '600',
-                        background: '#fff',
-                        opacity: '.9',
-                        top: '50%',
-                        marginTop: '-18px'
-                      }}
+                      key={round.id}
+                      style={{ color: themeColor.color }}
+                      className="unstop-round-list"
                     >
-                      <BsCircleFill />
-                    </div>
-                    <div
-                      style={{
-                        color: themeColor.color,
-                        padding: '22px 30px',
-                        marginBottom: '20px',
-                        borderRadius: '20px',
-                        transition: '.4s',
-                        position: 'relative',
-                        boxShadow: '0 6px 65px #27497d17',
-                        background: '#fff'
-                      }}
-                    >
-                      <h3 style={{ fontSize: '18px' }}>
-                        {round.details[0].title}
-                      </h3>
                       <div
                         style={{
-                          fontSize: '15px',
-                          lineHeight: '26px',
-                          color: '#1c4980',
-                          margin: '10px 0 0',
-                          wordBreak: 'break-word'
+                          width: '36px',
+                          height: '36px',
+                          border: `5px solid ${themeColor.light}`,
+                          color: themeColor.color,
+                          borderRadius: '50px',
+                          position: 'absolute',
+                          left: '-12px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '16px',
+                          fontWeight: '600',
+                          background: '#fff',
+                          opacity: '.9',
+                          top: '50%',
+                          marginTop: '-18px'
                         }}
-                        dangerouslySetInnerHTML={{
-                          __html: round.details[0].display_text
+                      >
+                        <BsCircleFill />
+                      </div>
+                      <div
+                        style={{
+                          color: themeColor.color,
+                          padding: '22px 30px',
+                          marginBottom: '20px',
+                          borderRadius: '20px',
+                          transition: '.4s',
+                          position: 'relative',
+                          boxShadow: '0 6px 65px #27497d17',
+                          background: '#fff'
                         }}
-                      ></div>
-                      <div style={{ marginTop: 25, display: 'flex', gap: 40 }}>
-                        <span>
-                          <div
-                            style={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                              justifyContent: 'center',
-                              color: '#1c4980'
-                            }}
-                          >
-                            <strong>Start Date</strong>
-                            {moment(round.details[0].start_date).format(
-                              'MMMM Do YYYY, h:mm a'
-                            )}
-                          </div>
-                        </span>
-                        <span>
-                          <div
-                            style={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                              justifyContent: 'center',
-                              color: '#1c4980'
-                            }}
-                          >
-                            <strong>End Date</strong>
-                            {moment(round.details[0].end_date).format(
-                              'MMMM Do YYYY, h:mm a'
-                            )}
-                          </div>
-                        </span>
+                      >
+                        <h3 style={{ fontSize: '18px' }}>
+                          {round.details[0].title}
+                        </h3>
+                        <div
+                          style={{
+                            fontSize: '15px',
+                            lineHeight: '26px',
+                            color: '#1c4980',
+                            margin: '10px 0 0',
+                            wordBreak: 'break-word'
+                          }}
+                          dangerouslySetInnerHTML={{
+                            __html: round.details[0].display_text
+                          }}
+                        ></div>
+                        <div
+                          style={{ marginTop: 25, display: 'flex', gap: 40 }}
+                        >
+                          <span>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                color: '#1c4980'
+                              }}
+                            >
+                              <strong>Start Date</strong>
+                              {moment(round.details[0].start_date).format(
+                                'MMMM Do YYYY, h:mm a'
+                              )}
+                            </div>
+                          </span>
+                          <span>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                color: '#1c4980'
+                              }}
+                            >
+                              <strong>End Date</strong>
+                              {moment(round.details[0].end_date).format(
+                                'MMMM Do YYYY, h:mm a'
+                              )}
+                            </div>
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          ) : null}
           <div
             style={{
               padding: '40px',
@@ -668,71 +719,76 @@ const UnstopOpportunity = () => {
                     Contact the organisers
                   </h2>
                 </Col>
-                <Col span={12}>
-                  <h2
-                    style={{
-                      borderLeft: `10px solid ${themeColor.color}`,
-                      color: '#1c4980',
-                      paddingLeft: 30,
-                      fontSize: '20px',
-                      margin: '30px 0px'
-                    }}
-                  >
-                    Download attachments
-                  </h2>
-                  <ul
-                    style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      margin: '-15px -40px'
-                    }}
-                  >
-                    {opportunity.attachment.map(res => (
-                      <li
-                        key={res.id}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          margin: '5px',
-                          width: 'calc(50% - 10px)',
-                          gap: 10,
-                          padding: '10px 20px',
-                          border: '1px solid #ebebeb'
-                        }}
-                      >
-                        <div
+                {opportunity.attachment.length > 0 ? (
+                  <Col span={12}>
+                    <h2
+                      style={{
+                        borderLeft: `10px solid ${themeColor.color}`,
+                        color: '#1c4980',
+                        paddingLeft: 30,
+                        fontSize: '20px',
+                        margin: '30px 0px'
+                      }}
+                    >
+                      Download attachments
+                    </h2>
+                    <ul
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        margin: '-15px -40px'
+                      }}
+                    >
+                      {opportunity.attachment.map(res => (
+                        <li
+                          key={res.id}
                           style={{
                             display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            margin: '5px',
+                            width: 'calc(50% - 10px)',
                             gap: 10,
-                            alignItems: 'center'
+                            padding: '10px 20px',
+                            border: '1px solid #ebebeb'
                           }}
                         >
                           <div
                             style={{
-                              height: '32px',
-                              width: '32px',
-                              background: themeColor.light,
-                              boxShadow: '0 1px 4px #54545426',
-                              borderRadius: '4px',
                               display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              color: themeColor.color,
-                              fontSize: '20px'
+                              gap: 10,
+                              alignItems: 'center'
                             }}
                           >
-                            <AiOutlineFileImage />
+                            <div
+                              style={{
+                                height: '32px',
+                                width: '32px',
+                                background: themeColor.light,
+                                boxShadow: '0 1px 4px #54545426',
+                                borderRadius: '4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: themeColor.color,
+                                fontSize: '20px'
+                              }}
+                            >
+                              <AiOutlineFileImage />
+                            </div>
+                            <span>{res.title}</span>
                           </div>
-                          <span>{res.title}</span>
-                        </div>
-                        <ImDownload3
-                          style={{ fontSize: '20px', color: themeColor.color }}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </Col>
+                          <ImDownload3
+                            style={{
+                              fontSize: '20px',
+                              color: themeColor.color
+                            }}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </Col>
+                ) : null}
               </Row>
             </div>
           </div>
@@ -854,8 +910,7 @@ const UnstopOpportunity = () => {
                             height: 'auto',
                             position: 'absolute',
                             right: '10px',
-                            bottom: '10px',
-                            display: 'block'
+                            bottom: '10px'
                           }}
                           alt="logo"
                           src={
