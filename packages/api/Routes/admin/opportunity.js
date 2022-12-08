@@ -244,4 +244,56 @@ router.get('/home/posts/topWriters', async (req, res) => {
   }
 })
 
+router.get('/hackerearth/challenges', async (req, res) => {
+  try {
+    console.log('called')
+    const browser = await puppeteer.launch({ headless: true })
+    const page = await browser.newPage()
+    await page.goto('https://www.hackerearth.com/challenges/')
+    await page.waitForSelector('#challenge-container')
+    const scrapedData = await page.evaluate(() =>
+      Array.from(document.getElementsByClassName('challenge-card-modern'))
+        .map(card => ({
+          imageUrl:
+            card.getElementsByClassName('event-image')[0] &&
+            card.getElementsByClassName('event-image')[0]?.style
+              ? card.getElementsByClassName('event-image')[0]?.style
+                  ?.backgroundImage
+              : card.getElementsByClassName('company-logo')[0]?.src,
+          title: card.getElementsByClassName('challenge-list-title')[0]
+            ?.innerText,
+          type: card.getElementsByClassName('challenge-type')[0]?.innerText,
+          status:
+            card.getElementsByClassName('challenge-button')[0]?.innerText ===
+            'START NOW'
+              ? 'On-going'
+              : 'upcoming',
+          date: card.getElementsByClassName('countdown')[0]
+            ? card.getElementsByClassName('countdown')[0]?.children[1]
+                ?.innerText
+            : card.getElementsByClassName('date')[0]?.innerText,
+          url: card.children[0]?.href
+        }))
+        .filter(card => card.title)
+    )
+    console.log({ scrapedData })
+    res.json({
+      result: scrapedData.map(sd => {
+        return {
+          ...sd,
+          date: sd.date.includes(':\nDAYS')
+            ? parseInt(sd.date.replaceAll(':\nDAYS').replaceAll(' ', ''))
+            : sd.date,
+          imageUrl: sd.imageUrl.replace('url(', '').replace(')', '')
+        }
+      }),
+      msg: 'done',
+      status: 200
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ result: null, msg: 'error', status: 500 })
+  }
+})
+
 export default router
