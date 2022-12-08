@@ -27,7 +27,6 @@ const Dashboard = () => {
   useEffect(() => {
     getRequest('opportunity/home/posts?per_page=16')
       .then(s => {
-        console.log(s)
         setPostsData(JSON.parse(s.data.result)[0].data.tagFeed?.items)
         setPostsDataLoading(false)
       })
@@ -37,7 +36,6 @@ const Dashboard = () => {
   useEffect(() => {
     getRequest('opportunity/home/banners')
       .then(s => {
-        console.log(s)
         setHomepageBanner(JSON.parse(s.data.result).data)
         setHomepageBannerLoading(false)
       })
@@ -47,14 +45,17 @@ const Dashboard = () => {
   useEffect(() => {
     getRequest('opportunity/hackathons/unstop/featured')
       .then(s => {
-        console.log(s)
         setFeaturedOpportunities(JSON.parse(s.data.result).data)
         setFeaturedOpportunitiesLoading(false)
       })
       .catch(e => console.log(e))
   }, [])
 
-  console.log(featuredOpportunities)
+  useEffect(() => {
+    getRequest('opportunity/hackerearth/challenges').then(s => {
+      console.log(s?.data?.result)
+    })
+  }, [])
 
   return (
     <PageLayout

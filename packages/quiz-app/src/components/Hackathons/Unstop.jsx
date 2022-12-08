@@ -132,7 +132,7 @@ const Unstop = () => {
             </div>
           </Card>
         </Col>
-        <Col span={12}>
+        <Col span={12} style={{ margin: 0, padding: 0 }}>
           <InfiniteScroll
             dataLength={opportunities?.length} //This is important field to render the next data
             next={() => {
@@ -159,6 +159,7 @@ const Unstop = () => {
                 &# 8593; Release to refresh
               </h3>
             }
+            style={{ padding: 7 }}
           >
             {opportunities?.map(opportunity => (
               <Link
