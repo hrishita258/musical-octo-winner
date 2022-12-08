@@ -246,7 +246,6 @@ router.get('/home/posts/topWriters', async (req, res) => {
 
 router.get('/hackerearth/challenges', async (req, res) => {
   try {
-    console.log('called')
     const browser = await puppeteer.launch({ headless: true })
     const page = await browser.newPage()
     await page.goto('https://www.hackerearth.com/challenges/')
@@ -286,6 +285,47 @@ router.get('/hackerearth/challenges', async (req, res) => {
           imageUrl: sd.imageUrl.replace('url(', '').replace(')', '')
         }
       }),
+      msg: 'done',
+      status: 200
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ result: null, msg: 'error', status: 500 })
+  }
+})
+
+router.get('/mlh/challenges', async (req, res) => {
+  try {
+    const currentYear = new Date().getFullYear()
+    console.log(currentYear + 1)
+    const browser = await puppeteer.launch({ headless: true })
+    const page = await browser.newPage()
+    await page.goto(`https://mlh.io/seasons/${currentYear + 1}/events`)
+    await page.waitForSelector('.feature')
+    const scrapedData = await page.evaluate(() =>
+      Array.from(
+        document
+          .getElementsByClassName('feature')[2]
+          .children[0].getElementsByClassName('event')
+      ).map(card => ({
+        imageUrl: card.getElementsByTagName('img')[0].src,
+        title: card.getElementsByClassName('event-name')[0]?.innerText,
+        url: card.getElementsByTagName('a')[0].href,
+        logoUrl: card.getElementsByTagName('img')[1].src,
+        date: card.getElementsByClassName('event-date')[0]?.innerText,
+        location: {
+          city: card.getElementsByClassName('event-location')[0].children[0]
+            ?.innerText,
+          state:
+            card.getElementsByClassName('event-location')[0].children[1]
+              ?.innerText
+        },
+        type: card.getElementsByClassName('event-hybrid-notes')[0]?.innerText
+      }))
+    )
+    console.log(JSON.stringify(scrapedData))
+    res.json({
+      result: scrapedData,
       msg: 'done',
       status: 200
     })

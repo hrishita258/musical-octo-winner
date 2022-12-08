@@ -52,7 +52,7 @@ const Dashboard = () => {
   }, [])
 
   useEffect(() => {
-    getRequest('opportunity/hackerearth/challenges').then(s => {
+    getRequest('opportunity/mlh/challenges').then(s => {
       console.log(s?.data?.result)
     })
   }, [])
