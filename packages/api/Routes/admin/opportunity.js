@@ -276,7 +276,6 @@ router.get('/hackerearth/challenges', async (req, res) => {
         }))
         .filter(card => card.title)
     )
-    console.log({ scrapedData })
     res.json({
       result: scrapedData.map(sd => {
         return {
