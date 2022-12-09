@@ -132,12 +132,13 @@ const Unstop = () => {
             </div>
           </Card>
         </Col>
-        <Col span={12}>
+        <Col span={12} style={{ padding: 0, margin: 0 }}>
           <InfiniteScroll
             dataLength={opportunities?.length} //This is important field to render the next data
             next={() => {
               fetchData()
             }}
+            style={{ padding: '12px', width: '100%' }}
             hasMore={true}
             loader={<h4>Loading...</h4>}
             endMessage={
