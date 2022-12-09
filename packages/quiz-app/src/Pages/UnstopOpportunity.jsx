@@ -241,6 +241,7 @@ const UnstopOpportunity = () => {
       style={{
         position: 'relative',
         maxWidth: '1600px',
+        width: '100%',
         margin: '0px auto',
         color: themeColor.color,
         backgroundColor: '#FFF'
@@ -474,10 +475,18 @@ const UnstopOpportunity = () => {
       </div>
 
       {/* second */}
-      <div style={{ maxWidth: '1550px', display: 'flex', margin: '0px auto' }}>
+      <div
+        style={{
+          maxWidth: '1550px',
+          display: 'flex',
+          margin: '0px auto',
+          width: '100%'
+        }}
+      >
         <div
           style={{
             maxWidth: '1280px',
+            width: '100%',
             margin: '0px auto',
             paddingRight: '40px'
           }}
@@ -488,7 +497,13 @@ const UnstopOpportunity = () => {
                 padding: '40px'
               }}
             >
-              <div style={{ maxWidth: '1280px', margin: '0px auto' }}>
+              <div
+                style={{
+                  maxWidth: '1280px',
+                  margin: '0px auto',
+                  width: '100%'
+                }}
+              >
                 <h2
                   style={{
                     borderLeft: `10px solid ${themeColor.color}`,
@@ -606,7 +621,9 @@ const UnstopOpportunity = () => {
               background: 'rgba(236,239,243,.2)'
             }}
           >
-            <div style={{ maxWidth: '1280px', margin: '0px auto' }}>
+            <div
+              style={{ maxWidth: '1280px', margin: '0px auto', width: '100%' }}
+            >
               <h2
                 style={{
                   borderLeft: `10px solid ${themeColor.color}`,
@@ -630,7 +647,9 @@ const UnstopOpportunity = () => {
               padding: '40px'
             }}
           >
-            <div style={{ maxWidth: '1280px', margin: '0px auto' }}>
+            <div
+              style={{ maxWidth: '1280px', margin: '0px auto', width: '100%' }}
+            >
               <Row gutter={25}>
                 <Col span={12}>
                   <h2
@@ -706,19 +725,22 @@ const UnstopOpportunity = () => {
                     ))}
                   </ul>
                 </Col>
-                <Col span={12}>
-                  <h2
-                    style={{
-                      borderLeft: `10px solid ${themeColor.color}`,
-                      color: '#1c4980',
-                      paddingLeft: 30,
-                      fontSize: '20px',
-                      margin: '30px 0px'
-                    }}
-                  >
-                    Contact the organisers
-                  </h2>
-                </Col>
+                {opportunity.contacts ? (
+                  <Col span={12}>
+                    <h2
+                      style={{
+                        borderLeft: `10px solid ${themeColor.color}`,
+                        color: '#1c4980',
+                        paddingLeft: 30,
+                        fontSize: '20px',
+                        margin: '30px 0px'
+                      }}
+                    >
+                      Contact the organisers
+                    </h2>
+                  </Col>
+                ) : null}
+
                 {opportunity.attachment.length > 0 ? (
                   <Col span={12}>
                     <h2

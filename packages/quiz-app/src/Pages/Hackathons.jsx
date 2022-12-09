@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { getRequest } from '../axios/axiosMethods'
 import Devfolio from '../components/Hackathons/Devfolio'
 import DevPost from '../components/Hackathons/DevPost'
+import MLH from '../components/Hackathons/MLH'
 import Unstop from '../components/Hackathons/Unstop'
 import PageLayout from '../components/PageLayout'
 
@@ -91,7 +92,7 @@ const Hackathons = () => {
             {
               label: 'Major League Hacking',
               key: 'mlh',
-              children: `Content of Tab Pane 5`
+              children: <MLH />
             }
           ]}
         />

@@ -27,6 +27,7 @@ const Dashboard = () => {
   useEffect(() => {
     getRequest('opportunity/home/posts?per_page=16')
       .then(s => {
+        console.log(JSON.parse(s.data.result))
         setPostsData(JSON.parse(s.data.result)[0].data.tagFeed?.items)
         setPostsDataLoading(false)
       })
@@ -49,12 +50,6 @@ const Dashboard = () => {
         setFeaturedOpportunitiesLoading(false)
       })
       .catch(e => console.log(e))
-  }, [])
-
-  useEffect(() => {
-    getRequest('opportunity/mlh/challenges').then(s => {
-      console.log(s?.data?.result)
-    })
   }, [])
 
   return (

@@ -95,7 +95,6 @@ router.get('/hackathons/unstop', async (req, res) => {
     //   )
     //   console.log(i, 'done')
     // }
-
     // const page = await browser.newPage()
     // await page.goto(
     //   `https://unstop.com/api/public/opportunity/search-new?opportunity=all&sort=&dir=&filters=Open,,All,All&types=oppstatus,teamsize,payment,eligible&atype=explore&page=${page_number}`
@@ -103,13 +102,13 @@ router.get('/hackathons/unstop', async (req, res) => {
     // await page.waitForSelector('pre')
     // let element = await page.$('pre')
     // let value = await page.evaluate(el => el.textContent, element)
-
     // await browser.close()
     // if (value)
     res.status(200).json({
       result: await MeiliSearchClient.index('unstop').search('', {
         filter: `end_date_filter > ${Date.now()}`,
-        limit: 25
+        offset: parseInt(req.query.page_number),
+        limit: 12
       }),
       msg: 'done',
       status: 200
@@ -199,7 +198,7 @@ router.get('/home/posts', async (req, res) => {
         {
           operationName: 'TopicFeedQuery',
           variables: {
-            tagSlug: 'programming',
+            tagSlug: 'technology',
             mode: 'HOT',
             paging: {
               to: '0',
@@ -328,36 +327,36 @@ router.get('/hackerearth/challenges', async (req, res) => {
 
 router.get('/mlh/challenges', async (req, res) => {
   try {
-    const currentYear = new Date().getFullYear()
-    console.log(currentYear + 1)
-    const browser = await puppeteer.launch({ headless: true })
-    const page = await browser.newPage()
-    await page.goto(`https://mlh.io/seasons/${currentYear + 1}/events`)
-    await page.waitForSelector('.feature')
-    const scrapedData = await page.evaluate(() =>
-      Array.from(
-        document
-          .getElementsByClassName('feature')[2]
-          .children[0].getElementsByClassName('event')
-      ).map(card => ({
-        imageUrl: card.getElementsByTagName('img')[0].src,
-        title: card.getElementsByClassName('event-name')[0]?.innerText,
-        url: card.getElementsByTagName('a')[0].href,
-        logoUrl: card.getElementsByTagName('img')[1].src,
-        date: card.getElementsByClassName('event-date')[0]?.innerText,
-        location: {
-          city: card.getElementsByClassName('event-location')[0].children[0]
-            ?.innerText,
-          state:
-            card.getElementsByClassName('event-location')[0].children[1]
-              ?.innerText
-        },
-        type: card.getElementsByClassName('event-hybrid-notes')[0]?.innerText
-      }))
-    )
-    console.log(JSON.stringify(scrapedData))
+    // const currentYear = new Date().getFullYear()
+    // console.log(currentYear + 1)
+    // const browser = await puppeteer.launch({ headless: true })
+    // const page = await browser.newPage()
+    // await page.goto(`https://mlh.io/seasons/${currentYear + 1}/events`)
+    // await page.waitForSelector('.feature')
+    // const scrapedData = await page.evaluate(() =>
+    //   Array.from(
+    //     document
+    //       .getElementsByClassName('feature')[2]
+    //       .children[0].getElementsByClassName('event')
+    //   ).map(card => ({
+    //     imageUrl: card.getElementsByTagName('img')[0].src,
+    //     title: card.getElementsByClassName('event-name')[0]?.innerText,
+    //     url: card.getElementsByTagName('a')[0].href,
+    //     logoUrl: card.getElementsByTagName('img')[1].src,
+    //     date: card.getElementsByClassName('event-date')[0]?.innerText,
+    //     location: {
+    //       city: card.getElementsByClassName('event-location')[0].children[0]
+    //         ?.innerText,
+    //       state:
+    //         card.getElementsByClassName('event-location')[0].children[1]
+    //           ?.innerText
+    //     },
+    //     type: card.getElementsByClassName('event-hybrid-notes')[0]?.innerText
+    //   }))
+    // )
+    // console.log(JSON.stringify(scrapedData))
     res.json({
-      result: scrapedData,
+      result: await MeiliSearchClient.index('mlh').getDocuments(),
       msg: 'done',
       status: 200
     })

@@ -19,7 +19,7 @@ import { getRequest } from '../../axios/axiosMethods'
 const Unstop = () => {
   const [opportunities, setOpportunities] = useState([])
   const [featured, setFeatured] = useState()
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
 
   useEffect(() => {
     getRequest('opportunity/hackathons/unstop/featured')
@@ -38,16 +38,12 @@ const Unstop = () => {
   const fetchData = () => {
     getRequest('opportunity/hackathons/unstop?page_number=' + page)
       .then(res => {
-        console.log(JSON.parse(res.data.result))
-        setOpportunities([
-          ...opportunities,
-          ...JSON.parse(res.data.result)?.data?.data
-        ])
+        setOpportunities([...opportunities, ...res.data.result.hits])
       })
       .catch(err => {
         console.log(err)
       })
-    setPage(page + 1)
+    setPage(page + 12)
   }
 
   const refresh = setItems => {}
@@ -67,8 +63,6 @@ const Unstop = () => {
     { name: 'College Festivals' },
     { name: 'Articals' }
   ]
-
-  console.log(opportunities.length)
 
   return (
     <div
