@@ -1,4 +1,4 @@
-import { Row } from 'antd'
+import { Card, Col, Image, Row } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { getRequest } from '../../axios/axiosMethods'
 
@@ -11,7 +11,7 @@ const HackerEarth = () => {
       .then(res => {
         if (res.status === 200) {
           if (res.data.status === 200) {
-            console.log(res.data.result)
+            setHackathons(res.data.result.results)
           }
         }
       })
@@ -21,8 +21,16 @@ const HackerEarth = () => {
   }, [])
 
   return (
-    <div style={{ margin: '0px auto', maxWidth: '1180px' }}>
-      <Row gutter={25}></Row>
+    <div style={{ margin: '0px auto', maxWidth: '1280px' }}>
+      <Row gutter={25}>
+        {hackathons.map(hackathon => (
+          <Col span={6} key={hackathon?.id}>
+            <Card
+              cover={<Image alt={hackathon?.title} src={hackathon?.imageUrl} />}
+            ></Card>
+          </Col>
+        ))}
+      </Row>
     </div>
   )
 }
