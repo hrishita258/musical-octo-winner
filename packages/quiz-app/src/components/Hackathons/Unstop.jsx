@@ -38,6 +38,7 @@ const Unstop = () => {
   const fetchData = () => {
     getRequest('opportunity/hackathons/unstop?page_number=' + page)
       .then(res => {
+        console.log(JSON.parse(res.data.result))
         setOpportunities([
           ...opportunities,
           ...JSON.parse(res.data.result)?.data?.data

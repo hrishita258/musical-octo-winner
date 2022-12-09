@@ -31,10 +31,7 @@ const Hackathons = () => {
         const { result } = res.data
         if (res.status === 200)
           if (res.data.status === 200) {
-            setDevpostHackathons([
-              ...devpostHackathons,
-              ...JSON.parse(result)?.hackathons
-            ])
+            setDevpostHackathons([...devpostHackathons, ...result.results])
             setLoading(false)
           }
       }

@@ -36,17 +36,17 @@ const DevfolioHackathonDetailsDrawer = ({
             alignItems: 'center',
             flexDirection: 'column',
             padding: '.8rem',
-            background: hackathon?._source?.hackathon_setting?.primary_color
+            background: hackathon?.hackathon_setting?.primary_color
           }}
         >
           <Image
             width={250}
             preview={false}
-            src={hackathon?._source?.hackathon_setting?.logo}
+            src={hackathon?.hackathon_setting?.logo}
             alt="logo"
           />
           <h3 style={{ color: '#FFF', marginTop: 10, fontSize: 20 }}>
-            {hackathon?._source?.tagline}
+            {hackathon?.tagline}
           </h3>
         </div>
         <div style={{ padding: '0px 2rem' }}>
@@ -62,7 +62,7 @@ const DevfolioHackathonDetailsDrawer = ({
                   <div style={{ margin: '0px auto', width: '85%' }}>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <Image
-                        src={hackathon?._source.cover_img}
+                        src={hackathon?.cover_img}
                         preview={false}
                         alt=""
                       />
@@ -75,117 +75,108 @@ const DevfolioHackathonDetailsDrawer = ({
                         lineHeight: '32px'
                       }}
                     >
-                      <ReactMarkdown>{hackathon?._source?.desc}</ReactMarkdown>
+                      <ReactMarkdown>{hackathon?.desc}</ReactMarkdown>
                     </div>
                     <Divider orientation="left" orientationMargin={0}>
                       <h1>Social Links</h1>
                     </Divider>
                     <div style={{ marginBottom: '4rem' }}>
                       <Row gutter={[16, 16]}>
-                        {Object.keys(
-                          hackathon?._source?.hackathon_setting || {}
-                        )?.map(key =>
-                          hackathon?._source?.hackathon_setting[key] !== null &&
-                          [
-                            'facebook',
-                            'twitter',
-                            'instagram',
-                            'linkedin',
-                            'slack',
-                            'discord',
-                            'medium',
-                            'telegram',
-                            'site',
-                            'contact_email'
-                          ].includes(key) ? (
-                            <Col key={key} span={8}>
-                              <Card bodyStyle={{ padding: '10px' }}>
-                                <div
-                                  style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '1rem'
-                                  }}
-                                >
+                        {Object.keys(hackathon?.hackathon_setting || {})?.map(
+                          key =>
+                            hackathon?.hackathon_setting[key] !== null &&
+                            [
+                              'facebook',
+                              'twitter',
+                              'instagram',
+                              'linkedin',
+                              'slack',
+                              'discord',
+                              'medium',
+                              'telegram',
+                              'site',
+                              'contact_email'
+                            ].includes(key) ? (
+                              <Col key={key} span={8}>
+                                <Card bodyStyle={{ padding: '10px' }}>
                                   <div
                                     style={{
                                       display: 'flex',
-                                      justifyContent: 'center',
                                       alignItems: 'center',
-                                      width: '4rem',
-                                      height: '4rem',
-                                      backgroundColor: socialLinks.find(
-                                        sl => sl.name === key
-                                      )?.color,
-                                      color: '#FFF',
-                                      fontSize: '3rem',
-                                      borderRadius: '10%',
-                                      boxShadow:
-                                        'rgb(3 0 92 / 36%) 0px 1px 5px, rgb(3 0 92 / 48%) 0px 6px 16px'
+                                      gap: '1rem'
                                     }}
                                   >
-                                    {
-                                      socialLinks.find(sl => sl.name === key)
-                                        ?.icon
-                                    }
-                                  </div>
-                                  <div>
-                                    <b>
-                                      {key === 'contact_email'
-                                        ? 'Email'
-                                        : key.charAt(0).toUpperCase() +
-                                          key.slice(1)}
-                                    </b>
-                                    <h5>
-                                      {hackathon?._source.name}'s{' '}
-                                      {key === 'contact_email'
-                                        ? 'Email'
-                                        : key.charAt(0).toUpperCase() +
-                                          key.slice(1)}
-                                    </h5>
-                                  </div>
-                                </div>
-                                <div
-                                  style={{
-                                    backgroundColor: 'rgb(240, 244, 255)',
-                                    borderRadius: '16px',
-                                    width: '100%',
-                                    padding: '3px 9px',
-                                    marginTop: 15
-                                  }}
-                                >
-                                  <p
-                                    style={{
-                                      boxSizing: 'border-box',
-                                      margin: '0px',
-                                      color: 'rgb(55, 112, 255)',
-                                      fontWeight: 600,
-                                      display: '-webkit-box',
-                                      WebkitLineClamp: 1,
-                                      WebkitBoxOrient: 'vertical',
-                                      overflowWrap: 'anywhere',
-                                      overflow: 'hidden'
-                                    }}
-                                  >
-                                    <a
-                                      href={
-                                        hackathon?._source.hackathon_setting[
-                                          key
-                                        ]
-                                      }
-                                      target="__blank"
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        width: '4rem',
+                                        height: '4rem',
+                                        backgroundColor: socialLinks.find(
+                                          sl => sl.name === key
+                                        )?.color,
+                                        color: '#FFF',
+                                        fontSize: '3rem',
+                                        borderRadius: '10%',
+                                        boxShadow:
+                                          'rgb(3 0 92 / 36%) 0px 1px 5px, rgb(3 0 92 / 48%) 0px 6px 16px'
+                                      }}
                                     >
                                       {
-                                        hackathon?._source.hackathon_setting[
-                                          key
-                                        ]
+                                        socialLinks.find(sl => sl.name === key)
+                                          ?.icon
                                       }
-                                    </a>
-                                  </p>
-                                </div>
-                              </Card>
-                            </Col>
-                          ) : null
+                                    </div>
+                                    <div>
+                                      <b>
+                                        {key === 'contact_email'
+                                          ? 'Email'
+                                          : key.charAt(0).toUpperCase() +
+                                            key.slice(1)}
+                                      </b>
+                                      <h5>
+                                        {hackathon?.name}'s{' '}
+                                        {key === 'contact_email'
+                                          ? 'Email'
+                                          : key.charAt(0).toUpperCase() +
+                                            key.slice(1)}
+                                      </h5>
+                                    </div>
+                                  </div>
+                                  <div
+                                    style={{
+                                      backgroundColor: 'rgb(240, 244, 255)',
+                                      borderRadius: '16px',
+                                      width: '100%',
+                                      padding: '3px 9px',
+                                      marginTop: 15
+                                    }}
+                                  >
+                                    <p
+                                      style={{
+                                        boxSizing: 'border-box',
+                                        margin: '0px',
+                                        color: 'rgb(55, 112, 255)',
+                                        fontWeight: 600,
+                                        display: '-webkit-box',
+                                        WebkitLineClamp: 1,
+                                        WebkitBoxOrient: 'vertical',
+                                        overflowWrap: 'anywhere',
+                                        overflow: 'hidden'
+                                      }}
+                                    >
+                                      <a
+                                        href={hackathon?.hackathon_setting[key]}
+                                        target="__blank"
+                                      >
+                                        {hackathon?.hackathon_setting[key]}
+                                      </a>
+                                    </p>
+                                  </div>
+                                </Card>
+                              </Col>
+                            ) : null
                         )}
                       </Row>
                     </div>
@@ -196,7 +187,7 @@ const DevfolioHackathonDetailsDrawer = ({
                       defaultActiveKey={['1']}
                       style={{ marginBottom: '4rem', width: '100%' }}
                     >
-                      {hackathon?._source?.hackathon_faqs?.map((faq, index) => (
+                      {hackathon?.hackathon_faqs?.map((faq, index) => (
                         <Collapse.Panel
                           header={
                             <h3
@@ -223,12 +214,12 @@ const DevfolioHackathonDetailsDrawer = ({
                         </Collapse.Panel>
                       ))}
                     </Collapse>
-                    {hackathon?._source?.sponsor_tiers.length ? (
+                    {hackathon?.sponsor_tiers.length ? (
                       <>
                         <Divider orientation="left" orientationMargin={0}>
                           <h1>Sponsors</h1>
                         </Divider>
-                        {hackathon?._source?.sponsor_tiers?.map(tier =>
+                        {hackathon?.sponsor_tiers?.map(tier =>
                           tier?.sponsors.length ? (
                             <Card key={tier.uuid}>
                               <h2>{tier?.name}</h2>
@@ -263,9 +254,9 @@ const DevfolioHackathonDetailsDrawer = ({
               {
                 label: `Prizzes`,
                 key: '2',
-                children: hackathon?._source?.prizes?.length ? (
+                children: hackathon?.prizes?.length ? (
                   <Row gutter={[20, 25]}>
-                    {hackathon?._source?.prizes?.map(prize => (
+                    {hackathon?.prizes?.map(prize => (
                       <Col span={12} key={prize.uuid}>
                         <h2>{prize.name}</h2>
                         <Card>
@@ -301,9 +292,9 @@ const DevfolioHackathonDetailsDrawer = ({
               {
                 label: `Speaker and Judges`,
                 key: '3',
-                children: hackathon?._source?.judges?.length ? (
+                children: hackathon?.judges?.length ? (
                   <Row gutter={16}>
-                    {hackathon?._source?.judges?.map(judge => (
+                    {hackathon?.judges?.map(judge => (
                       <Col span={6} key={judge.uuid}>
                         <Card
                           hoverable
@@ -339,9 +330,7 @@ const DevfolioHackathonDetailsDrawer = ({
                               overflowWrap: 'anywhere',
                               overflow: 'hidden',
                               marginTop: 7,
-                              color:
-                                hackathon?._source?.hackathon_setting
-                                  .primary_color
+                              color: hackathon?.hackathon_setting.primary_color
                             }}
                           >
                             {judge.job_title}

@@ -1,22 +1,18 @@
 import express from 'express'
 import puppeteer from 'puppeteer'
-
+import MeiliSearchClient from '../../db/MeiliSearch.js'
 const router = express.Router()
 
 router.get('/hackathons/devpost', async (req, res) => {
   try {
     const { page_number } = req.query
-    const browser = await puppeteer.launch()
-    const page = await browser.newPage()
-
-    await page.goto('https://devpost.com/api/hackathons?page=' + page_number)
-
-    await page.waitForSelector('pre')
-    let element = await page.$('pre')
-    let value = await page.evaluate(el => el.textContent, element)
-    await browser.close()
-    if (value)
-      return res.status(200).json({ result: value, msg: 'done', status: 200 })
+    const response = await MeiliSearchClient.index('devpost').getDocuments({
+      limit: 25
+    })
+    if (response)
+      return res
+        .status(200)
+        .json({ result: response, msg: 'done', status: 200 })
   } catch (error) {
     console.log(error)
     res.status(500).json({ result: null, msg: 'error', status: 500 })
@@ -25,41 +21,52 @@ router.get('/hackathons/devpost', async (req, res) => {
 
 router.get('/hackathons/devfolio', async (req, res) => {
   try {
-    const browser = await puppeteer.launch({
-      args: ['--disable-web-security', '--disable-features=IsolateOrigins']
+    // const browser = await puppeteer.launch({
+    //   args: ['--disable-web-security', '--disable-features=IsolateOrigins']
+    // })
+    // const page = await browser.newPage()
+    // await page.evaluate(() => {
+    //   var url = 'https://api.devfolio.co/api/search/hackathons'
+    //   var xhr = new XMLHttpRequest()
+    //   xhr.open('POST', url)
+    //   xhr.setRequestHeader('Accept', 'application/json')
+    //   xhr.setRequestHeader('Content-Type', 'application/json')
+    //   xhr.onreadystatechange = function () {
+    //     if (xhr.readyState === 4) {
+    //       document.body.appendChild(document.createElement('pre'))
+    //       document.getElementsByTagName('pre')[0].innerText = xhr.responseText
+    //     }
+    //   }
+    //   var data = `{
+    //       "from": 0,
+    //       "size": 500
+    //     }`
+    //   xhr.send(data)
+    // })
+    // await page.waitForSelector('pre')
+    // let element = await page.$('pre')
+    // let value = await page.evaluate(el => el.textContent, element)
+    // // console.log(await MeiliSearchClient.index('devfolio').deleteAllDocuments())
+    // await MeiliSearchClient.index('devfolio').addDocuments(
+    //   JSON.parse(value)
+    //     .hits.hits.map(s => s._source)
+    //     .map(s => ({
+    //       ...s,
+    //       end_date: Date.parse(s.ends_at)
+    //     }))
+    // )
+    // await browser.close()
+    // if (value)
+    // console.log(
+    //   await MeiliSearchClient.index('devfolio').updateFilterableAttributes([
+    //     'end_date'
+    //   ])
+    // )
+    const result = await MeiliSearchClient.index('devfolio').search('', {
+      filter: `end_date > ${Date.now()}`,
+      limit: 25
     })
-    const page = await browser.newPage()
-
-    await page.evaluate(() => {
-      var url = 'https://api.devfolio.co/api/search/hackathons'
-      var xhr = new XMLHttpRequest()
-      xhr.open('POST', url)
-
-      xhr.setRequestHeader('Accept', 'application/json')
-      xhr.setRequestHeader('Content-Type', 'application/json')
-
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-          document.body.appendChild(document.createElement('pre'))
-          document.getElementsByTagName('pre')[0].innerText = xhr.responseText
-        }
-      }
-
-      var data = `{
-            "type": "application_open",
-          "from": 0,
-          "size": 20
-        }`
-
-      xhr.send(data)
-    })
-
-    await page.waitForSelector('pre')
-    let element = await page.$('pre')
-    let value = await page.evaluate(el => el.textContent, element)
-    await browser.close()
-    if (value)
-      return res.status(200).json({ result: value, msg: 'done', status: 200 })
+    if (result) res.status(200).json({ result, msg: 'done', status: 200 })
   } catch (error) {
     console.log(error)
     res.status(500).json({ result: null, msg: 'error', status: 500 })
@@ -68,20 +75,45 @@ router.get('/hackathons/devfolio', async (req, res) => {
 
 router.get('/hackathons/unstop', async (req, res) => {
   try {
-    const { page_number } = req.query
-    console.log(page_number)
-    const browser = await puppeteer.launch()
-    const page = await browser.newPage()
-    await page.goto(
-      `https://unstop.com/api/public/opportunity/search-new?opportunity=all&sort=&dir=&filters=Open,,All,All&types=oppstatus,teamsize,payment,eligible&atype=explore&page=${page_number}`
-    )
-    await page.waitForSelector('pre')
-    let element = await page.$('pre')
-    let value = await page.evaluate(el => el.textContent, element)
-    await browser.close()
-    console.log(value)
-    if (value)
-      return res.status(200).json({ result: value, msg: 'done', status: 200 })
+    // const { page_number } = req.query
+    // console.log(page_number)
+    // const browser = await puppeteer.launch()
+    // for (let i = 1; i <= 996; i++) {
+    //   const page = await browser.newPage()
+    //   await page.goto(
+    //     'https://unstop.com/api/public/opportunity/search-new?page=' + i
+    //   )
+    //   await page.waitForSelector('pre')
+    //   let element = await page.$('pre')
+    //   let value = await page.evaluate(el => el.textContent, element)
+    //   await page.close()
+    //   await MeiliSearchClient.index('unstop').addDocuments(
+    //     JSON.parse(value)?.data?.data?.map(s => ({
+    //       ...s,
+    //       end_date_filter: Date.parse(s?.end_date)
+    //     }))
+    //   )
+    //   console.log(i, 'done')
+    // }
+
+    // const page = await browser.newPage()
+    // await page.goto(
+    //   `https://unstop.com/api/public/opportunity/search-new?opportunity=all&sort=&dir=&filters=Open,,All,All&types=oppstatus,teamsize,payment,eligible&atype=explore&page=${page_number}`
+    // )
+    // await page.waitForSelector('pre')
+    // let element = await page.$('pre')
+    // let value = await page.evaluate(el => el.textContent, element)
+
+    // await browser.close()
+    // if (value)
+    res.status(200).json({
+      result: await MeiliSearchClient.index('unstop').search('', {
+        filter: `end_date_filter > ${Date.now()}`,
+        limit: 25
+      }),
+      msg: 'done',
+      status: 200
+    })
   } catch (error) {
     console.log(error)
     res.status(500).json({ result: null, msg: 'error', status: 500 })

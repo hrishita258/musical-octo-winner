@@ -35,7 +35,8 @@ const Devfolio = () => {
       .then(res => {
         if (res.status === 200) {
           if (res.data.status === 200) {
-            setHackathons(JSON.parse(res.data.result))
+            console.log(res.data)
+            setHackathons(res.data.result.hits)
             setLoading(false)
           }
         }
@@ -67,8 +68,8 @@ const Devfolio = () => {
   return (
     <div style={{ margin: '0px 3rem' }} key="devfolio">
       <Row gutter={25}>
-        {hackathons?.hits?.hits?.map(hackathon => (
-          <Col key={hackathon._source.uuid} span={12}>
+        {hackathons?.map(hackathon => (
+          <Col key={hackathon?.uuid} span={12}>
             <Card>
               <div
                 style={{
@@ -80,12 +81,12 @@ const Devfolio = () => {
               >
                 <div>
                   <h3 style={{ fontSize: '20px' }}>
-                    {hackathon._source.devfolio_official ? (
+                    {hackathon?.devfolio_official ? (
                       <CheckCircleTwoTone
                         style={{ fontSize: 20, marginRight: 10 }}
                       />
                     ) : null}
-                    {hackathon._source.name}
+                    {hackathon?.name}
                   </h3>
                   <h4
                     style={{
@@ -96,9 +97,9 @@ const Devfolio = () => {
                       lineHeight: '16px'
                     }}
                   >
-                    {hackathon._source.type.charAt(0).toUpperCase() +
-                      hackathon._source.type.slice(1).toLowerCase()}
-                    {hackathon._source.rating ? (
+                    {hackathon?.type.charAt(0).toUpperCase() +
+                      hackathon?.type.slice(1).toLowerCase()}
+                    {hackathon?.rating ? (
                       <Rate
                         style={{
                           marginLeft: 10
@@ -106,7 +107,7 @@ const Devfolio = () => {
                         size="small"
                         allowHalf
                         disabled
-                        defaultValue={hackathon._source.rating}
+                        defaultValue={hackathon?.rating}
                       />
                     ) : null}
                   </h4>
@@ -121,11 +122,11 @@ const Devfolio = () => {
                       marginTop: 10
                     }}
                   >
-                    {Object.keys(hackathon._source.hackathon_setting).map(key =>
-                      hackathon._source.hackathon_setting[key] !== null &&
+                    {Object.keys(hackathon?.hackathon_setting).map(key =>
+                      hackathon?.hackathon_setting[key] !== null &&
                       ['site', 'instagram', 'twitter'].includes(key) ? (
                         <a
-                          href={hackathon._source.hackathon_setting[key]}
+                          href={hackathon?.hackathon_setting[key]}
                           className="devfolio-social-links"
                           key={key}
                           target="_blank"
@@ -156,8 +157,8 @@ const Devfolio = () => {
                     THEME
                   </p>
 
-                  {hackathon._source.themes.length ? (
-                    hackathon._source.themes?.map(theme => (
+                  {hackathon?.themes.length ? (
+                    hackathon?.themes?.map(theme => (
                       <Tag color="green" key={theme.uuid}>
                         {theme.name}
                       </Tag>
@@ -168,14 +169,12 @@ const Devfolio = () => {
                 </div>
                 <div style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
                   <Avatar.Group>
-                    {hackathon._source.participants_details?.map(
-                      participant => (
-                        <Avatar
-                          key={participant.uuid}
-                          src={participant.profile_image}
-                        />
-                      )
-                    )}
+                    {hackathon?.participants_details?.map(participant => (
+                      <Avatar
+                        key={participant.uuid}
+                        src={participant.profile_image}
+                      />
+                    ))}
                   </Avatar.Group>
                   <span
                     style={{
@@ -185,7 +184,7 @@ const Devfolio = () => {
                       lineHeight: '24px'
                     }}
                   >
-                    + {hackathon._source.participants_count - 3} Participating
+                    + {hackathon?.participants_count - 3} Participating
                   </span>
                 </div>
               </div>
@@ -217,7 +216,7 @@ const Devfolio = () => {
                       }}
                     >
                       {' '}
-                      {hackathon._source.location ? 'ONLINE' : 'OFFLINE'}
+                      {hackathon?.location ? 'ONLINE' : 'OFFLINE'}
                     </p>
                   </div>
                   <div
@@ -239,7 +238,7 @@ const Devfolio = () => {
                       }}
                     >
                       {' '}
-                      {hackathon._source.is_private ? 'PRIVATE' : 'OPEN'}
+                      {hackathon?.is_private ? 'PRIVATE' : 'OPEN'}
                     </p>
                   </div>
                   <div
@@ -260,11 +259,9 @@ const Devfolio = () => {
                         margin: 0
                       }}
                     >
-                      {new Date(hackathon._source.starts_at) >
-                      new Date(Date.now())
+                      {new Date(hackathon?.starts_at) > new Date(Date.now())
                         ? (
-                            'starts ' +
-                            moment(hackathon._source.starts_at).fromNow()
+                            'starts ' + moment(hackathon?.starts_at).fromNow()
                           ).toUpperCase()
                         : 'ONGOING'}
                     </p>
@@ -274,7 +271,7 @@ const Devfolio = () => {
                   type="primary"
                   size="large"
                   onClick={() =>
-                    setSelectedDevFolioHackathonId(hackathon._source.uuid)
+                    setSelectedDevFolioHackathonId(hackathon?.uuid)
                   }
                 >
                   Apply Now
@@ -285,8 +282,8 @@ const Devfolio = () => {
         ))}
       </Row>
       <DevfolioHackathonDetailsDrawer
-        hackathon={hackathons.hits.hits.find(
-          hackathon => hackathon._source.uuid === selectedDevFolioHackathonId
+        hackathon={hackathons?.find(
+          hackathon => hackathon?.uuid === selectedDevFolioHackathonId
         )}
         open={selectedDevFolioHackathonId !== null ? true : false}
         setSelectedDevFolioHackathonId={setSelectedDevFolioHackathonId}
