@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { getRequest } from '../axios/axiosMethods'
 import Devfolio from '../components/Hackathons/Devfolio'
 import DevPost from '../components/Hackathons/DevPost'
+import HackerEarth from '../components/Hackathons/HackerEarth'
+import MLH from '../components/Hackathons/MLH'
 import Unstop from '../components/Hackathons/Unstop'
 import PageLayout from '../components/PageLayout'
 
@@ -31,10 +33,7 @@ const Hackathons = () => {
         const { result } = res.data
         if (res.status === 200)
           if (res.data.status === 200) {
-            setDevpostHackathons([
-              ...devpostHackathons,
-              ...JSON.parse(result)?.hackathons
-            ])
+            setDevpostHackathons([...devpostHackathons, ...result.results])
             setLoading(false)
           }
       }
@@ -89,12 +88,12 @@ const Hackathons = () => {
             {
               label: 'HackerEarth',
               key: 'hackerearth',
-              children: `Content of Tab Pane 4`
+              children: <HackerEarth />
             },
             {
               label: 'Major League Hacking',
               key: 'mlh',
-              children: `Content of Tab Pane 5`
+              children: <MLH />
             }
           ]}
         />

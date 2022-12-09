@@ -4,7 +4,13 @@ import cors from 'cors'
 import { randomBytes } from 'crypto'
 import express from 'express'
 import jwt from 'jsonwebtoken'
+import { MeiliSearch } from 'meilisearch'
 import APIRoutes from './Routes/index.js'
+
+const client = new MeiliSearch({
+  host: 'https://ms-10cf7dd0c824-1050.sgp.meilisearch.io',
+  apiKey: '78dc5f0674d379eba942767e92eca10803d86078'
+})
 
 const app = express()
 
@@ -37,6 +43,11 @@ app.use(authTokenMiddleware(JWT_ACCESS_SECRET))
 app.disable('x-powered-by')
 
 app.use('/api', APIRoutes)
+
+app.get('/mlh', async (req, res) => {
+  const response = await client.index('mlh').getDocuments({ limit: 1000 })
+  res.json({ response })
+})
 
 app.get('/', (req, res) => {
   res.json({ user: req.user })
