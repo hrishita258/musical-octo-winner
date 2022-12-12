@@ -1,4 +1,4 @@
-import { Badge, Carousel, Col, Image, Row } from 'antd'
+import { Avatar, Badge, Carousel, Col, Image, Row } from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineFileImage } from 'react-icons/ai'
@@ -397,7 +397,6 @@ const UnstopOpportunity = () => {
                   </div>
                 </div>
               </div>
-              <div>right</div>
             </div>
             <div
               style={{
@@ -467,6 +466,36 @@ const UnstopOpportunity = () => {
                     </span>
                   </h3>
                 </div>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-around',
+                  width: '300px',
+                  border: `1px solid ${themeColor.light}`,
+                  borderRadius: '10px',
+                  padding: '15px 5px'
+                }}
+              >
+                <div style={{ textAlign: 'center' }}>
+                  <Avatar.Group>
+                    {opportunity?.players?.map((player, index) => (
+                      <Avatar
+                        src={
+                          player?.user?.social_avatar || player?.user?.avatar
+                        }
+                        key={player?.id}
+                      />
+                    ))}
+                  </Avatar.Group>
+                  <div style={{ marginTop: '0.5rem' }}>
+                    <span style={{ fontSize: '20px' }}>
+                      <b> {opportunity?.players_count}</b>
+                    </span>
+                    <p style={{ margin: 0 }}>Registered</p>
+                  </div>
+                </div>
+                <div></div>
               </div>
             </div>
             <div></div>
@@ -650,83 +679,93 @@ const UnstopOpportunity = () => {
             <div
               style={{ maxWidth: '1280px', margin: '0px auto', width: '100%' }}
             >
-              <Row gutter={25}>
-                <Col span={12}>
-                  <h2
-                    style={{
-                      borderLeft: `10px solid ${themeColor.color}`,
-                      color: '#1c4980',
-                      paddingLeft: 30,
-                      fontSize: '20px',
-                      margin: '30px 0px'
-                    }}
+              <Row gutter={30}>
+                {opportunity.datesToshow.length > 0 ? (
+                  <Col
+                    span={opportunity.datesToshow.length > 6 ? 24 : 12}
+                    style={{ marginTop: 25 }}
                   >
-                    What are the important dates & deadlines?
-                  </h2>
-                  <ul
-                    style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      margin: '-15px -43px'
-                    }}
-                  >
-                    {opportunity.datesToshow.map(date => (
-                      <li
-                        key={date.id}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'flex-start',
-                          margin: '15px 5px',
-                          width: 'calc(50% - 10px)',
-                          gap: 10
-                        }}
-                      >
-                        <div
+                    <h2
+                      style={{
+                        borderLeft: `10px solid ${themeColor.color}`,
+                        color: '#1c4980',
+                        paddingLeft: 30,
+                        fontSize: '20px',
+                        margin: '30px 0px'
+                      }}
+                    >
+                      What are the important dates & deadlines?
+                    </h2>
+                    <ul
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        margin: '-15px -43px'
+                      }}
+                    >
+                      {opportunity.datesToshow.map(date => (
+                        <li
+                          key={date.id}
                           style={{
-                            height: '32px',
-                            width: '32px',
-                            background: themeColor.light,
-                            boxShadow: '0 1px 4px #54545426',
-                            borderRadius: '4px',
                             display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: themeColor.color,
-                            fontSize: '20px'
+                            alignItems: 'flex-start',
+                            margin: '15px 5px',
+                            width: `calc(${
+                              opportunity.datesToshow.length > 6
+                                ? '33.33%'
+                                : '50%'
+                            } - 10px)`,
+                            gap: 10
                           }}
                         >
-                          <FaCalendarAlt />
-                        </div>
-                        <div>
-                          <span
+                          <div
                             style={{
+                              height: '32px',
+                              width: '32px',
+                              background: themeColor.light,
+                              boxShadow: '0 1px 4px #54545426',
+                              borderRadius: '4px',
                               display: 'flex',
-                              flexDirection: 'column',
-                              fontSize: '12px',
-                              color: '#27497dd9'
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: themeColor.color,
+                              fontSize: '20px'
                             }}
                           >
-                            <strong
+                            <FaCalendarAlt />
+                          </div>
+                          <div>
+                            <span
                               style={{
-                                fontSize: '13px',
-                                display: 'block',
-                                color: '#1c4980',
-                                fontWeight: 500
+                                display: 'flex',
+                                flexDirection: 'column',
+                                fontSize: '12px',
+                                color: '#27497dd9'
                               }}
                             >
-                              {date.title}
-                            </strong>
-                            {moment(date.important_date).format(
-                              'MMM Do YYYY, h:mm:ss a'
-                            )}
-                          </span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </Col>
+                              <strong
+                                style={{
+                                  fontSize: '13px',
+                                  display: 'block',
+                                  color: '#1c4980',
+                                  fontWeight: 500
+                                }}
+                              >
+                                {date.title}
+                              </strong>
+                              {moment(date.important_date).format(
+                                'MMM Do YYYY, h:mm:ss a'
+                              )}
+                            </span>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </Col>
+                ) : null}
+
                 {opportunity.contacts ? (
-                  <Col span={12}>
+                  <Col span={12} style={{ marginTop: 25 }}>
                     <h2
                       style={{
                         borderLeft: `10px solid ${themeColor.color}`,
@@ -742,7 +781,7 @@ const UnstopOpportunity = () => {
                 ) : null}
 
                 {opportunity.attachment.length > 0 ? (
-                  <Col span={12}>
+                  <Col span={12} style={{ marginTop: 25 }}>
                     <h2
                       style={{
                         borderLeft: `10px solid ${themeColor.color}`,

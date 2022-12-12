@@ -43,7 +43,6 @@ const MLH = () => {
                       style={{
                         position: 'absolute',
                         bottom: '-10px',
-                        left: '0px',
                         width: '70px',
                         height: '70px',
                         backgroundColor: '#FFF',
