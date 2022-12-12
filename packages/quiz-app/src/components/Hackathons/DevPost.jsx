@@ -11,7 +11,7 @@ import React from 'react'
 
 const DevPost = ({ page, hackathons }) => {
   return (
-    <Row gutter={30}>
+    <Row gutter={30} style={{ maxWidth: '1440px', margin: '0px auto' }}>
       <Col span={6}>
         <Card
           style={{
@@ -31,7 +31,8 @@ const DevPost = ({ page, hackathons }) => {
             top: 0,
             padding: '1rem',
             zIndex: 1,
-            boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)'
+            boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)',
+            textAlign: 'center'
           }}
         >
           <Input.Search
@@ -61,7 +62,7 @@ const DevPost = ({ page, hackathons }) => {
             />
           </div>
         </div>
-        <div style={{ maxWidth: '1000px', margin: '0px auto' }}>
+        <div style={{ margin: '0px auto' }}>
           {hackathons.map(hackathon => (
             <a href={hackathon.url} key={hackathon.id} target="__blank">
               <Card

@@ -19,14 +19,44 @@ const HackerEarth = () => {
         console.log(err)
       })
   }, [])
-
+  console.log(hackathons)
   return (
     <div style={{ margin: '0px auto', maxWidth: '1280px' }}>
       <Row gutter={25}>
         {hackathons.map(hackathon => (
           <Col span={6} key={hackathon?.id}>
             <Card
-              cover={<Image alt={hackathon?.title} src={hackathon?.imageUrl} />}
+              cover={
+                <div
+                  style={{
+                    height: '230px',
+                    position: 'relative'
+                  }}
+                >
+                  <div
+                    style={{
+                      height: '100%',
+                      padding: '0.5rem',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      position: 'relative'
+                    }}
+                  >
+                    <Image
+                      preview={false}
+                      alt={hackathon?.title}
+                      src={hackathon?.imageUrl.replaceAll('"', '')}
+                      style={{
+                        borderRadius: '7px',
+                        width: '100%',
+                        height: '100%'
+                      }}
+                    />
+                  </div>
+                  <div></div>
+                </div>
+              }
             ></Card>
           </Col>
         ))}
