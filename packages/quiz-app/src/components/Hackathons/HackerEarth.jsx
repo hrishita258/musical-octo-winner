@@ -19,7 +19,7 @@ const HackerEarth = () => {
         console.log(err)
       })
   }, [])
-
+  console.log(hackathons, 'hacker earth')
   return (
     <div style={{ margin: '0px auto', maxWidth: '1280px' }}>
       <Row gutter={25}>

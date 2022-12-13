@@ -52,6 +52,8 @@ const Dashboard = () => {
       .catch(e => console.log(e))
   }, [])
 
+  console.log(featuredOpportunities)
+
   return (
     <PageLayout
       breadcrumbs={BREADCRUMBS}
@@ -205,7 +207,7 @@ const Dashboard = () => {
           padding: '0px 2rem'
         }}
       >
-        <Carousel arrows slidesToShow={4}>
+        <Carousel arrows slidesToShow={3}>
           {featuredOpportunities?.map(fo => (
             <div key={fo.id}>
               <div
