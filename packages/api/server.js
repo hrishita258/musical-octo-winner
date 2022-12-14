@@ -156,10 +156,25 @@ app.post('/refresh', async (req, res) => {
   }
 })
 
-app.get('/api/admin/activeSessions', async (req, res) => {
+app.post('/api/admin/activeSessions', async (req, res) => {
   try {
-    const result = await prisma.refreshTokens.findMany()
-    res.json({ status: 200, result })
+    const { token } = req.body
+    if (!token)
+      return res.status(400).json({ status: 403, msg: 'token not provided' })
+    const refreshToken = await prisma.refreshTokens.findMany({
+      where: {
+        userId: req.user.id,
+        isActive: true
+      }
+    })
+
+    refreshToken.forEach(rf => {
+      if (rf.token !== token) {
+        rf.token = ''
+      }
+    })
+
+    res.json({ status: 200, result: refreshToken })
   } catch (error) {
     console.log(error)
   }

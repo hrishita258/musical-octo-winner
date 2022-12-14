@@ -447,7 +447,7 @@ const UnstopOpportunity = () => {
                       color: '#1c4980'
                     }}
                   >
-                    {opportunity.organisation.name}
+                    {opportunity?.organisation?.name}
                   </span>
                   <h3
                     style={{
