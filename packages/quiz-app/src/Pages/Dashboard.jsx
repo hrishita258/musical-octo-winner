@@ -64,22 +64,32 @@ const Dashboard = () => {
       }
     >
       <div style={{ margin: '0px 1.5rem 3rem' }}>
-        <Carousel slidesToShow={2} autoplay arrows>
+        <Carousel slidesToShow={1} autoplay>
           {homepageBanner?.map(banner => (
             <div key={banner.id}>
               <a href={'https://unstop.com/' + banner.link} target="__blank">
-                <Image
+                <div
                   style={{
-                    borderRadius: '12px',
-                    boxShadow: '0 0 10px #0080ff40',
-                    background: '#fff',
-                    maxWidth: 'calc(100% - 1rem)',
-                    margin: '2rem 6px'
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
                   }}
-                  preview={false}
-                  src={banner.bannerImage.image_url}
-                  alt="something is coming here"
-                />
+                >
+                  <Image
+                    style={{
+                      borderRadius: '12px',
+                      boxShadow: '0 0 10px #0080ff40',
+                      background: '#fff',
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      margin: '2rem 0px'
+                    }}
+                    preview={false}
+                    src={banner.bannerImage.image_url}
+                    alt="something is coming here"
+                  />
+                </div>
               </a>
             </div>
           ))}
