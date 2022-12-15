@@ -11,7 +11,8 @@ import Quizzes from '../Pages/Quizzes'
 import UnstopOpportunity from '../Pages/UnstopOpportunity'
 import Users from '../Pages/Users'
 
-export const Routes = () => {
+export const Routes = ({ role }) => {
+  console.log('Routes role', role)
   return (
     <HHRoutes>
       <Route path="/" element={<Dashboard />} />

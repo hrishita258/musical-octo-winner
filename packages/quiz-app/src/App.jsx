@@ -50,7 +50,8 @@ const App = () => {
           role,
           email,
           fullname,
-          profileImg: '',
+          profileImg:
+            'https://cdn.dribbble.com/users/286340/screenshots/13372646/media/0cc1299eb6a7d857b80897c054c9eda8.jpg?compress=1&resize=400x300&vertical=top',
           accessToken,
           refreshToken,
           issuedAt,
@@ -75,7 +76,8 @@ const App = () => {
                 isLoggedIn: true,
                 userId,
                 role,
-                profileImg: '',
+                profileImg:
+                  'https://cdn.dribbble.com/users/286340/screenshots/13372646/media/0cc1299eb6a7d857b80897c054c9eda8.jpg?compress=1&resize=400x300&vertical=top',
                 email,
                 fullname,
                 accessToken,

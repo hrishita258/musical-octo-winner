@@ -34,7 +34,8 @@ const Login = () => {
           email,
           fullname,
           accessToken,
-          profileImg: '',
+          profileImg:
+            'https://cdn.dribbble.com/users/286340/screenshots/13372646/media/0cc1299eb6a7d857b80897c054c9eda8.jpg?compress=1&resize=400x300&vertical=top',
           refreshToken,
           issuedAt,
           expiresAt: expiresAt * 1000
@@ -57,8 +58,13 @@ const Login = () => {
     <div>
       <Row className="login-container">
         <Col
-          span={17}
-          style={{ display: 'flex', alignItems: 'center', padding: '4rem' }}
+          span={16}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: '4rem',
+            backgroundColor: '#f8f8f8'
+          }}
         >
           <div
             style={{
@@ -70,16 +76,11 @@ const Login = () => {
               boxSizing: 'border-box'
             }}
           >
-            {
-              <Image
-                src="https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/demo-1/static/media/login-v2.2198399d.svg"
-                preview={false}
-              />
-            }
+            {<Image src="/quizzer.svg" preview={false} />}
           </div>
         </Col>
         <Col
-          span={7}
+          span={8}
           style={{
             padding: '4rem',
             display: 'flex',
@@ -93,7 +94,8 @@ const Login = () => {
               style={{
                 marginBottom: '1rem',
                 color: '#5e5873',
-                fontSize: '1.714rem'
+                fontSize: '1.714rem',
+                fontWeight: 400
               }}
             >
               Welcome to Quizzer 👋
