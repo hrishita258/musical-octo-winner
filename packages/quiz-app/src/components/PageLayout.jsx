@@ -22,7 +22,11 @@ const PageLayout = ({ children, breadcrumbs, loading, noStyle = false }) => {
   const getMenuChildren = data =>
     data.map(item => {
       if (item.show === false) return null
-      if (item.role && !item.role?.includes(appState.role)) return null
+      if (appState.role === 'spoc' && appState.isAdmin) {
+        if (item.role && !item.role?.includes('admin')) return null
+      } else {
+        if (item.role && !item.role?.includes(appState.role)) return null
+      }
       if (item.children)
         return {
           key: item.key,

@@ -55,7 +55,8 @@ const App = () => {
           accessToken,
           refreshToken,
           issuedAt,
-          expiresAt
+          expiresAt,
+          isAdmin: role === 'spoc' ? true : false
         })
         setLoading(false)
       } else {
@@ -83,7 +84,8 @@ const App = () => {
                 accessToken,
                 refreshToken,
                 issuedAt,
-                expiresAt: expiresAt * 1000
+                expiresAt: expiresAt * 1000,
+                isAdmin: role === 'spoc' ? true : false
               }
               setAppState(obj)
               localStorage.setItem('quiz-appState', JSON.stringify(obj))

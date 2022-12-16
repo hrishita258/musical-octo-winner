@@ -10,7 +10,8 @@ export const defaultAppState = {
   accessToken: '',
   refreshToken: '',
   issuedAt: 0,
-  expiresAt: 0
+  expiresAt: 0,
+  isAdmin: false
 }
 
 export const AppStateContext = createContext({

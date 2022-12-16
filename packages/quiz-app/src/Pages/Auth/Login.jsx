@@ -38,7 +38,8 @@ const Login = () => {
             'https://cdn.dribbble.com/users/286340/screenshots/13372646/media/0cc1299eb6a7d857b80897c054c9eda8.jpg?compress=1&resize=400x300&vertical=top',
           refreshToken,
           issuedAt,
-          expiresAt: expiresAt * 1000
+          expiresAt: expiresAt * 1000,
+          isAdmin: role === 'spoc' ? true : false
         }
         setAppState(obj)
         localStorage.setItem('quiz-appState', JSON.stringify(obj))
