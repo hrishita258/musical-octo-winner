@@ -5,6 +5,7 @@ import { AiOutlineFileImage } from 'react-icons/ai'
 import { BiRupee } from 'react-icons/bi'
 import { BsCircleFill } from 'react-icons/bs'
 import { FaCalendarAlt } from 'react-icons/fa'
+import { FiUserCheck } from 'react-icons/fi'
 import { ImDownload3, ImUsers } from 'react-icons/im'
 import { IoLocationOutline } from 'react-icons/io5'
 import { useParams } from 'react-router-dom'
@@ -498,7 +499,80 @@ const UnstopOpportunity = () => {
                 <div></div>
               </div>
             </div>
-            <div></div>
+            <div
+              style={{
+                background: 'rgba(236,239,243,.35)',
+                padding: '9px 18px',
+                borderRadius: '10px',
+                marginTop: '20px'
+              }}
+            >
+              <div
+                style={{
+                  height: '55px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <div
+                  style={{
+                    width: 'calc(100% - 280px)',
+                    display: 'flex',
+                    fontSize: '15px'
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    <strong
+                      style={{
+                        marginRight: '25px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 7,
+                        color: '#1c4980',
+                        fontSize: '13px'
+                      }}
+                    >
+                      <FiUserCheck style={{ fontSize: '16px' }} /> Eligibility:
+                    </strong>
+                    <div
+                      style={{
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                        display: 'flex'
+                      }}
+                    >
+                      {opportunity?.filters
+                        ?.filter(fl => fl.type === 'eligible')
+                        .map((filter, index) => (
+                          <div
+                            key={filter?.id}
+                            style={{
+                              fontSize: '13px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              position: 'relative',
+                              fontWeight: 500,
+                              marginRight: '25px',
+                              color: themeColor?.color,
+                              gap: 5
+                            }}
+                          >
+                            <Badge color={themeColor.light} /> {filter.name}
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
