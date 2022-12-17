@@ -355,3 +355,8 @@ code {
   background-color: cyan !important;
   color: white !important;
 }
+
+.opportunity-tags-first:hover {
+  overflow-x: scroll !important;
+  transition: all 0.5s ease-in-out;
+}

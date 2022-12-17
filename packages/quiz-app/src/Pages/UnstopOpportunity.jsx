@@ -582,7 +582,13 @@ const UnstopOpportunity = () => {
                     </span>
                   </div>
                 </div>
-                <div style={{ display: 'flex' }}>
+                <div
+                  className="opportunity-tags-first"
+                  style={{
+                    display: 'flex',
+                    overflowX: 'hidden'
+                  }}
+                >
                   {opportunity?.filters
                     ?.filter(fl => fl.type !== 'eligible')
                     ?.map(s => (
