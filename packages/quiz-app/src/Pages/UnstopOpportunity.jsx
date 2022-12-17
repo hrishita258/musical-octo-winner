@@ -1,4 +1,4 @@
-import { Avatar, Badge, Carousel, Col, Image, Row } from 'antd'
+import { Avatar, Badge, Carousel, Col, Image, Row, Tag } from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineFileImage } from 'react-icons/ai'
@@ -511,6 +511,95 @@ const UnstopOpportunity = () => {
                 style={{
                   height: '55px',
                   display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  <div
+                    style={{
+                      marginRight: '15px',
+                      paddingRight: '15px',
+                      borderRight: `2px solid ${themeColor?.light}`,
+                      display: 'flex',
+                      flexDirection: 'column'
+                    }}
+                  >
+                    <strong
+                      style={{
+                        fontWeight: 600,
+                        color: themeColor?.color
+                      }}
+                    >
+                      Start Date
+                    </strong>
+                    <span
+                      style={{
+                        marginTop: '5px',
+                        fontWeight: 500,
+                        color: '#27497db3'
+                      }}
+                    >
+                      {moment(opportunity?.start_date).format(
+                        'MMMM Do YYYY, h:mm a'
+                      )}
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      marginRight: '15px',
+                      paddingRight: '15px',
+                      borderRight: `2px solid ${themeColor?.light}`,
+                      display: 'flex',
+                      flexDirection: 'column'
+                    }}
+                  >
+                    <strong
+                      style={{
+                        fontWeight: 600,
+                        color: themeColor?.color
+                      }}
+                    >
+                      End Date
+                    </strong>
+                    <span
+                      style={{
+                        marginTop: '5px',
+                        fontWeight: 500,
+                        color: '#27497db3'
+                      }}
+                    >
+                      {moment(opportunity?.end_date)?.format(
+                        'MMMM Do YYYY, h:mm a'
+                      )}
+                    </span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex' }}>
+                  {opportunity?.filters
+                    ?.filter(fl => fl.type !== 'eligible')
+                    ?.map(s => (
+                      <Tag
+                        color={themeColor?.color}
+                        style={{ fontSize: '14px' }}
+                        key={s.id}
+                      >
+                        {s?.name}
+                      </Tag>
+                    ))}
+                </div>
+              </div>
+              <div
+                style={{
+                  height: '55px',
+                  display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between'
                 }}
@@ -588,7 +677,7 @@ const UnstopOpportunity = () => {
       >
         <div
           style={{
-            maxWidth: '1280px',
+            maxWidth: '1330px',
             width: '100%',
             margin: '0px auto',
             paddingRight: '40px'
@@ -602,7 +691,7 @@ const UnstopOpportunity = () => {
             >
               <div
                 style={{
-                  maxWidth: '1280px',
+                  maxWidth: '1330px',
                   margin: '0px auto',
                   width: '100%'
                 }}
@@ -725,7 +814,7 @@ const UnstopOpportunity = () => {
             }}
           >
             <div
-              style={{ maxWidth: '1280px', margin: '0px auto', width: '100%' }}
+              style={{ maxWidth: '1330px', margin: '0px auto', width: '100%' }}
             >
               <h2
                 style={{
@@ -751,7 +840,7 @@ const UnstopOpportunity = () => {
             }}
           >
             <div
-              style={{ maxWidth: '1280px', margin: '0px auto', width: '100%' }}
+              style={{ maxWidth: '1330px', margin: '0px auto', width: '100%' }}
             >
               <Row gutter={30}>
                 {opportunity.datesToshow.length > 0 ? (
@@ -934,7 +1023,7 @@ const UnstopOpportunity = () => {
             }}
           >
             <div
-              style={{ maxWidth: '1280px', margin: '0px auto', width: '100%' }}
+              style={{ maxWidth: '1330px', margin: '0px auto', width: '100%' }}
             >
               <h2
                 style={{
