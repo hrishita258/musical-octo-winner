@@ -4,6 +4,7 @@ import ActiveSessions from '../Pages/ActiveSessions'
 import Colleges from '../Pages/Colleges'
 import Dashboard from '../Pages/Dashboard'
 import Hackathons from '../Pages/Hackathons'
+import LeaderBoard from '../Pages/LeaderBoard'
 import Quiz from '../Pages/Quiz'
 import QuizPanel from '../Pages/QuizPanel'
 import QuizQuestionEdit from '../Pages/QuizQuestionsEdit'
@@ -34,6 +35,7 @@ export const Routes = ({ role }) => {
         path="/opportunities/unstop/:opportunityId"
         element={<UnstopOpportunity />}
       ></Route>
+      <Route path="/leaderboard" element={<LeaderBoard />}></Route>
     </HHRoutes>
   )
 }
