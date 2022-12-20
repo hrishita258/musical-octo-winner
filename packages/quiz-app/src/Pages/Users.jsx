@@ -18,7 +18,7 @@ import {
   Tag
 } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { FaUsers } from 'react-icons/fa'
+import { FaUserCheck, FaUserGraduate, FaUsers, FaUserTie } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { getRequest, postRequest } from '../axios/axiosMethods'
 import DropOptions from '../components/DropOptions'
@@ -219,13 +219,12 @@ const Users = () => {
               }}
             >
               <div>
-                <h1 style={{ fontSize: '1.5rem', color: '#5e5873', margin: 0 }}>
-                  <b>{usersData.length}</b>
+                <h1 style={{ fontSize: '1.5rem', margin: 0 }}>
+                  <b>{usersData?.length}</b>
                 </h1>
                 <p
                   style={{
                     fontSize: '1rem',
-                    color: '#5e5873',
                     fontWeight: 400
                   }}
                 >
@@ -234,13 +233,17 @@ const Users = () => {
               </div>
               <div>
                 <Avatar
-                  size={50}
+                  size={55}
                   style={{
-                    color: '#f56a00',
-                    backgroundColor: '#fde3cf'
+                    color: '#7367f0',
+                    backgroundColor: 'rgba(115,103,240,.12)',
+                    fontSize: '2rem',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
                   }}
                 >
-                  <FaUsers size={25} />
+                  <FaUsers />
                 </Avatar>
               </div>
             </div>
@@ -258,52 +261,12 @@ const Users = () => {
               }}
             >
               <div>
-                <h1 style={{ fontSize: '1.5rem', color: '#5e5873', margin: 0 }}>
-                  <b>{usersData.length}</b>
+                <h1 style={{ fontSize: '1.5rem', margin: 0 }}>
+                  <b>{usersData?.filter(s => s?.role === 'student')?.length}</b>
                 </h1>
                 <p
                   style={{
                     fontSize: '1rem',
-                    color: '#5e5873',
-                    fontWeight: 400
-                  }}
-                >
-                  Active Users
-                </p>
-              </div>
-              <div>
-                <Avatar
-                  size={50}
-                  style={{
-                    color: '#f56a00',
-                    backgroundColor: '#fde3cf'
-                  }}
-                >
-                  <FaUsers size={25} />
-                </Avatar>
-              </div>
-            </div>
-          </Card>
-        </Col>
-
-        <Col span={5}>
-          <Card bodyStyle={{ padding: '10px 24px' }}>
-            <div
-              style={{
-                display: 'flex',
-                gap: 10,
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}
-            >
-              <div>
-                <h1 style={{ fontSize: '1.5rem', color: '#5e5873', margin: 0 }}>
-                  <b>{usersData.length}</b>
-                </h1>
-                <p
-                  style={{
-                    fontSize: '1rem',
-                    color: '#5e5873',
                     fontWeight: 400
                   }}
                 >
@@ -312,13 +275,17 @@ const Users = () => {
               </div>
               <div>
                 <Avatar
-                  size={50}
+                  size={55}
                   style={{
-                    color: '#f56a00',
-                    backgroundColor: '#fde3cf'
+                    color: '#ff9f43',
+                    backgroundColor: '#rgba(255,159,67,.12)',
+                    fontSize: '2rem',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
                   }}
                 >
-                  <FaUsers size={25} />
+                  <FaUserGraduate />
                 </Avatar>
               </div>
             </div>
@@ -336,13 +303,12 @@ const Users = () => {
               }}
             >
               <div>
-                <h1 style={{ fontSize: '1.5rem', color: '#5e5873', margin: 0 }}>
-                  <b>{usersData.length}</b>
+                <h1 style={{ fontSize: '1.5rem', margin: 0 }}>
+                  <b>{usersData?.filter(s => s?.role === 'faculty')?.length}</b>
                 </h1>
                 <p
                   style={{
                     fontSize: '1rem',
-                    color: '#5e5873',
                     fontWeight: 400
                   }}
                 >
@@ -351,13 +317,58 @@ const Users = () => {
               </div>
               <div>
                 <Avatar
-                  size={50}
+                  size={55}
                   style={{
-                    color: '#f56a00',
-                    backgroundColor: '#fde3cf'
+                    color: '#ea5455',
+                    backgroundColor: 'rgba(234,84,85,.12)',
+                    fontSize: '2rem',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
                   }}
                 >
-                  <FaUsers size={25} />
+                  <FaUserTie />
+                </Avatar>
+              </div>
+            </div>
+          </Card>
+        </Col>
+        <Col span={5}>
+          <Card bodyStyle={{ padding: '10px 24px' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: 10,
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <div>
+                <h1 style={{ fontSize: '1.5rem', margin: 0 }}>
+                  <b>{usersData?.filter(s => s.isActive)?.length}</b>
+                </h1>
+                <p
+                  style={{
+                    fontSize: '1rem',
+                    fontWeight: 400
+                  }}
+                >
+                  Active Users
+                </p>
+              </div>
+              <div>
+                <Avatar
+                  size={55}
+                  style={{
+                    color: '#28c76f',
+                    backgroundColor: 'rgba(40,199,111,.12)',
+                    fontSize: '2rem',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                >
+                  <FaUserCheck />
                 </Avatar>
               </div>
             </div>
