@@ -6,6 +6,7 @@ import {
   Col,
   Drawer,
   Form,
+  Image,
   Input,
   message,
   Popconfirm,
@@ -17,6 +18,7 @@ import {
   Tag
 } from 'antd'
 import React, { useEffect, useState } from 'react'
+import { FaUsers } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { getRequest, postRequest } from '../axios/axiosMethods'
 import DropOptions from '../components/DropOptions'
@@ -205,17 +207,200 @@ const Users = () => {
 
   return (
     <PageLayout breadcrumbs={BREADCRUMBS}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          marginBottom: '16px'
-        }}
-      >
-        <Button type="primary" onClick={() => setOpen(true)}>
-          Add User
-        </Button>
-      </div>
+      <Row gutter={25}>
+        <Col span={5}>
+          <Card bodyStyle={{ padding: '10px 24px' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: 10,
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <div>
+                <h1 style={{ fontSize: '1.5rem', color: '#5e5873', margin: 0 }}>
+                  <b>{usersData.length}</b>
+                </h1>
+                <p
+                  style={{
+                    fontSize: '1rem',
+                    color: '#5e5873',
+                    fontWeight: 400
+                  }}
+                >
+                  Total Users
+                </p>
+              </div>
+              <div>
+                <Avatar
+                  size={50}
+                  style={{
+                    color: '#f56a00',
+                    backgroundColor: '#fde3cf'
+                  }}
+                >
+                  <FaUsers size={25} />
+                </Avatar>
+              </div>
+            </div>
+          </Card>
+        </Col>
+
+        <Col span={5}>
+          <Card bodyStyle={{ padding: '10px 24px' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: 10,
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <div>
+                <h1 style={{ fontSize: '1.5rem', color: '#5e5873', margin: 0 }}>
+                  <b>{usersData.length}</b>
+                </h1>
+                <p
+                  style={{
+                    fontSize: '1rem',
+                    color: '#5e5873',
+                    fontWeight: 400
+                  }}
+                >
+                  Active Users
+                </p>
+              </div>
+              <div>
+                <Avatar
+                  size={50}
+                  style={{
+                    color: '#f56a00',
+                    backgroundColor: '#fde3cf'
+                  }}
+                >
+                  <FaUsers size={25} />
+                </Avatar>
+              </div>
+            </div>
+          </Card>
+        </Col>
+
+        <Col span={5}>
+          <Card bodyStyle={{ padding: '10px 24px' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: 10,
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <div>
+                <h1 style={{ fontSize: '1.5rem', color: '#5e5873', margin: 0 }}>
+                  <b>{usersData.length}</b>
+                </h1>
+                <p
+                  style={{
+                    fontSize: '1rem',
+                    color: '#5e5873',
+                    fontWeight: 400
+                  }}
+                >
+                  Total Students
+                </p>
+              </div>
+              <div>
+                <Avatar
+                  size={50}
+                  style={{
+                    color: '#f56a00',
+                    backgroundColor: '#fde3cf'
+                  }}
+                >
+                  <FaUsers size={25} />
+                </Avatar>
+              </div>
+            </div>
+          </Card>
+        </Col>
+
+        <Col span={5}>
+          <Card bodyStyle={{ padding: '10px 24px' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: 10,
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <div>
+                <h1 style={{ fontSize: '1.5rem', color: '#5e5873', margin: 0 }}>
+                  <b>{usersData.length}</b>
+                </h1>
+                <p
+                  style={{
+                    fontSize: '1rem',
+                    color: '#5e5873',
+                    fontWeight: 400
+                  }}
+                >
+                  Total Faculties
+                </p>
+              </div>
+              <div>
+                <Avatar
+                  size={50}
+                  style={{
+                    color: '#f56a00',
+                    backgroundColor: '#fde3cf'
+                  }}
+                >
+                  <FaUsers size={25} />
+                </Avatar>
+              </div>
+            </div>
+          </Card>
+        </Col>
+        <Col span={4}>
+          <Card bodyStyle={{ padding: 0 }}>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ width: '33.33%' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'flex-end',
+                    marginTop: '1.5rem'
+                  }}
+                >
+                  <Image
+                    width={60}
+                    preview={false}
+                    src="https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/demo-1/assets/faq-illustrations.0a8a9367.svg"
+                  />
+                </div>
+              </div>
+              <div
+                style={{
+                  width: '66.66%',
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  justifyContent: 'space-evenly',
+                  flexDirection: 'column',
+                  alignContent: 'space-between',
+                  paddingRight: '1rem'
+                }}
+              >
+                <Button type="primary" onClick={() => setOpen(true)}>
+                  Add New User
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </Col>
+      </Row>
       <Card>
         <Table
           style={{ fontSize: '12px' }}
