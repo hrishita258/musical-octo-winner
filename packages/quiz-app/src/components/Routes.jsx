@@ -3,6 +3,7 @@ import { Route, Routes as HHRoutes } from 'react-router-dom'
 import ActiveSessions from '../Pages/ActiveSessions'
 import Colleges from '../Pages/Colleges'
 import Dashboard from '../Pages/Dashboard'
+import Explore from '../Pages/Explore'
 import Hackathons from '../Pages/Hackathons'
 import LeaderBoard from '../Pages/LeaderBoard'
 import Quiz from '../Pages/Quiz'
@@ -36,6 +37,7 @@ export const Routes = ({ role }) => {
         element={<UnstopOpportunity />}
       ></Route>
       <Route path="/leaderboard" element={<LeaderBoard />}></Route>
+      <Route path="/explore" element={<Explore />}></Route>
     </HHRoutes>
   )
 }
