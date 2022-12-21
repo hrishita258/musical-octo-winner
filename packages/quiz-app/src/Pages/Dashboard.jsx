@@ -66,6 +66,7 @@ const Dashboard = () => {
               }}
             >
               <Image
+                preview={false}
                 height={100}
                 src="https://d8it4huxumps7.cloudfront.net/uploads/images/62cfb2da5f01e_noto_trophy.svg"
               />
@@ -79,24 +80,13 @@ const Dashboard = () => {
           </div>
         </Card>
         <Card style={{ marginTop: 50 }}>
-          <h1 style={{ fontSize: '1.275rem', color: 'black' }}>
-            Assesment by Specializations
-          </h1>
-          <Row
-            gutter={15}
-            wrap={false}
-            style={{ marginTop: 30, overflowX: 'auto' }}
-          >
+          <h1 style={{ fontSize: '1.275rem' }}>Assesment by Specializations</h1>
+          <Row gutter={15} style={{ marginTop: 30 }}>
             {[1, 2, 3, 4, 5, 6].map((item, index) => (
               <Col key={item} span={4}>
                 <Card
                   style={{
-                    marginBottom: 10,
-                    background:
-                      '#' +
-                      (((1 << 24) * Math.random()) | 0)
-                        .toString(16)
-                        .padStart(6, '0')
+                    marginBottom: 10
                   }}
                 >
                   <div
@@ -111,20 +101,22 @@ const Dashboard = () => {
                         size={60}
                         shape="square"
                         style={{
-                          color: '#f56a00',
-                          backgroundColor: '#fde1ce'
+                          color: '#fff',
+                          backgroundColor:
+                            '#' +
+                            (((1 << 24) * Math.random()) | 0)
+                              .toString(16)
+                              .padStart(6, '0')
                         }}
                       >
-                        {item} C
+                        <b> {item} C</b>
                       </Avatar>
                     </div>
                     <div>
-                      <h1 style={{ fontSize: '1rem', color: '#FFF' }}>
+                      <h1 style={{ fontSize: '1rem' }}>
                         Cloud Computing {item}
                       </h1>
-                      <p style={{ fontSize: '1rem', color: '#FFF', margin: 0 }}>
-                        83%
-                      </p>
+                      <p style={{ fontSize: '1rem', margin: 0 }}>83%</p>
                     </div>
                   </div>
                 </Card>
@@ -133,9 +125,7 @@ const Dashboard = () => {
           </Row>
         </Card>
         <Card style={{ marginTop: 50 }}>
-          <h1 style={{ fontSize: '1.275rem', color: 'black' }}>
-            Continue where you left off
-          </h1>
+          <h1 style={{ fontSize: '1.275rem' }}>Continue where you left off</h1>
         </Card>
       </div>
     </PageLayout>
