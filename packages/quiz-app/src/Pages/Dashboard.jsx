@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Image } from 'antd'
+import { Avatar, Button, Card, Col, Image, Row } from 'antd'
 import React from 'react'
 import PageLayout from '../components/PageLayout'
 
@@ -29,7 +29,8 @@ const Dashboard = () => {
             style={{
               display: 'flex',
               justifyContent: 'space-between',
-              alignItems: 'center'
+              alignItems: 'center',
+              padding: '0px 50px'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -61,7 +62,7 @@ const Dashboard = () => {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 10
+                gap: 15
               }}
             >
               <Image
@@ -69,11 +70,72 @@ const Dashboard = () => {
                 src="https://d8it4huxumps7.cloudfront.net/uploads/images/62cfb2da5f01e_noto_trophy.svg"
               />
               <div>
-                <h1 style={{ fontSize: '1.3rem', color: '#FFF' }}>Points</h1>
+                <h1 style={{ fontSize: '1.3rem', color: '#FFF' }}>
+                  245 Points
+                </h1>
                 <Button type="primary">View Leaderboard</Button>
               </div>
             </div>
           </div>
+        </Card>
+        <Card style={{ marginTop: 50 }}>
+          <h1 style={{ fontSize: '1.275rem', color: 'black' }}>
+            Assesment by Specializations
+          </h1>
+          <Row
+            gutter={15}
+            wrap={false}
+            style={{ marginTop: 30, overflowX: 'auto' }}
+          >
+            {[1, 2, 3, 4, 5, 6].map((item, index) => (
+              <Col key={item} span={4}>
+                <Card
+                  style={{
+                    marginBottom: 10,
+                    background:
+                      '#' +
+                      (((1 << 24) * Math.random()) | 0)
+                        .toString(16)
+                        .padStart(6, '0')
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 15
+                    }}
+                  >
+                    <div style={{}}>
+                      <Avatar
+                        size={60}
+                        shape="square"
+                        style={{
+                          color: '#f56a00',
+                          backgroundColor: '#fde1ce'
+                        }}
+                      >
+                        {item} C
+                      </Avatar>
+                    </div>
+                    <div>
+                      <h1 style={{ fontSize: '1rem', color: '#FFF' }}>
+                        Cloud Computing {item}
+                      </h1>
+                      <p style={{ fontSize: '1rem', color: '#FFF', margin: 0 }}>
+                        83%
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        </Card>
+        <Card style={{ marginTop: 50 }}>
+          <h1 style={{ fontSize: '1.275rem', color: 'black' }}>
+            Continue where you left off
+          </h1>
         </Card>
       </div>
     </PageLayout>
