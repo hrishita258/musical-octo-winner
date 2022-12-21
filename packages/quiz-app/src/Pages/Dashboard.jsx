@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Col, Image, Row } from 'antd'
+import { Avatar, Button, Card, Col, Image, Progress, Row, Tag } from 'antd'
 import React from 'react'
 import PageLayout from '../components/PageLayout'
 
@@ -81,9 +81,13 @@ const Dashboard = () => {
         </Card>
         <Card style={{ marginTop: 50 }}>
           <h1 style={{ fontSize: '1.275rem' }}>Assesment by Specializations</h1>
-          <Row gutter={15} style={{ marginTop: 30 }}>
+          <Row
+            wrap={false}
+            gutter={15}
+            style={{ marginTop: 30, overflowX: 'auto' }}
+          >
             {[1, 2, 3, 4, 5, 6].map((item, index) => (
-              <Col key={item} span={4}>
+              <Col key={item} span={6} xxl={4}>
                 <Card
                   style={{
                     marginBottom: 10
@@ -126,6 +130,53 @@ const Dashboard = () => {
         </Card>
         <Card style={{ marginTop: 50 }}>
           <h1 style={{ fontSize: '1.275rem' }}>Continue where you left off</h1>
+          <Row
+            wrap={false}
+            gutter={15}
+            style={{ marginTop: 30, overflowX: 'auto' }}
+          >
+            {[1, 2, 3, 4, 5, 6].map((item, index) => (
+              <Col key={item} span={6} xxl={4}>
+                <Card
+                  style={{
+                    marginBottom: 10
+                  }}
+                  bodyStyle={{
+                    padding: 10
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 7
+                    }}
+                  >
+                    <Image
+                      preview={false}
+                      style={{ width: '100%', borderRadius: 7 }}
+                      src="https://cdn.pixabay.com/photo/2019/05/22/22/28/brainstorm-4222728__340.jpg"
+                    />
+                  </div>
+                  <div style={{ marginTop: 10 }}>
+                    <Tag color="blue" size="small">
+                      Cloud Computing
+                    </Tag>
+                  </div>
+                  <Card.Meta
+                    title="lets start with the basics"
+                    style={{
+                      fontSize: '1.1rem',
+                      marginTop: 7,
+                      marginBottom: 7
+                    }}
+                  ></Card.Meta>
+                  <Progress percent={50} status="active" />
+                </Card>
+              </Col>
+            ))}
+          </Row>
         </Card>
       </div>
     </PageLayout>
