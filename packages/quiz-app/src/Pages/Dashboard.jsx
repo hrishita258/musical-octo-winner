@@ -1,4 +1,14 @@
-import { Avatar, Button, Card, Col, Image, Progress, Row, Tag } from 'antd'
+import {
+  Avatar,
+  Button,
+  Calendar,
+  Card,
+  Col,
+  Image,
+  Progress,
+  Row,
+  Tag
+} from 'antd'
 import React from 'react'
 import { IoRibbonOutline } from 'react-icons/io5'
 import PageLayout from '../components/PageLayout'
@@ -107,7 +117,7 @@ const Dashboard = () => {
                       <IoRibbonOutline size={40} />
                     </div>
                     <Progress
-                      percent={70}
+                      percent={50}
                       status="active"
                       strokeColor="#d46b08"
                       showInfo={false}
@@ -186,7 +196,9 @@ const Dashboard = () => {
           </Col>
           <Col span={7}>
             <Card></Card>
-            <Card></Card>
+            <Card>
+              <Calendar fullscreen={false} />
+            </Card>
           </Col>
         </Row>
         <Card style={{ marginTop: 50 }}>
