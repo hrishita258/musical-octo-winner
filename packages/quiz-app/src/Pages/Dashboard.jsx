@@ -1,5 +1,6 @@
 import { Avatar, Button, Card, Col, Image, Progress, Row, Tag } from 'antd'
 import React from 'react'
+import { IoRibbonOutline } from 'react-icons/io5'
 import PageLayout from '../components/PageLayout'
 
 const Dashboard = () => {
@@ -79,6 +80,115 @@ const Dashboard = () => {
             </div>
           </div>
         </Card>
+        <Row style={{ marginTop: 50 }} gutter={50}>
+          <Col span={17}>
+            <Row gutter={20}>
+              <Col span={24}>
+                <h1 style={{ fontSize: '1.275rem' }}>Progress</h1>
+              </Col>
+              <Col span={17}>
+                <Card
+                  style={{
+                    background: '#fff7e6',
+                    border: '1px solid #ffd591'
+                  }}
+                  bodyStyle={{ padding: '10px 25px' }}
+                >
+                  <div
+                    style={{ display: 'flex', alignItems: 'center', gap: 15 }}
+                  >
+                    <div
+                      style={{
+                        padding: 10,
+                        background: '#ffd591',
+                        borderRadius: '10px'
+                      }}
+                    >
+                      <IoRibbonOutline size={40} />
+                    </div>
+                    <Progress
+                      percent={70}
+                      status="active"
+                      strokeColor="#d46b08"
+                      showInfo={false}
+                    />
+                    <span>12/24</span>
+                  </div>
+                </Card>
+                <Card></Card>
+              </Col>
+              <Col span={7}>
+                <Card>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <strong
+                      style={{
+                        fontWeight: 600,
+                        fontSize: '1.275rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10
+                      }}
+                    >
+                      <h1
+                        style={{
+                          color: '#1890ff',
+                          margin: 0
+                        }}
+                      >
+                        8
+                      </h1>
+                      <span>Assigenments</span>
+                    </strong>
+
+                    <span
+                      style={{
+                        fontSize: '1rem',
+                        color: '#e60000'
+                      }}
+                    >
+                      4 overdues
+                    </span>
+                  </div>
+                </Card>
+                <Card>
+                  <h1 style={{ textAlign: 'center', fontSize: '1.2rem' }}>
+                    Overall Progress
+                  </h1>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginTop: 20,
+                      flexDirection: 'column',
+                      gap: 25
+                    }}
+                  >
+                    <Progress
+                      type="circle"
+                      percent={25}
+                      strokeColor={{ '0%': '#108ee9', '100%': '#87d068' }}
+                    />
+                    <p style={{ fontSize: '1rem' }}>
+                      Great work! Let's finish all your assesment{' '}
+                    </p>
+                  </div>
+                </Card>
+              </Col>
+            </Row>
+            <Card></Card>
+          </Col>
+          <Col span={7}>
+            <Card></Card>
+            <Card></Card>
+          </Col>
+        </Row>
         <Card style={{ marginTop: 50 }}>
           <h1 style={{ fontSize: '1.275rem' }}>Assesment by Specializations</h1>
           <Row
