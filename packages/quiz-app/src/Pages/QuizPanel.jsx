@@ -11,6 +11,9 @@ import {
   Row
 } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
+import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
+import { BsEye } from 'react-icons/bs'
+import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
 import { getRequest } from '../axios/axiosMethods'
 import PageLayout from '../components/PageLayout'
@@ -32,7 +35,13 @@ const QuizPanel = () => {
   const [quizData, setQuizData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [secondsRemaining, setSecondsRemaining] = useState(0)
-  const [open, setOpen] = useState(false)
+  const [rulesDrawerOpen, setRulesDrawerOpen] = useState(false)
+  const [startQuiz, setStartQuiz] = useState(
+    localStorage.getItem('quizStarted') &&
+      localStorage.getItem('quizStarted') === true
+      ? true
+      : false
+  )
 
   const params = useParams()
   const { appState } = useAppState()
@@ -41,19 +50,20 @@ const QuizPanel = () => {
   const minutesRemaining = (secondsRemaining - secondsToDisplay) / 60
 
   useEffect(() => {
-    document.addEventListener('fullscreenerror', function (err) {
-      console.log(err)
-    })
-  }, [])
-
-  useEffect(() => {
     getRequest('quizzes/' + params.quizId)
       .then(response => {
         if (response.status === 200) {
           if (response.data.status) {
             setQuizData(response.data.result)
-            setSecondsRemaining(response.data.result.duration * 60)
-            INITIAL_COUNT = response.data.result.duration * 60
+            setSecondsRemaining(
+              localStorage.getItem('currentCount') !== undefined || null
+                ? parseInt(localStorage.getItem('currentCount'))
+                : response.data.result.duration * 60
+            )
+            INITIAL_COUNT =
+              localStorage.getItem('currentCount') !== undefined || null
+                ? parseInt(localStorage.getItem('currentCount'))
+                : response.data.result.duration * 60
           }
           setLoading(false)
         } else {
@@ -67,13 +77,17 @@ const QuizPanel = () => {
       })
   }, [params])
 
-  useInterval(() => {
-    if (secondsRemaining > 0) {
-      setSecondsRemaining(secondsRemaining - 1)
-    } else {
-      console.log('stopped')
-    }
-  }, 1000)
+  useInterval(
+    () => {
+      if (secondsRemaining > 0) {
+        setSecondsRemaining(secondsRemaining - 1)
+        localStorage.setItem('currentCount', secondsRemaining)
+      } else {
+        console.log('stopped')
+      }
+    },
+    startQuiz ? 1000 : null
+  )
 
   function useInterval(callback, delay) {
     const savedCallback = useRef()
@@ -97,7 +111,13 @@ const QuizPanel = () => {
 
   useEffect(() => {
     function onFullscreenChange() {
-      console.log('changed nm ')
+      if (document.fullscreenElement) {
+        console.log('fullscreen')
+        document.querySelector('body').style.overflow = 'hidden'
+      } else {
+        console.log('not fullscreen')
+        document.querySelector('body').style.overflow = 'auto'
+      }
     }
 
     document.addEventListener('fullscreenchange', onFullscreenChange)
@@ -105,6 +125,8 @@ const QuizPanel = () => {
     return () =>
       document.removeEventListener('fullscreenchange', onFullscreenChange)
   }, [])
+
+  console.log(quizData)
 
   const twoDigits = num => String(num).padStart(2, '0')
   return (
@@ -188,7 +210,7 @@ const QuizPanel = () => {
               </div>
             </div>
             <div className="quiz-panel-rule-button">
-              <Button type="primary" onClick={() => setOpen(true)}>
+              <Button type="primary" onClick={() => setRulesDrawerOpen(true)}>
                 Rules
               </Button>
             </div>
@@ -197,7 +219,7 @@ const QuizPanel = () => {
       </Card>
       <div style={{ padding: '0.5rem' }}>
         <Row gutter={5} style={{ height: 'calc(100vh - 100px)' }}>
-          <Col span={4}>
+          <Col span={5}>
             <Card
               style={{ position: 'relative', height: '100%' }}
               bodyStyle={{ padding: 7 }}
@@ -245,16 +267,112 @@ const QuizPanel = () => {
               </Button>
             </Card>
           </Col>
-          <Col span={20}>
-            <Card>here is the questions</Card>
+          <Col span={19}>
+            <Card
+              style={{ margin: 25, position: 'relative' }}
+              bodyStyle={{ position: 'relative' }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}
+              >
+                <div style={{ fontSize: '15px', letterSpacing: 3 }}>
+                  <strong>
+                    <b style={{ marginRight: 15 }}>Question</b> 01/20
+                  </strong>
+                  <Progress size="small" percent={2} showInfo={false} />
+                </div>
+                <span>
+                  <BsEye
+                    style={{
+                      marginRight: 7,
+                      alignSelf: 'baseline',
+                      fontSize: 19
+                    }}
+                  />{' '}
+                  Mark for review
+                </span>
+              </div>
+              <div
+                style={{ margin: '40px 0px', fontSize: 18, fontWeight: 500 }}
+              >
+                <ReactMarkdown>
+                  {quizData &&
+                    quizData.Questions &&
+                    quizData.Questions[0].question}
+                </ReactMarkdown>
+              </div>
+              <Row gutter={25}>
+                {quizData &&
+                  quizData.Questions &&
+                  quizData.Questions[0].Choices.map((c, i) => (
+                    <Col key={c?.id} span={12}>
+                      <Card>
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 15
+                          }}
+                        >
+                          <div
+                            style={{
+                              height: 35,
+                              width: 35,
+                              borderRadius: '50%',
+                              border: '1px solid lightgray',
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center'
+                            }}
+                          >
+                            {String.fromCharCode(65 + i)}
+                          </div>
+                          <div>
+                            <ReactMarkdown className="quiz-panel-choices">
+                              {c?.text}
+                            </ReactMarkdown>
+                          </div>
+                        </div>
+                      </Card>
+                    </Col>
+                  ))}
+              </Row>
+              <div style={{ width: '100%', marginTop: 30 }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    bottom: 10,
+                    position: 'absolute',
+                    width: '96%',
+                    margin: '0px auto'
+                  }}
+                >
+                  <div style={{ display: 'flex', gap: 15 }}>
+                    <Button>
+                      <AiOutlineLeft />
+                    </Button>
+                    <Button>
+                      <AiOutlineRight />
+                    </Button>
+                  </div>
+                  <Button type="default">Skip</Button>
+                </div>
+              </div>
+            </Card>
           </Col>
         </Row>
         {/* drawer */}
         <Drawer
           placement="right"
           closable={false}
-          open={open}
-          forceRender={true}
+          open={rulesDrawerOpen}
+          onClose={() => setRulesDrawerOpen(false)}
         >
           <div
             style={{
@@ -311,13 +429,35 @@ const QuizPanel = () => {
           </div>
         </Drawer>
         {/* intial modal */}
-        <Modal title="Vertically centered modal dialog" centered open={false}>
-          <Button
-            id="fullscreen"
-            onClick={() => document.documentElement.requestFullscreen()}
+        {console.log(startQuiz, 'startQuiz')}
+        <Modal centered open={!startQuiz} footer={false}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column',
+              gap: 15
+            }}
           >
-            go full screen
-          </Button>
+            <Image
+              src="https://media.istockphoto.com/id/1266921162/vector/tv-quiz-show-host-and-two-participants-happy-girl-winning-competition-flat-vector.jpg?s=612x612&w=0&k=20&c=2SOtslWYY3sok-fnEmYXka3ANMEXq7FHyolz4yu9Cdw="
+              preview={false}
+            />
+            <p style={{ fontSize: 19, fontWeight: 500 }}>
+              Are you ready to start the assessment?
+            </p>
+            <Button
+              id="fullscreen"
+              onClick={() => {
+                localStorage.setItem('quizStarted', 'true')
+                document.documentElement.requestFullscreen()
+                setStartQuiz(true)
+              }}
+            >
+              Start Assesment
+            </Button>
+          </div>
         </Modal>
       </div>
     </PageLayout>

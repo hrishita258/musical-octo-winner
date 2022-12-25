@@ -360,3 +360,7 @@ code {
   overflow-x: scroll !important;
   transition: all 0.5s ease-in-out;
 }
+
+.quiz-panel-choices > p {
+  margin: 0 !important;
+}
