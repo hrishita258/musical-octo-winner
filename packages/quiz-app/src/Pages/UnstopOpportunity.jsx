@@ -1,10 +1,25 @@
-import { Avatar, Badge, Carousel, Col, Image, Row, Tag } from 'antd'
+import {
+  Avatar,
+  Badge,
+  Card,
+  Carousel,
+  Col,
+  Drawer,
+  Image,
+  Row,
+  Tag
+} from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineFileImage } from 'react-icons/ai'
 import { BiRupee } from 'react-icons/bi'
 import { BsCircleFill } from 'react-icons/bs'
-import { FaCalendarAlt } from 'react-icons/fa'
+import {
+  FaCalendarAlt,
+  FaEnvelope,
+  FaPhoneAlt,
+  FaUserAlt
+} from 'react-icons/fa'
 import { FiUserCheck } from 'react-icons/fi'
 import { ImDownload3, ImUsers } from 'react-icons/im'
 import { IoLocationOutline } from 'react-icons/io5'
@@ -197,9 +212,9 @@ const themeColors = [
 const UnstopOpportunity = () => {
   const { opportunityId } = useParams()
   const [opportunity, setOpportunity] = useState({})
-  const [featured, setFeatured] = useState([])
   const [loading, setLoading] = useState(true)
   const [themeColor, setThemeColor] = useState('blue')
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     getRequest('opportunity/unstop/' + opportunityId)
@@ -222,16 +237,6 @@ const UnstopOpportunity = () => {
         console.log(err)
       })
   }, [opportunityId])
-
-  useEffect(() => {
-    getRequest('opportunity/hackathons/unstop/featured')
-      .then(res => {
-        setFeatured(JSON.parse(res.data.result))
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }, [])
 
   console.log(opportunity)
 
@@ -663,6 +668,28 @@ const UnstopOpportunity = () => {
                             <Badge color={themeColor.light} /> {filter.name}
                           </div>
                         ))}
+                      {opportunity?.regnRequirements?.allowed_organisations ? (
+                        <div
+                          style={{
+                            fontSize: '13px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'relative',
+                            fontWeight: 500,
+                            marginRight: '25px',
+                            gap: 5,
+                            color: '#1c4980',
+                            cursor: 'pointer',
+                            textDecoration: 'underline'
+                          }}
+                          onClick={() => {
+                            setOpen(true)
+                          }}
+                        >
+                          <Badge color={themeColor.light} /> eligible for
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 </div>
@@ -728,7 +755,10 @@ const UnstopOpportunity = () => {
                           width: '36px',
                           height: '36px',
                           border: `5px solid ${themeColor.light}`,
-                          color: themeColor.color,
+                          color:
+                            round?.status === 'LIVE'
+                              ? '#FFF'
+                              : themeColor.color,
                           borderRadius: '50px',
                           position: 'absolute',
                           left: '-12px',
@@ -737,10 +767,14 @@ const UnstopOpportunity = () => {
                           justifyContent: 'center',
                           fontSize: '16px',
                           fontWeight: '600',
-                          background: '#fff',
+                          background:
+                            round?.status === 'LIVE'
+                              ? themeColor.color
+                              : '#fff',
                           opacity: '.9',
                           top: '50%',
-                          marginTop: '-18px'
+                          marginTop: '-18px',
+                          animation: 'live1 2.4s ease-in-out infinite'
                         }}
                       >
                         <BsCircleFill />
@@ -754,7 +788,11 @@ const UnstopOpportunity = () => {
                           transition: '.4s',
                           position: 'relative',
                           boxShadow: '0 6px 65px #27497d17',
-                          background: '#fff'
+                          background: '#fff',
+                          border:
+                            round?.status === 'LIVE'
+                              ? `2px solid ${themeColor.color}`
+                              : ''
                         }}
                       >
                         <h3 style={{ fontSize: '18px' }}>
@@ -933,8 +971,8 @@ const UnstopOpportunity = () => {
                   </Col>
                 ) : null}
 
-                {opportunity.contacts ? (
-                  <Col span={12} style={{ marginTop: 25 }}>
+                {opportunity.contacts.length > 0 ? (
+                  <Col span={24} style={{ marginTop: 25 }}>
                     <h2
                       style={{
                         borderLeft: `10px solid ${themeColor.color}`,
@@ -946,6 +984,87 @@ const UnstopOpportunity = () => {
                     >
                       Contact the organisers
                     </h2>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        width: '100%',
+                        justifyContent: 'space-between'
+                      }}
+                    >
+                      {opportunity.contacts.map(contact => (
+                        <Card
+                          hoverable
+                          key={contact.id}
+                          style={{
+                            width: 'calc(33.33% - 30px)'
+                          }}
+                          bodyStyle={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: '10px',
+                            gap: 20
+                          }}
+                        >
+                          <div
+                            style={{
+                              height: '60px',
+                              width: '60px',
+                              boxShadow: '0 1px 4px #54545426',
+                              borderRadius: '4px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: themeColor.color,
+                              fontSize: '25px'
+                            }}
+                          >
+                            <FaUserAlt />
+                          </div>
+                          <div>
+                            <h3 style={{ margin: 3 }}>{contact.name}</h3>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 10
+                              }}
+                            >
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  shadow: '0 1px 4px #54545426',
+                                  borderRadius: '50%',
+                                  height: '30px',
+                                  width: '30px',
+                                  background: themeColor.light,
+                                  color: themeColor.color,
+                                  justifyContent: 'center'
+                                }}
+                              >
+                                <FaEnvelope />
+                              </div>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  shadow: '0 1px 4px #54545426',
+                                  borderRadius: '50%',
+                                  height: '30px',
+                                  width: '30px',
+                                  background: themeColor.light,
+                                  color: themeColor.color,
+                                  justifyContent: 'center'
+                                }}
+                              >
+                                <FaPhoneAlt />
+                              </div>
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
                   </Col>
                 ) : null}
 
@@ -1036,15 +1155,25 @@ const UnstopOpportunity = () => {
                   borderLeft: `10px solid ${themeColor.color}`,
                   color: '#1c4980',
                   paddingLeft: 30,
-                  fontSize: '20px',
-                  margin: '30px 0px'
+                  fontSize: '20px'
                 }}
               >
                 Rewards and Prizes
               </h2>
+              {opportunity?.overall_prizes ? (
+                <p
+                  style={{
+                    fontSize: '14px',
+                    paddingLeft: 40,
+                    fontWeight: 500
+                  }}
+                >
+                  {opportunity?.overall_prizes}
+                </p>
+              ) : null}
               <div
                 style={{
-                  margin: 0,
+                  marginTop: 30,
                   padding: 0,
                   display: 'flex',
                   flexWrap: 'wrap',
@@ -1157,8 +1286,110 @@ const UnstopOpportunity = () => {
               </div>
             </div>
           </div>
+          {opportunity?.gallery?.length > 0 ? (
+            <div
+              style={{
+                padding: '40px'
+              }}
+            >
+              <div
+                style={{
+                  maxWidth: '1330px',
+                  margin: '0px auto',
+                  width: '100%'
+                }}
+              >
+                <h2
+                  style={{
+                    borderLeft: `10px solid ${themeColor.color}`,
+                    color: '#1c4980',
+                    paddingLeft: 30,
+                    fontSize: '20px',
+                    marginBottom: '30px'
+                  }}
+                >
+                  In Pictures
+                </h2>
+                <div>
+                  <Image.PreviewGroup>
+                    <Carousel slidesPerRow={4}>
+                      {opportunity?.gallery?.map((res, index) => (
+                        <div key={index}>
+                          <div
+                            style={{
+                              position: 'relative',
+                              height: '16rem',
+                              width: '100%',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              display: 'flex',
+                              padding: '15px'
+                            }}
+                          >
+                            <Image
+                              alt="logo"
+                              height={200}
+                              src={res?.image_url}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </Carousel>
+                  </Image.PreviewGroup>
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
+      {opportunity?.regnRequirements?.allowed_organisations?.length > 0 ? (
+        <Drawer
+          title="Eligible Institutes/Organizations"
+          placement="right"
+          onClose={() => setOpen(false)}
+          open={open}
+        >
+          {opportunity?.regnRequirements?.allowed_organisations?.map(
+            (res, index) => (
+              <div
+                key={index}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '20px 10px',
+                  borderBottom: '1px solid #e8e8e8',
+                  gap: 15
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    height: '80px',
+                    width: '120px',
+                    padding: '5px',
+                    borderRadius: '5px',
+                    position: 'relative',
+                    boxShadow: '0 1px 4px #54545426'
+                  }}
+                >
+                  <Image preview={false} src={res?.logoUrl2} />
+                </div>
+                <p
+                  style={{
+                    fontWeight: '500',
+                    color: themeColor?.color
+                  }}
+                >
+                  {res?.name}
+                </p>
+              </div>
+            )
+          )}
+        </Drawer>
+      ) : null}
     </div>
   )
 }
