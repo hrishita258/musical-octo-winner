@@ -371,4 +371,36 @@ router.get('/mlh/challenges', async (req, res) => {
   }
 })
 
+router.get('/explore/unstop', async (req, res) => {
+  try {
+    const data = []
+    const types = [
+      'jobs',
+      'internships',
+      'competitions',
+      'quizzes',
+      'cultural',
+      'workshops'
+    ]
+
+    for (let i = 0; i < types.length; i++) {
+      const type = types[i]
+      const result = await MeiliSearchClient.index('unstop').search('', {
+        filter: `end_date_filter > ${Date.now()} AND type = ${type}`,
+        limit: 6
+      })
+      data.push({ type, result })
+    }
+
+    res.status(200).json({
+      result: data,
+      msg: 'done',
+      status: 200
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ result: null, msg: 'error', status: 500 })
+  }
+})
+
 export default router

@@ -1,8 +1,9 @@
-import { Avatar, Card, Carousel, Image, Tag } from 'antd'
+import { Avatar, Card, Carousel, Image, Row, Tag } from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { FaCalendarAlt, FaUsers } from 'react-icons/fa'
 import { getRequest } from '../axios/axiosMethods'
+import ExploreMoreColComp from '../components/ExploreMoreColComp'
 import PageLayout from '../components/PageLayout'
 
 const Explore = () => {
@@ -13,6 +14,7 @@ const Explore = () => {
   const [postsDataLoading, setPostsDataLoading] = useState(true)
   const [featuredOpportunitiesLoading, setFeaturedOpportunitiesLoading] =
     useState(true)
+  const [unstopHome, setUntopHome] = useState([])
 
   const BREADCRUMBS = [
     {
@@ -27,11 +29,16 @@ const Explore = () => {
   useEffect(() => {
     getRequest('opportunity/home/posts?per_page=16')
       .then(s => {
-        console.log(JSON.parse(s.data.result))
         setPostsData(JSON.parse(s.data.result)[0].data.tagFeed?.items)
         setPostsDataLoading(false)
       })
       .catch(e => console.log(e))
+  }, [])
+
+  useEffect(() => {
+    getRequest('opportunity/explore/unstop').then(s => {
+      setUntopHome(s.data.result)
+    })
   }, [])
 
   useEffect(() => {
@@ -52,7 +59,7 @@ const Explore = () => {
       .catch(e => console.log(e))
   }, [])
 
-  console.log(featuredOpportunities)
+  console.log(unstopHome, 'unstopHome')
 
   return (
     <PageLayout
@@ -65,7 +72,7 @@ const Explore = () => {
     >
       <div style={{ color: '#ef78b9' }}>
         <div>
-          <Carousel slidesToShow={2} autoplay>
+          <Carousel slidesPerRow={2} autoplay>
             {homepageBanner?.map(banner => (
               <div key={banner.id}>
                 <a href={'https://unstop.com/' + banner.link} target="__blank">
@@ -201,7 +208,17 @@ const Explore = () => {
             ))}
           </Carousel>
         </div>
-
+        <Row gutter={25}>
+          {['jobs', 'competitions', 'workshops']?.map((item, index) =>
+            unstopHome && unstopHome.length > 0 ? (
+              <ExploreMoreColComp
+                title={item}
+                data={unstopHome?.find(un => un?.type === item)}
+                key={index}
+              />
+            ) : null
+          )}
+        </Row>
         <h2
           style={{
             borderLeft: `10px solid #ef78b9`,
@@ -218,7 +235,7 @@ const Explore = () => {
             padding: '0px 2rem'
           }}
         >
-          <Carousel arrows slidesToShow={4}>
+          <Carousel arrows slidesPerRow={4}>
             {featuredOpportunities?.map(fo => (
               <div key={fo.id}>
                 <Card
@@ -322,6 +339,17 @@ const Explore = () => {
             ))}
           </Carousel>
         </div>
+        <Row gutter={25}>
+          {['quizzes', 'cultural', 'internships']?.map((item, index) =>
+            unstopHome && unstopHome.length > 0 ? (
+              <ExploreMoreColComp
+                title={item}
+                data={unstopHome?.find(un => un?.type === item)}
+                key={index}
+              />
+            ) : null
+          )}
+        </Row>
       </div>
     </PageLayout>
   )
