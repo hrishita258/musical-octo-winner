@@ -1,14 +1,4 @@
-import {
-  Avatar,
-  Badge,
-  Card,
-  Carousel,
-  Col,
-  Drawer,
-  Image,
-  Row,
-  Tag
-} from 'antd'
+import { Avatar, Badge, Carousel, Col, Drawer, Image, Row, Tag } from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineFileImage } from 'react-icons/ai'
@@ -791,9 +781,10 @@ const UnstopOpportunity = () => {
                           background: '#fff',
                           border:
                             round?.status === 'LIVE'
-                              ? `2px solid ${themeColor.color}`
+                              ? `2px solid ${themeColor.light}`
                               : ''
                         }}
+                        className={round?.status === 'LIVE' ? 'conic' : ''}
                       >
                         <h3 style={{ fontSize: '18px' }}>
                           {round.details[0].title}
@@ -972,7 +963,10 @@ const UnstopOpportunity = () => {
                 ) : null}
 
                 {opportunity.contacts.length > 0 ? (
-                  <Col span={24} style={{ marginTop: 25 }}>
+                  <Col
+                    span={opportunity?.contacts?.length > 1 ? 24 : 12}
+                    style={{ marginTop: 25 }}
+                  >
                     <h2
                       style={{
                         borderLeft: `10px solid ${themeColor.color}`,
@@ -989,80 +983,96 @@ const UnstopOpportunity = () => {
                         display: 'flex',
                         flexWrap: 'wrap',
                         width: '100%',
-                        justifyContent: 'space-between'
+                        justifyContent: 'space-between',
+                        margin: '-15px 0px'
                       }}
                     >
                       {opportunity.contacts.map(contact => (
-                        <Card
+                        <div
                           hoverable
                           key={contact.id}
                           style={{
-                            width: 'calc(33.33% - 30px)'
-                          }}
-                          bodyStyle={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: '10px',
-                            gap: 20
+                            width:
+                              opportunity?.contacts?.length > 1
+                                ? 'calc(33.33% - 30px)'
+                                : 'calc(50% - 30px)',
+                            margin: '5px',
+                            padding: '10px 20px',
+                            border: '1px solid #ebebeb'
                           }}
                         >
                           <div
                             style={{
-                              height: '60px',
-                              width: '60px',
-                              boxShadow: '0 1px 4px #54545426',
-                              borderRadius: '4px',
                               display: 'flex',
                               alignItems: 'center',
-                              justifyContent: 'center',
-                              color: themeColor.color,
-                              fontSize: '25px'
+                              gap: 10
                             }}
                           >
-                            <FaUserAlt />
-                          </div>
-                          <div>
-                            <h3 style={{ margin: 3 }}>{contact.name}</h3>
+                            <div
+                              style={{
+                                height: '32px',
+                                width: '32px',
+                                background: '#FFF',
+                                boxShadow: '0 1px 4px #54545426',
+                                borderRadius: '4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: themeColor.color,
+                                fontSize: '20px'
+                              }}
+                            >
+                              <FaUserAlt />
+                            </div>
                             <div
                               style={{
                                 display: 'flex',
-                                alignItems: 'center',
-                                gap: 10
+                                justifyContent: 'space-between',
+                                width: '100%'
                               }}
                             >
+                              <h3>{contact.name}</h3>
                               <div
                                 style={{
                                   display: 'flex',
                                   alignItems: 'center',
-                                  shadow: '0 1px 4px #54545426',
-                                  borderRadius: '50%',
-                                  height: '30px',
-                                  width: '30px',
-                                  background: themeColor.light,
-                                  color: themeColor.color,
-                                  justifyContent: 'center'
+                                  gap: 10
                                 }}
                               >
-                                <FaEnvelope />
-                              </div>
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  shadow: '0 1px 4px #54545426',
-                                  borderRadius: '50%',
-                                  height: '30px',
-                                  width: '30px',
-                                  background: themeColor.light,
-                                  color: themeColor.color,
-                                  justifyContent: 'center'
-                                }}
-                              >
-                                <FaPhoneAlt />
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    shadow: '0 1px 4px #54545426',
+                                    borderRadius: '50%',
+                                    height: '30px',
+                                    width: '30px',
+                                    background: themeColor.light,
+                                    color: themeColor.color,
+                                    justifyContent: 'center'
+                                  }}
+                                >
+                                  <FaEnvelope />
+                                </div>
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    shadow: '0 1px 4px #54545426',
+                                    borderRadius: '50%',
+                                    height: '30px',
+                                    width: '30px',
+                                    background: themeColor.light,
+                                    color: themeColor.color,
+                                    justifyContent: 'center'
+                                  }}
+                                >
+                                  <FaPhoneAlt />
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </Card>
+                        </div>
                       ))}
                     </div>
                   </Col>

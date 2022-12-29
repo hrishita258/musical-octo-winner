@@ -78,7 +78,7 @@ router.get('/hackathons/unstop', async (req, res) => {
     // const { page_number } = req.query
     // console.log(page_number)
     // const browser = await puppeteer.launch()
-    // for (let i = 1; i <= 996; i++) {
+    // for (let i = 1; i <= 40; i++) {
     //   const page = await browser.newPage()
     //   await page.goto(
     //     'https://unstop.com/api/public/opportunity/search-new?page=' + i
@@ -104,6 +104,14 @@ router.get('/hackathons/unstop', async (req, res) => {
     // let value = await page.evaluate(el => el.textContent, element)
     // await browser.close()
     // if (value)
+
+    // const r = await MeiliSearchClient.index('unstop').addDocuments(
+    //   unstopOpportunities?.hits?.map(s => ({
+    //     ...s,
+    //     end_date_filter: Date.parse(s?.end_date)
+    //   }))
+    // )
+
     res.status(200).json({
       result: await MeiliSearchClient.index('unstop').search('', {
         filter: `end_date_filter > ${Date.now()}`,
