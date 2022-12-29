@@ -1358,6 +1358,7 @@ const UnstopOpportunity = () => {
           placement="right"
           onClose={() => setOpen(false)}
           open={open}
+          bodyStyle={{ padding: 5 }}
         >
           {opportunity?.regnRequirements?.allowed_organisations?.map(
             (res, index) => (
