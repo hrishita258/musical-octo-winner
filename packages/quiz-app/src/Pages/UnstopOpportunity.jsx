@@ -658,7 +658,8 @@ const UnstopOpportunity = () => {
                             <Badge color={themeColor.light} /> {filter.name}
                           </div>
                         ))}
-                      {opportunity?.regnRequirements?.allowed_organisations ? (
+                      {opportunity?.regnRequirements?.allowed_organisations
+                        .length > 0 ? (
                         <div
                           style={{
                             fontSize: '13px',
@@ -770,6 +771,7 @@ const UnstopOpportunity = () => {
                         <BsCircleFill />
                       </div>
                       <div
+                        id={round?.id}
                         style={{
                           color: themeColor.color,
                           padding: '22px 30px',
@@ -786,6 +788,11 @@ const UnstopOpportunity = () => {
                         }}
                         className={round?.status === 'LIVE' ? 'conic' : ''}
                       >
+                        {round?.status === 'LIVE'
+                          ? document
+                              .getElementById(round?.id)
+                              ?.style?.setProperty('--color', themeColor.color)
+                          : ''}
                         <h3 style={{ fontSize: '18px' }}>
                           {round.details[0].title}
                         </h3>

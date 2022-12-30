@@ -1,3 +1,7 @@
+:root {
+  --color: #1c4980;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600&display=swap');
 body {
   margin: 0;
@@ -391,7 +395,7 @@ code {
   height: 200%;
   background-repeat: no-repeat;
   background-position: 0 0;
-  background-image: conic-gradient(transparent, #1c4980, transparent 50%);
+  background-image: conic-gradient(transparent, var(--color), transparent 50%);
   -webkit-animation: rotate 4s linear infinite;
   animation: rotate 4s linear infinite;
 }
