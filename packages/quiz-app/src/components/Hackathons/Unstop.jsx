@@ -39,6 +39,7 @@ const Unstop = () => {
     getRequest('opportunity/hackathons/unstop?page_number=' + page)
       .then(res => {
         setOpportunities([...opportunities, ...res.data.result.hits])
+        console.log(res.data)
       })
       .catch(err => {
         console.log(err)
