@@ -1176,7 +1176,7 @@ const UnstopOpportunity = () => {
               </Row>
             </div>
           </div>
-          {opportunity?.job_detail ? (
+          {opportunity?.job_detail && opportunity?.subtype === 'jobs' ? (
             <div
               style={{
                 padding: '40px',
@@ -1299,151 +1299,157 @@ const UnstopOpportunity = () => {
               </div>
             </div>
           ) : null}
-          <div
-            style={{
-              padding: '40px',
-              background: 'rgba(236,239,243,.2)'
-            }}
-          >
+          {opportunity?.subtype !== 'jobs' ? (
             <div
-              style={{ maxWidth: '1330px', margin: '0px auto', width: '100%' }}
+              style={{
+                padding: '40px',
+                background: 'rgba(236,239,243,.2)'
+              }}
             >
-              <h2
-                style={{
-                  borderLeft: `10px solid ${themeColor.color}`,
-                  color: '#1c4980',
-                  paddingLeft: 30,
-                  fontSize: '20px'
-                }}
-              >
-                Rewards and Prizes
-              </h2>
-              {opportunity?.overall_prizes ? (
-                <p
-                  style={{
-                    fontSize: '14px',
-                    paddingLeft: 40,
-                    fontWeight: 500
-                  }}
-                >
-                  {opportunity?.overall_prizes}
-                </p>
-              ) : null}
               <div
                 style={{
-                  marginTop: 30,
-                  padding: 0,
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  alignItems: 'center'
+                  maxWidth: '1330px',
+                  margin: '0px auto',
+                  width: '100%'
                 }}
               >
-                {opportunity.prizes.map(reward => (
-                  <div
+                <h2
+                  style={{
+                    borderLeft: `10px solid ${themeColor.color}`,
+                    color: '#1c4980',
+                    paddingLeft: 30,
+                    fontSize: '20px'
+                  }}
+                >
+                  Rewards and Prizes
+                </h2>
+                {opportunity?.overall_prizes ? (
+                  <p
                     style={{
-                      width: 'calc(33.33% - 20px)',
-                      margin: '10px',
-                      position: 'relative'
+                      fontSize: '14px',
+                      paddingLeft: 40,
+                      fontWeight: 500
                     }}
-                    key={reward.id}
                   >
-                    <Badge.Ribbon
-                      text={
-                        reward.certificate
-                          ? 'certificate'
-                          : reward.pre_placement_internship
-                          ? `PPI's`
-                          : reward.pre_placement_opportunity
-                          ? `PPO's`
-                          : ''
-                      }
-                      color={
-                        reward.pre_placement_internship ||
-                        reward.pre_placement_opportunity
-                          ? 'pink'
-                          : 'green'
-                      }
-                      key={reward.id}
+                    {opportunity?.overall_prizes}
+                  </p>
+                ) : null}
+                <div
+                  style={{
+                    marginTop: 30,
+                    padding: 0,
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'center'
+                  }}
+                >
+                  {opportunity.prizes.map(reward => (
+                    <div
                       style={{
-                        display:
-                          reward.certificate ||
+                        width: 'calc(33.33% - 20px)',
+                        margin: '10px',
+                        position: 'relative'
+                      }}
+                      key={reward.id}
+                    >
+                      <Badge.Ribbon
+                        text={
+                          reward.certificate
+                            ? 'certificate'
+                            : reward.pre_placement_internship
+                            ? `PPI's`
+                            : reward.pre_placement_opportunity
+                            ? `PPO's`
+                            : ''
+                        }
+                        color={
                           reward.pre_placement_internship ||
                           reward.pre_placement_opportunity
-                            ? 'block'
-                            : 'none'
-                      }}
-                    >
-                      <div
+                            ? 'pink'
+                            : 'green'
+                        }
+                        key={reward.id}
                         style={{
-                          overflow: 'hidden',
-                          background: '#ffffff',
-                          boxShadow: '0.67px 3.67px 8px #186edf3b',
-                          borderRadius: '13px',
-                          padding: '20px 20px 10px',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          minHeight: '180px',
-                          color: '#1c4980'
-                        }}
-                      >
-                        <div style={{ paddingRight: '70px' }}>
-                          <h3 style={{ fontSize: '18px' }}>{reward.rank}</h3>
-                          <p
-                            style={{
-                              fontSize: '12px',
-                              margin: '12px 0 0',
-                              lineHeight: '18px'
-                            }}
-                          >
-                            {reward.others}
-                          </p>
-                        </div>
-                        {reward.cash ? (
-                          <div
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                              height: '80px',
-                              color: themeColor.color,
-                              fontSize: '20px',
-                              fontWeight: '500'
-                            }}
-                          >
-                            <strong>
-                              {reward.cash.toLocaleString('en-US', {
-                                style: 'currency',
-                                currency: reward.currencyCode
-                              })}
-                            </strong>
-                          </div>
-                        ) : null}
-
-                        <img
-                          style={{
-                            display: 'block',
-                            width: '60px',
-                            height: 'auto',
-                            position: 'absolute',
-                            right: '10px',
-                            bottom: '10px'
-                          }}
-                          alt="logo"
-                          src={
+                          display:
+                            reward.certificate ||
                             reward.pre_placement_internship ||
                             reward.pre_placement_opportunity
-                              ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/svg-images/ppi-icon.png'
-                              : 'https://d8it4huxumps7.cloudfront.net/uploads/images/svg-images/unstop-trophy.png'
-                          }
-                        />
-                      </div>
-                    </Badge.Ribbon>
-                  </div>
-                ))}
+                              ? 'block'
+                              : 'none'
+                        }}
+                      >
+                        <div
+                          style={{
+                            overflow: 'hidden',
+                            background: '#ffffff',
+                            boxShadow: '0.67px 3.67px 8px #186edf3b',
+                            borderRadius: '13px',
+                            padding: '20px 20px 10px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            minHeight: '180px',
+                            color: '#1c4980'
+                          }}
+                        >
+                          <div style={{ paddingRight: '70px' }}>
+                            <h3 style={{ fontSize: '18px' }}>{reward.rank}</h3>
+                            <p
+                              style={{
+                                fontSize: '12px',
+                                margin: '12px 0 0',
+                                lineHeight: '18px'
+                              }}
+                            >
+                              {reward.others}
+                            </p>
+                          </div>
+                          {reward.cash ? (
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                height: '80px',
+                                color: themeColor.color,
+                                fontSize: '20px',
+                                fontWeight: '500'
+                              }}
+                            >
+                              <strong>
+                                {reward.cash.toLocaleString('en-US', {
+                                  style: 'currency',
+                                  currency: reward.currencyCode
+                                })}
+                              </strong>
+                            </div>
+                          ) : null}
+
+                          <img
+                            style={{
+                              display: 'block',
+                              width: '60px',
+                              height: 'auto',
+                              position: 'absolute',
+                              right: '10px',
+                              bottom: '10px'
+                            }}
+                            alt="logo"
+                            src={
+                              reward.pre_placement_internship ||
+                              reward.pre_placement_opportunity
+                                ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/svg-images/ppi-icon.png'
+                                : 'https://d8it4huxumps7.cloudfront.net/uploads/images/svg-images/unstop-trophy.png'
+                            }
+                          />
+                        </div>
+                      </Badge.Ribbon>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          ) : null}
           {opportunity?.gallery?.length > 0 ? (
             <div
               style={{
@@ -1503,7 +1509,7 @@ const UnstopOpportunity = () => {
             style={{
               border: `2px solid ${themeColor.color}`,
               padding: '20px',
-              margin: '40px 10px',
+              margin: '50px',
               borderRadius: '7px'
             }}
           >
@@ -1514,21 +1520,37 @@ const UnstopOpportunity = () => {
             >
               {opportunity?.organisation?.name}
             </h1>
-            <div
+            <a
+              href={opportunity?.organisation?.seo_url}
               style={{
-                color: '#1c4980',
-                fontSize: '16px'
+                textDecoration: 'none'
               }}
-              dangerouslySetInnerHTML={{
-                __html:
-                  opportunity?.organisation?.description?.slice(0, 850) + '...'
-              }}
-            ></div>
-            <Button type="primary" size="large">
-              {' '}
-              Read more & get a sneak-peek into{' '}
-              {opportunity?.organisation?.name}
-            </Button>
+              target="_blank"
+            >
+              <div
+                style={{
+                  color: '#1c4980',
+                  fontSize: '16px',
+                  cursor: 'pointer'
+                }}
+                dangerouslySetInnerHTML={{
+                  __html:
+                    opportunity?.organisation?.description?.slice(0, 850) +
+                    '...'
+                }}
+              ></div>
+              <Button
+                type="primary"
+                size="large"
+                style={{
+                  background: themeColor.color
+                }}
+              >
+                {' '}
+                Read more & get a sneak-peek into{' '}
+                {opportunity?.organisation?.name}
+              </Button>
+            </a>
           </div>
         </div>
       </div>
@@ -1539,6 +1561,7 @@ const UnstopOpportunity = () => {
           onClose={() => setOpen(false)}
           open={open}
           bodyStyle={{ padding: 5 }}
+          width={500}
         >
           {opportunity?.regnRequirements?.allowed_organisations?.map(
             (res, index) => (
@@ -1547,7 +1570,6 @@ const UnstopOpportunity = () => {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
                   padding: '20px 10px',
                   borderBottom: '1px solid #e8e8e8',
                   gap: 15
@@ -1558,12 +1580,12 @@ const UnstopOpportunity = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    height: '80px',
-                    width: '120px',
+                    width: '100px',
                     padding: '5px',
                     borderRadius: '5px',
                     position: 'relative',
-                    boxShadow: '0 1px 4px #54545426'
+                    boxShadow: '0 1px 4px #54545426',
+                    minWidth: '100px'
                   }}
                 >
                   <Image preview={false} src={res?.logoUrl2} />
