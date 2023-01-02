@@ -1,4 +1,14 @@
-import { Avatar, Badge, Carousel, Col, Drawer, Image, Row, Tag } from 'antd'
+import {
+  Avatar,
+  Badge,
+  Button,
+  Carousel,
+  Col,
+  Drawer,
+  Image,
+  Row,
+  Tag
+} from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineFileImage } from 'react-icons/ai'
@@ -1249,11 +1259,18 @@ const UnstopOpportunity = () => {
                             color: '#1c4980'
                           }}
                         >
-                          {ai === 'Job Location(s)'
-                            ? opportunity?.job_detail?.locations?.map(s => (
-                                <strong style={{ marginRight: 10 }}>{s}</strong>
-                              ))
-                            : null}
+                          {ai === 'Job Location(s)' ? (
+                            opportunity?.job_detail?.locations?.map(s => (
+                              <strong style={{ marginRight: 10 }}>{s}</strong>
+                            ))
+                          ) : ai === 'Salary' ? (
+                            <span>
+                              <strong> Salary: </strong>
+                              {opportunity?.job_detail?.not_disclosed
+                                ? 'not disclosed'
+                                : opportunity?.job_detail?.min_salary}
+                            </span>
+                          ) : null}
                         </p>
                       </div>
                       <div
@@ -1486,9 +1503,33 @@ const UnstopOpportunity = () => {
             style={{
               border: `2px solid ${themeColor.color}`,
               padding: '20px',
-              margin: '40px 10px'
+              margin: '40px 10px',
+              borderRadius: '7px'
             }}
-          ></div>
+          >
+            <h1
+              style={{
+                color: '#1c4980'
+              }}
+            >
+              {opportunity?.organisation?.name}
+            </h1>
+            <div
+              style={{
+                color: '#1c4980',
+                fontSize: '16px'
+              }}
+              dangerouslySetInnerHTML={{
+                __html:
+                  opportunity?.organisation?.description?.slice(0, 850) + '...'
+              }}
+            ></div>
+            <Button type="primary" size="large">
+              {' '}
+              Read more & get a sneak-peek into{' '}
+              {opportunity?.organisation?.name}
+            </Button>
+          </div>
         </div>
       </div>
       {opportunity?.regnRequirements?.allowed_organisations?.length > 0 ? (
