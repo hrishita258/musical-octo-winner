@@ -703,11 +703,14 @@ const UnstopOpportunity = () => {
           style={{
             maxWidth: '1330px',
             width: '100%',
-            margin: '0px auto',
-            paddingRight: '40px'
+            margin: '0px auto'
           }}
         >
-          {opportunity.rounds.length > 0 ? (
+          {opportunity.rounds.length > 0 &&
+          opportunity?.display_configs?.show_rounds &&
+          opportunity?.display_configs?.show_rounds_data &&
+          !opportunity?.rounds[0]?.is_hidden &&
+          !opportunity?.rounds[0]?.is_inactive ? (
             <div
               style={{
                 padding: '40px'
@@ -735,116 +738,121 @@ const UnstopOpportunity = () => {
                   className="unstop-rounds-container"
                   style={{ color: themeColor.color, maxWidth: '1250px' }}
                 >
-                  {opportunity.rounds.map(round => (
-                    <div
-                      key={round.id}
-                      style={{ color: themeColor.color }}
-                      className="unstop-round-list"
-                    >
+                  {opportunity.rounds.map(round =>
+                    !round?.is_hidden && !round?.is_inactive ? (
                       <div
-                        style={{
-                          width: '36px',
-                          height: '36px',
-                          border: `5px solid ${themeColor.light}`,
-                          color:
-                            round?.status === 'LIVE'
-                              ? '#FFF'
-                              : themeColor.color,
-                          borderRadius: '50px',
-                          position: 'absolute',
-                          left: '-12px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '16px',
-                          fontWeight: '600',
-                          background:
-                            round?.status === 'LIVE'
-                              ? themeColor.color
-                              : '#fff',
-                          opacity: '.9',
-                          top: '50%',
-                          marginTop: '-18px',
-                          animation: 'live1 2.4s ease-in-out infinite'
-                        }}
+                        key={round.id}
+                        style={{ color: themeColor.color }}
+                        className="unstop-round-list"
                       >
-                        <BsCircleFill />
-                      </div>
-                      <div
-                        id={round?.id}
-                        style={{
-                          color: themeColor.color,
-                          padding: '22px 30px',
-                          marginBottom: '20px',
-                          borderRadius: '20px',
-                          transition: '.4s',
-                          position: 'relative',
-                          boxShadow: '0 6px 65px #27497d17',
-                          background: '#fff',
-                          border:
-                            round?.status === 'LIVE'
-                              ? `2px solid ${themeColor.light}`
-                              : ''
-                        }}
-                        className={round?.status === 'LIVE' ? 'conic' : ''}
-                      >
-                        {round?.status === 'LIVE'
-                          ? document
-                              .getElementById(round?.id)
-                              ?.style?.setProperty('--color', themeColor.color)
-                          : ''}
-                        <h3 style={{ fontSize: '18px' }}>
-                          {round.details[0].title}
-                        </h3>
                         <div
                           style={{
-                            fontSize: '15px',
-                            lineHeight: '26px',
-                            color: '#1c4980',
-                            margin: '10px 0 0',
-                            wordBreak: 'break-word'
+                            width: '36px',
+                            height: '36px',
+                            border: `5px solid ${themeColor.light}`,
+                            color:
+                              round?.status === 'LIVE'
+                                ? '#FFF'
+                                : themeColor.color,
+                            borderRadius: '50px',
+                            position: 'absolute',
+                            left: '-12px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '16px',
+                            fontWeight: '600',
+                            background:
+                              round?.status === 'LIVE'
+                                ? themeColor.color
+                                : '#fff',
+                            opacity: '.9',
+                            top: '50%',
+                            marginTop: '-18px',
+                            animation: 'live1 2.4s ease-in-out infinite'
                           }}
-                          dangerouslySetInnerHTML={{
-                            __html: round.details[0].display_text
-                          }}
-                        ></div>
-                        <div
-                          style={{ marginTop: 25, display: 'flex', gap: 40 }}
                         >
-                          <span>
-                            <div
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                color: '#1c4980'
-                              }}
-                            >
-                              <strong>Start Date</strong>
-                              {moment(round.details[0].start_date).format(
-                                'MMMM Do YYYY, h:mm a'
-                              )}
-                            </div>
-                          </span>
-                          <span>
-                            <div
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                color: '#1c4980'
-                              }}
-                            >
-                              <strong>End Date</strong>
-                              {moment(round.details[0].end_date).format(
-                                'MMMM Do YYYY, h:mm a'
-                              )}
-                            </div>
-                          </span>
+                          <BsCircleFill />
+                        </div>
+                        <div
+                          id={round?.id}
+                          style={{
+                            color: themeColor.color,
+                            padding: '22px 30px',
+                            marginBottom: '20px',
+                            borderRadius: '20px',
+                            transition: '.4s',
+                            position: 'relative',
+                            boxShadow: '0 6px 65px #27497d17',
+                            background: '#fff',
+                            border:
+                              round?.status === 'LIVE'
+                                ? `2px solid ${themeColor.light}`
+                                : ''
+                          }}
+                          className={round?.status === 'LIVE' ? 'conic' : ''}
+                        >
+                          {round?.status === 'LIVE'
+                            ? document
+                                .getElementById(round?.id)
+                                ?.style?.setProperty(
+                                  '--color',
+                                  themeColor.color
+                                )
+                            : ''}
+                          <h3 style={{ fontSize: '18px' }}>
+                            {round.details[0].title}
+                          </h3>
+                          <div
+                            style={{
+                              fontSize: '15px',
+                              lineHeight: '26px',
+                              color: '#1c4980',
+                              margin: '10px 0 0',
+                              wordBreak: 'break-word'
+                            }}
+                            dangerouslySetInnerHTML={{
+                              __html: round.details[0].display_text
+                            }}
+                          ></div>
+                          <div
+                            style={{ marginTop: 25, display: 'flex', gap: 40 }}
+                          >
+                            <span>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  justifyContent: 'center',
+                                  color: '#1c4980'
+                                }}
+                              >
+                                <strong>Start Date</strong>
+                                {moment(round.details[0].start_date).format(
+                                  'MMMM Do YYYY, h:mm a'
+                                )}
+                              </div>
+                            </span>
+                            <span>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  justifyContent: 'center',
+                                  color: '#1c4980'
+                                }}
+                              >
+                                <strong>End Date</strong>
+                                {moment(round.details[0].end_date).format(
+                                  'MMMM Do YYYY, h:mm a'
+                                )}
+                              </div>
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ) : null
+                  )}
                 </div>
               </div>
             </div>
@@ -1158,6 +1166,122 @@ const UnstopOpportunity = () => {
               </Row>
             </div>
           </div>
+          {opportunity?.job_detail ? (
+            <div
+              style={{
+                padding: '40px',
+                background: 'rgba(236,239,243,.2)'
+              }}
+            >
+              <div
+                style={{
+                  maxWidth: '1330px',
+                  margin: '0px auto',
+                  width: '100%'
+                }}
+              >
+                <h2
+                  style={{
+                    borderLeft: `10px solid ${themeColor.color}`,
+                    color: '#1c4980',
+                    paddingLeft: 30,
+                    fontSize: '20px',
+                    margin: '30px 0px'
+                  }}
+                >
+                  Additional Information
+                </h2>
+                <div
+                  style={{
+                    marginTop: 30,
+                    padding: 0,
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  {['Job Location(s)', 'Salary', 'Job Type/Timing'].map(ai => (
+                    <div
+                      style={{
+                        width: 'calc(50% - 30px)',
+                        margin: '30px 10px',
+
+                        position: 'relative',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        minHeight: 'auto',
+                        paddingBottom: '20px',
+                        margin: '10px',
+                        overflow: 'hidden',
+                        boxShadow: '0.67px 3.67px 8px #186edf3b',
+                        borderRadius: '13px',
+                        padding: '20px 20px 10px',
+                        display: 'flex',
+                        background: '#fff',
+                        justifyContent: 'space-between'
+                      }}
+                      key={ai}
+                    >
+                      <div
+                        style={{
+                          width: 'calc(100% - 80px)',
+                          paddingRight: '40px'
+                        }}
+                      >
+                        <h3
+                          style={{
+                            fontSize: '17px',
+                            lineHeight: '21px',
+                            marginBottom: '12px',
+                            color: themeColor.color,
+                            fontWeight: 600
+                          }}
+                        >
+                          {ai}
+                        </h3>
+                        <p
+                          style={{
+                            fontSize: '14px',
+                            lineHeight: '19px',
+                            fontWeight: 400,
+                            margin: 0,
+                            padding: 0,
+                            color: '#1c4980'
+                          }}
+                        >
+                          {ai === 'Job Location(s)'
+                            ? opportunity?.job_detail?.locations?.map(s => (
+                                <strong style={{ marginRight: 10 }}>{s}</strong>
+                              ))
+                            : null}
+                        </p>
+                      </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          height: '100px'
+                        }}
+                      >
+                        <img
+                          alt="some icon image"
+                          src={
+                            ai === 'Job Location(s)'
+                              ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/location.svg'
+                              : ai === 'Salary'
+                              ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/salary.svg'
+                              : ai === 'Job Type/Timing'
+                              ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/job-timing.svg'
+                              : null
+                          }
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : null}
           <div
             style={{
               padding: '40px',
@@ -1357,6 +1481,14 @@ const UnstopOpportunity = () => {
               </div>
             </div>
           ) : null}
+
+          <div
+            style={{
+              border: `2px solid ${themeColor.color}`,
+              padding: '20px',
+              margin: '40px 10px'
+            }}
+          ></div>
         </div>
       </div>
       {opportunity?.regnRequirements?.allowed_organisations?.length > 0 ? (
