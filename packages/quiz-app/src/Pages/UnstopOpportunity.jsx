@@ -264,8 +264,20 @@ const UnstopOpportunity = () => {
               ))}
             </Carousel>
           ) : (
-            <div>
-              <Image preview={false} src={opportunity.banner.image_url} />
+            <div
+              style={{
+                background: `linear-gradient(270deg, ${themeColor.color} 0%, #FFFFFF 100%)`
+              }}
+            >
+              <Image
+                preview={false}
+                src={opportunity.banner.image_url}
+                onError={e => {
+                  e.target.onerror = null
+                  e.target.src =
+                    'https://d8it4huxumps7.cloudfront.net/images/opportunity_banner/d2c-jobs/internships-01-left.svg'
+                }}
+              />
             </div>
           )}
           <div
@@ -599,8 +611,22 @@ const UnstopOpportunity = () => {
                     ?.map(s => (
                       <Tag
                         color={themeColor?.color}
-                        style={{ fontSize: '14px' }}
+                        style={{
+                          fontSize: '14px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: '4px'
+                        }}
                         key={s.id}
+                        icon={
+                          s.icon_url ? (
+                            <img
+                              src={s.icon_url}
+                              style={{ width: 22, marginRight: 5 }}
+                            />
+                          ) : null
+                        }
                       >
                         {s?.name}
                       </Tag>
@@ -1210,12 +1236,16 @@ const UnstopOpportunity = () => {
                     justifyContent: 'space-between'
                   }}
                 >
-                  {['Job Location(s)', 'Salary', 'Job Type/Timing'].map(ai => (
+                  {[
+                    'Job Location(s)',
+                    'Salary',
+                    'Job Type/Timing',
+                    'Experience'
+                  ].map(ai => (
                     <div
                       style={{
                         width: 'calc(50% - 30px)',
                         margin: '30px 10px',
-
                         position: 'relative',
                         flexDirection: 'row',
                         alignItems: 'center',
@@ -1242,7 +1272,7 @@ const UnstopOpportunity = () => {
                           style={{
                             fontSize: '17px',
                             lineHeight: '21px',
-                            marginBottom: '12px',
+                            marginBottom: '15px',
                             color: themeColor.color,
                             fontWeight: 600
                           }}
@@ -1267,9 +1297,45 @@ const UnstopOpportunity = () => {
                             <span>
                               <strong> Salary: </strong>
                               {opportunity?.job_detail?.not_disclosed
-                                ? 'not disclosed'
+                                ? 'Not Disclosed'
                                 : opportunity?.job_detail?.min_salary}
                             </span>
+                          ) : ai === 'Job Type/Timing' ? (
+                            <>
+                              <span>
+                                <strong> Job Type: </strong>
+                                {opportunity?.job_detail?.type === 'in_office'
+                                  ? 'In Office'
+                                  : 'Remote'}
+                              </span>
+                              <span
+                                style={{
+                                  display: 'block',
+                                  marginTop: '5px'
+                                }}
+                              >
+                                <strong> Job Timing: </strong>
+                                {opportunity?.job_detail?.timing === 'full_time'
+                                  ? 'Full Time'
+                                  : 'Part Time'}
+                              </span>
+                            </>
+                          ) : ai === 'Experience' ? (
+                            <>
+                              <span>
+                                <strong>Min Experience: </strong>
+                                {opportunity?.job_detail?.min_experience} Years
+                              </span>
+                              <span
+                                style={{
+                                  display: 'block',
+                                  marginTop: '5px'
+                                }}
+                              >
+                                <strong>Max Experience: </strong>
+                                {opportunity?.job_detail?.max_experience} Years
+                              </span>
+                            </>
                           ) : null}
                         </p>
                       </div>
@@ -1289,7 +1355,7 @@ const UnstopOpportunity = () => {
                               ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/salary.svg'
                               : ai === 'Job Type/Timing'
                               ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/job-timing.svg'
-                              : null
+                              : 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/experience.svg'
                           }
                         />
                       </div>

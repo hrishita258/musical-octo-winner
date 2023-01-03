@@ -27,8 +27,7 @@ const ExploreMoreColComp = ({ title, data }) => {
                   alignItems: 'center',
                   gap: 15,
                   padding: 5,
-                  minHeight: 120,
-                  color: '#1c4980'
+                  minHeight: 120
                 }}
                 style={{
                   margin: '10px',
