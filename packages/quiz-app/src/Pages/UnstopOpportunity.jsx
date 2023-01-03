@@ -732,7 +732,8 @@ const UnstopOpportunity = () => {
           maxWidth: '1550px',
           display: 'flex',
           margin: '0px auto',
-          width: '100%'
+          width: '100%',
+          marginTop: '40px'
         }}
       >
         <div
@@ -1202,7 +1203,7 @@ const UnstopOpportunity = () => {
               </Row>
             </div>
           </div>
-          {opportunity?.job_detail && opportunity?.subtype === 'jobs' ? (
+          {opportunity?.job_detail ? (
             <div
               style={{
                 padding: '40px',
@@ -1237,130 +1238,149 @@ const UnstopOpportunity = () => {
                   }}
                 >
                   {[
-                    'Job Location(s)',
-                    'Salary',
-                    'Job Type/Timing',
-                    'Experience'
-                  ].map(ai => (
-                    <div
-                      style={{
-                        width: 'calc(50% - 30px)',
-                        margin: '30px 10px',
-                        position: 'relative',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        minHeight: 'auto',
-                        paddingBottom: '20px',
-                        margin: '10px',
-                        overflow: 'hidden',
-                        boxShadow: '0.67px 3.67px 8px #186edf3b',
-                        borderRadius: '13px',
-                        padding: '20px 20px 10px',
-                        display: 'flex',
-                        background: '#fff',
-                        justifyContent: 'space-between'
-                      }}
-                      key={ai}
-                    >
-                      <div
-                        style={{
-                          width: 'calc(100% - 80px)',
-                          paddingRight: '40px'
-                        }}
-                      >
-                        <h3
+                    {
+                      item: 'Job Location(s)',
+                      keys: [{ key: 'locations', abrivation: 'Locations' }]
+                    },
+                    {
+                      item: 'Salary',
+                      keys: [
+                        { key: 'min_salary', abrivation: 'Min Salary' },
+                        { key: 'max_salary', abrivation: 'Max Salary' }
+                      ]
+                    },
+                    {
+                      item: 'Job Type/Timing',
+                      keys: [
+                        { key: 'type', abrivation: 'Job Type' },
+                        { key: 'timing', abrivation: 'Job Timing' }
+                      ]
+                    },
+                    {
+                      item: 'Experience',
+                      keys: [
+                        {
+                          key: 'min_experience',
+                          abrivation: 'Min Experience'
+                        },
+                        {
+                          key: 'max_experience',
+                          abrivation: 'Max Experience'
+                        }
+                      ]
+                    },
+                    {
+                      item: 'Work Detail',
+                      keys: [
+                        { key: 'working_days', abrivation: 'Working Days' },
+                        {
+                          key: 'working_hours',
+                          abrivation: 'Working Hours'
+                        }
+                      ]
+                    }
+                  ]
+                    .map(s => {
+                      return {
+                        item: s.item,
+                        keys: s.keys.filter(key => {
+                          return (
+                            opportunity.job_detail[key.key] !== undefined &&
+                            opportunity.job_detail[key.key] !== null &&
+                            opportunity.job_detail[key.key] !== ''
+                          )
+                        })
+                      }
+                    })
+
+                    .map((ai, index) =>
+                      ai?.keys?.length > 0 ? (
+                        <div
                           style={{
-                            fontSize: '17px',
-                            lineHeight: '21px',
-                            marginBottom: '15px',
-                            color: themeColor.color,
-                            fontWeight: 600
+                            width: 'calc(50% - 30px)',
+                            margin: '30px 10px',
+                            position: 'relative',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            minHeight: 'auto',
+                            paddingBottom: '20px',
+                            margin: '10px',
+                            overflow: 'hidden',
+                            boxShadow: '0.67px 3.67px 8px #186edf3b',
+                            borderRadius: '13px',
+                            padding: '20px 20px 10px',
+                            display: 'flex',
+                            background: '#fff',
+                            justifyContent: 'space-between'
                           }}
+                          key={index}
                         >
-                          {ai}
-                        </h3>
-                        <p
-                          style={{
-                            fontSize: '14px',
-                            lineHeight: '19px',
-                            fontWeight: 400,
-                            margin: 0,
-                            padding: 0,
-                            color: '#1c4980'
-                          }}
-                        >
-                          {ai === 'Job Location(s)' ? (
-                            opportunity?.job_detail?.locations?.map(s => (
-                              <strong style={{ marginRight: 10 }}>{s}</strong>
-                            ))
-                          ) : ai === 'Salary' ? (
-                            <span>
-                              <strong> Salary: </strong>
-                              {opportunity?.job_detail?.not_disclosed
-                                ? 'Not Disclosed'
-                                : opportunity?.job_detail?.min_salary}
-                            </span>
-                          ) : ai === 'Job Type/Timing' ? (
-                            <>
-                              <span>
-                                <strong> Job Type: </strong>
-                                {opportunity?.job_detail?.type === 'in_office'
-                                  ? 'In Office'
-                                  : 'Remote'}
-                              </span>
-                              <span
-                                style={{
-                                  display: 'block',
-                                  marginTop: '5px'
-                                }}
-                              >
-                                <strong> Job Timing: </strong>
-                                {opportunity?.job_detail?.timing === 'full_time'
-                                  ? 'Full Time'
-                                  : 'Part Time'}
-                              </span>
-                            </>
-                          ) : ai === 'Experience' ? (
-                            <>
-                              <span>
-                                <strong>Min Experience: </strong>
-                                {opportunity?.job_detail?.min_experience} Years
-                              </span>
-                              <span
-                                style={{
-                                  display: 'block',
-                                  marginTop: '5px'
-                                }}
-                              >
-                                <strong>Max Experience: </strong>
-                                {opportunity?.job_detail?.max_experience} Years
-                              </span>
-                            </>
-                          ) : null}
-                        </p>
-                      </div>
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          height: '100px'
-                        }}
-                      >
-                        <img
-                          alt="some icon image"
-                          src={
-                            ai === 'Job Location(s)'
-                              ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/location.svg'
-                              : ai === 'Salary'
-                              ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/salary.svg'
-                              : ai === 'Job Type/Timing'
-                              ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/job-timing.svg'
-                              : 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/experience.svg'
-                          }
-                        />
-                      </div>
-                    </div>
-                  ))}
+                          <div
+                            style={{
+                              width: 'calc(100% - 80px)',
+                              paddingRight: '40px'
+                            }}
+                          >
+                            <h3
+                              style={{
+                                fontSize: '17px',
+                                lineHeight: '21px',
+                                marginBottom: '15px',
+                                color: themeColor.color,
+                                fontWeight: 600
+                              }}
+                            >
+                              {ai.item}
+                            </h3>
+                            {ai.keys.map((keyItem, index) =>
+                              opportunity?.job_detail?.[keyItem.key] !==
+                              null ? (
+                                <p
+                                  key={index}
+                                  style={{
+                                    fontSize: '14px',
+                                    lineHeight: '19px',
+                                    fontWeight: 400,
+                                    margin: 0,
+                                    padding: 0,
+                                    color: '#1c4980',
+                                    marginBottom: '7px'
+                                  }}
+                                >
+                                  <strong>{keyItem.abrivation}: </strong>
+                                  {opportunity?.job_detail?.[keyItem.key] ===
+                                  'in_office'
+                                    ? 'In Office'
+                                    : opportunity?.job_detail?.[keyItem.key]}
+                                </p>
+                              ) : null
+                            )}
+                          </div>
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              height: '100px'
+                            }}
+                          >
+                            <img
+                              alt="some icon image"
+                              src={
+                                ai.item === 'Job Location(s)'
+                                  ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/location.svg'
+                                  : ai.item === 'Salary'
+                                  ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/salary.svg'
+                                  : ai.item === 'Job Type/Timing'
+                                  ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/job-timing.svg'
+                                  : ai.item === 'Experience'
+                                  ? 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/experience.svg'
+                                  : 'https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/stipend/work-detail.svg'
+                              }
+                            />
+                          </div>
+                        </div>
+                      ) : null
+                    )}
                 </div>
               </div>
             </div>
