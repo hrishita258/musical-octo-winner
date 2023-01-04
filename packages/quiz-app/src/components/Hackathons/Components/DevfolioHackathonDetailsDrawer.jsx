@@ -27,7 +27,6 @@ const DevfolioHackathonDetailsDrawer = ({
     })
   }, [hackathon])
 
-  console.log(hackathon)
   return (
     <Drawer
       open={open}

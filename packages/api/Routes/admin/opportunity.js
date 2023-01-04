@@ -74,14 +74,15 @@ router.get('/hackathons/devfolio', async (req, res) => {
   }
 })
 
-router.get('/hackathons/devfolio/project:slug', async (req, res) => {
-  console.log(req.query.slug, 'slug')
+router.get('/hackathons/devfolio/project', async (req, res) => {
+  const { slug } = req.query
+
   try {
     const browser = await puppeteer.launch({
       args: ['--disable-web-security', '--disable-features=IsolateOrigins']
     })
     const page = await browser.newPage()
-    await page.evaluate(() => {
+    await page.evaluate(slug => {
       var url = 'https://api.devfolio.co/api/search/projects'
       var xhr = new XMLHttpRequest()
       xhr.open('POST', url)
@@ -95,16 +96,16 @@ router.get('/hackathons/devfolio/project:slug', async (req, res) => {
       }
       var data = `{
     "hackathon_slugs": [
-        ${req.query.slug}
-        ],
-        "q": "",
-        "filter": "all",
-        "prizes": [],
-        "from": 0,
-        "size": 10
-    }`
+        "${slug}"
+    ],
+    "q": "",
+    "filter": "all",
+    "prizes": [],
+    "from": 0,
+    "size": 500
+}`
       xhr.send(data)
-    })
+    }, slug)
     await page.waitForSelector('pre')
     let element = await page.$('pre')
     let value = await page.evaluate(el => el.textContent, element)
