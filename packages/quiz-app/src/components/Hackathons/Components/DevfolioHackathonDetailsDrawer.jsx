@@ -9,8 +9,9 @@ import {
   Row,
   Tabs
 } from 'antd'
-import React from 'react'
+import React, { useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
+import { getRequest } from '../../../axios/axiosMethods'
 
 const DevfolioHackathonDetailsDrawer = ({
   hackathon,
@@ -18,6 +19,14 @@ const DevfolioHackathonDetailsDrawer = ({
   setSelectedDevFolioHackathonId,
   socialLinks
 }) => {
+  useEffect(() => {
+    getRequest(
+      'opportunity/hackathons/devfolio/project?slug=' + hackathon?.slug
+    ).then(res => {
+      console.log(res)
+    })
+  }, [hackathon])
+
   console.log(hackathon)
   return (
     <Drawer

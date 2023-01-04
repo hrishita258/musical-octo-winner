@@ -1,12 +1,5 @@
-import cron from 'node-cron'
 import puppeteer from 'puppeteer'
 import MeiliSearchClient from '../../db/MeiliSearch.js'
-
-export default () => {
-  cron.schedule('0 * * * *', async () => {
-    await updateUnstoppedOpportunities()
-  })
-}
 
 const updateUnstoppedOpportunities = async () => {
   const AllNewOpportunities = []
@@ -63,3 +56,5 @@ const updateUnstoppedOpportunities = async () => {
     'type'
   ])
 }
+
+cron.schedule('0 * * * *', updateUnstoppedOpportunities)

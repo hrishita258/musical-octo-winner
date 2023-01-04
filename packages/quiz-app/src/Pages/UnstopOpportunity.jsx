@@ -603,7 +603,8 @@ const UnstopOpportunity = () => {
                   className="opportunity-tags-first"
                   style={{
                     display: 'flex',
-                    overflowX: 'hidden'
+                    overflowX: 'hidden',
+                    width: '55%'
                   }}
                 >
                   {opportunity?.filters
