@@ -1,5 +1,16 @@
 import { CheckCircleTwoTone, GlobalOutlined } from '@ant-design/icons'
-import { Avatar, Button, Card, Col, Rate, Row, Space, Spin, Tag } from 'antd'
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  Divider,
+  Rate,
+  Row,
+  Space,
+  Spin,
+  Tag
+} from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { FaLinkedinIn, FaSlackHash, FaTelegramPlane } from 'react-icons/fa'
@@ -64,221 +75,266 @@ const Devfolio = () => {
     )
 
   return (
-    <div style={{ margin: '0px 3rem' }} key="devfolio">
-      <Row gutter={25}>
-        {hackathons?.Past?.map(hackathon => (
-          <Col key={hackathon?.uuid} span={12}>
-            <Card>
-              <div
+    <div key="devfolio">
+      {Object.keys(hackathons).length > 0
+        ? Object.keys(hackathons)?.map(key => (
+            <>
+              <Divider
+                orientation="left"
+                orientationMargin="0"
                 style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: 10
+                  fontSize: '22px',
+                  marginTop: 50
                 }}
               >
-                <div>
-                  <h3 style={{ fontSize: '20px' }}>
-                    {hackathon?.devfolio_official ? (
-                      <CheckCircleTwoTone
-                        style={{ fontSize: 20, marginRight: 10 }}
-                      />
-                    ) : null}
-                    {hackathon?.name}
-                  </h3>
-                  <h4
-                    style={{
-                      color: 'rgb(142, 152, 156)',
-                      fontWeight: 400,
-                      letterSpacing: '0.03em',
-                      fontSize: '14px',
-                      lineHeight: '16px'
-                    }}
-                  >
-                    {hackathon?.type.charAt(0).toUpperCase() +
-                      hackathon?.type.slice(1).toLowerCase()}
-                    {hackathon?.rating ? (
-                      <Rate
+                {key + ' Hackathons'}
+              </Divider>
+              <Row gutter={25} key={key} style={{ marginTop: 20 }}>
+                {hackathons[key]?.map(hackathon => (
+                  <Col key={hackathon?.uuid} span={8}>
+                    <Card>
+                      <div
                         style={{
-                          marginLeft: 10
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: 10
                         }}
-                        size="small"
-                        allowHalf
-                        disabled
-                        defaultValue={hackathon?.rating}
-                      />
-                    ) : null}
-                  </h4>
-                </div>
-                <div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      gap: 8,
-                      fontSize: 25,
-                      color: '#ef78b9',
-                      marginTop: 10
-                    }}
-                  >
-                    {Object.keys(hackathon?.hackathon_setting).map(key =>
-                      hackathon?.hackathon_setting[key] !== null &&
-                      ['site', 'instagram', 'twitter'].includes(key) ? (
-                        <a
-                          href={hackathon?.hackathon_setting[key]}
-                          className="devfolio-social-links"
-                          key={key}
-                          target="_blank"
-                        >
-                          {socialLinks.find(l => l.name === key)?.icon}
-                        </a>
-                      ) : null
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}
-              >
-                <div>
-                  <p
-                    style={{
-                      color: 'rgb(142, 152, 156)',
-                      fontWeight: 700,
-                      letterSpacing: '0.12em',
-                      fontSize: '12px'
-                    }}
-                  >
-                    THEME
-                  </p>
+                      >
+                        <div>
+                          <h3 style={{ fontSize: '20px' }}>
+                            {hackathon?.devfolio_official ? (
+                              <CheckCircleTwoTone
+                                style={{ fontSize: 20, marginRight: 10 }}
+                              />
+                            ) : null}
+                            {hackathon?.name}
+                          </h3>
+                          <h4
+                            style={{
+                              color: 'rgb(142, 152, 156)',
+                              fontWeight: 400,
+                              letterSpacing: '0.03em',
+                              fontSize: '14px',
+                              lineHeight: '16px'
+                            }}
+                          >
+                            {hackathon?.type.charAt(0).toUpperCase() +
+                              hackathon?.type.slice(1).toLowerCase()}
+                            {hackathon?.rating ? (
+                              <Rate
+                                style={{
+                                  marginLeft: 10
+                                }}
+                                size="small"
+                                allowHalf
+                                disabled
+                                defaultValue={hackathon?.rating}
+                              />
+                            ) : null}
+                          </h4>
+                        </div>
+                        <div>
+                          <div
+                            style={{
+                              display: 'flex',
+                              gap: 8,
+                              fontSize: 25,
+                              color: '#ef78b9',
+                              marginTop: 10
+                            }}
+                          >
+                            {Object.keys(hackathon?.hackathon_setting).map(
+                              key =>
+                                hackathon?.hackathon_setting[key] !== null &&
+                                ['site', 'instagram', 'twitter'].includes(
+                                  key
+                                ) ? (
+                                  <a
+                                    href={hackathon?.hackathon_setting[key]}
+                                    className="devfolio-social-links"
+                                    key={key}
+                                    target="_blank"
+                                  >
+                                    {
+                                      socialLinks.find(l => l.name === key)
+                                        ?.icon
+                                    }
+                                  </a>
+                                ) : null
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <div>
+                          <p
+                            style={{
+                              color: 'rgb(142, 152, 156)',
+                              fontWeight: 700,
+                              letterSpacing: '0.12em',
+                              fontSize: '12px'
+                            }}
+                          >
+                            THEME
+                          </p>
 
-                  {hackathon?.themes.length ? (
-                    hackathon?.themes?.map(theme => (
-                      <Tag color="green" key={theme.uuid}>
-                        {theme.name}
-                      </Tag>
-                    ))
-                  ) : (
-                    <Tag color="blue">No Restrictions</Tag>
-                  )}
-                </div>
-                <div style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
-                  <Avatar.Group>
-                    {hackathon?.participants_details?.map(participant => (
-                      <Avatar
-                        key={participant.uuid}
-                        src={participant.profile_image}
-                      />
-                    ))}
-                  </Avatar.Group>
-                  <span
-                    style={{
-                      color: 'rgb(15, 163, 141)',
-                      fontSize: '18px',
-                      fontWeight: 600,
-                      lineHeight: '24px'
-                    }}
-                  >
-                    + {hackathon?.participants_count - 3} Participating
-                  </span>
-                </div>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  marginTop: 25,
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 19 }}>
-                  <div
-                    style={{
-                      backgroundColor: ' rgb(245, 247, 247)',
-                      padding: '16px',
-                      borderRadius: '16px',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    <p
-                      style={{
-                        color: 'rgb(56, 71, 78)',
-                        fontWeight: 700,
-                        fontSize: '12px',
-                        lineHeight: '16px',
-                        letterSpacing: '0.12em',
-                        margin: 0
-                      }}
-                    >
-                      {' '}
-                      {hackathon?.location ? 'ONLINE' : 'OFFLINE'}
-                    </p>
-                  </div>
-                  <div
-                    style={{
-                      backgroundColor: ' rgb(245, 247, 247)',
-                      padding: '16px',
-                      borderRadius: '16px',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    <p
-                      style={{
-                        color: 'rgb(56, 71, 78)',
-                        fontWeight: 700,
-                        fontSize: '12px',
-                        lineHeight: '16px',
-                        letterSpacing: '0.12em',
-                        margin: 0
-                      }}
-                    >
-                      {' '}
-                      {hackathon?.is_private ? 'PRIVATE' : 'OPEN'}
-                    </p>
-                  </div>
-                  <div
-                    style={{
-                      backgroundColor: ' rgb(245, 247, 247)',
-                      padding: '16px',
-                      borderRadius: '16px',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    <p
-                      style={{
-                        color: 'rgb(56, 71, 78)',
-                        fontWeight: 700,
-                        fontSize: '12px',
-                        lineHeight: '16px',
-                        letterSpacing: '0.12em',
-                        margin: 0
-                      }}
-                    >
-                      {new Date(hackathon?.starts_at) > new Date(Date.now())
-                        ? (
-                            'starts ' + moment(hackathon?.starts_at).fromNow()
-                          ).toUpperCase()
-                        : 'ONGOING'}
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  type="primary"
-                  size="large"
-                  onClick={() =>
-                    setSelectedDevFolioHackathonId(hackathon?.uuid)
-                  }
-                >
-                  Apply Now
-                </Button>
-              </div>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+                          {hackathon?.themes.length ? (
+                            hackathon?.themes?.map(theme => (
+                              <Tag color="green" key={theme.uuid}>
+                                {theme.name}
+                              </Tag>
+                            ))
+                          ) : (
+                            <Tag color="blue">No Restrictions</Tag>
+                          )}
+                        </div>
+                        <div
+                          style={{
+                            display: 'flex',
+                            gap: 15,
+                            alignItems: 'center'
+                          }}
+                        >
+                          <Avatar.Group>
+                            {hackathon?.participants_details?.map(
+                              participant => (
+                                <Avatar
+                                  key={participant.uuid}
+                                  src={participant.profile_image}
+                                />
+                              )
+                            )}
+                          </Avatar.Group>
+                          <span
+                            style={{
+                              color: 'rgb(15, 163, 141)',
+                              fontSize: '18px',
+                              fontWeight: 600,
+                              lineHeight: '24px'
+                            }}
+                          >
+                            + {hackathon?.participants_count - 3} Participating
+                          </span>
+                        </div>
+                      </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          marginTop: 25,
+                          alignItems: 'center',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 19
+                          }}
+                        >
+                          <div
+                            style={{
+                              backgroundColor: ' rgb(245, 247, 247)',
+                              padding: '16px',
+                              borderRadius: '16px',
+                              whiteSpace: 'nowrap'
+                            }}
+                          >
+                            <p
+                              style={{
+                                color: 'rgb(56, 71, 78)',
+                                fontWeight: 700,
+                                fontSize: '12px',
+                                lineHeight: '16px',
+                                letterSpacing: '0.12em',
+                                margin: 0
+                              }}
+                            >
+                              {' '}
+                              {hackathon?.location ? 'ONLINE' : 'OFFLINE'}
+                            </p>
+                          </div>
+                          <div
+                            style={{
+                              backgroundColor: ' rgb(245, 247, 247)',
+                              padding: '16px',
+                              borderRadius: '16px',
+                              whiteSpace: 'nowrap'
+                            }}
+                          >
+                            <p
+                              style={{
+                                color: 'rgb(56, 71, 78)',
+                                fontWeight: 700,
+                                fontSize: '12px',
+                                lineHeight: '16px',
+                                letterSpacing: '0.12em',
+                                margin: 0
+                              }}
+                            >
+                              {' '}
+                              {hackathon?.is_private ? 'PRIVATE' : 'OPEN'}
+                            </p>
+                          </div>
+                          <div
+                            style={{
+                              backgroundColor: ' rgb(245, 247, 247)',
+                              padding: '16px',
+                              borderRadius: '16px',
+                              whiteSpace: 'nowrap'
+                            }}
+                          >
+                            <p
+                              style={{
+                                color: 'rgb(56, 71, 78)',
+                                fontWeight: 700,
+                                fontSize: '12px',
+                                lineHeight: '16px',
+                                letterSpacing: '0.12em',
+                                margin: 0
+                              }}
+                            >
+                              {new Date(hackathon?.starts_at) >
+                              new Date(Date.now())
+                                ? (
+                                    'starts ' +
+                                    moment(hackathon?.starts_at).fromNow()
+                                  ).toUpperCase()
+                                : 'ONGOING'}
+                            </p>
+                          </div>
+                        </div>
+
+                        <Button
+                          type="primary"
+                          size="large"
+                          disabled={key === 'Upcoming' ? true : false}
+                          onClick={() =>
+                            setSelectedDevFolioHackathonId(hackathon?.uuid)
+                          }
+                        >
+                          {key === 'Ongoing'
+                            ? 'Apply Now'
+                            : key === 'Past'
+                            ? 'See Projects'
+                            : 'Apply Now'}
+                        </Button>
+                      </div>
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+            </>
+          ))
+        : null}
+
       <DevfolioHackathonDetailsDrawer
         hackathon={hackathons?.Past?.find(
           hackathon => hackathon?.uuid === selectedDevFolioHackathonId

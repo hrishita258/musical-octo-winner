@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Card,
   Col,
   Collapse,
@@ -10,6 +11,8 @@ import {
   Tabs
 } from 'antd'
 import React, { useEffect, useState } from 'react'
+import { AiOutlineHeart } from 'react-icons/ai'
+import { FaMedal } from 'react-icons/fa'
 import ReactMarkdown from 'react-markdown'
 import { getRequest } from '../../../axios/axiosMethods'
 
@@ -414,7 +417,11 @@ const DevfolioHackathonDetailsDrawer = ({
                   <Row gutter={15}>
                     {projects.map(project => (
                       <Col span={8} key={project.uuid}>
-                        <Card hoverable bodyStyle={{ padding: '10px' }}>
+                        <Card
+                          hoverable
+                          bodyStyle={{ padding: '10px' }}
+                          size="small"
+                        >
                           <div
                             style={{
                               position: 'relative',
@@ -425,12 +432,102 @@ const DevfolioHackathonDetailsDrawer = ({
                             }}
                           >
                             <Image
-                              src={project?.cover_img}
+                              preview={false}
+                              src={
+                                project?.cover_img
+                                  ? project?.cover_img
+                                  : 'https://imgs.search.brave.com/tHDXasdjBuBLTWM5PGkUDRMNXh04Ol31l0aGP5Mjyc0/rs:fit:675:450:1/g:ce/aHR0cHM6Ly9jZG5p/Lmljb25zY291dC5j/b20vaWxsdXN0cmF0/aW9uL3ByZW1pdW0v/dGh1bWIvYnVzaW5l/c3MtdGVhbS1wbGFu/bmluZy1wcm9qZWN0/LTI3NDEwMzYtMjI4/MDk0MC5wbmc'
+                              }
                               style={{ borderRadius: '5px' }}
                             />
                           </div>
-                          <h3 style={{}}>{project?.name}</h3>
-                          <p>{project?.tagline}</p>
+                          <Card.Meta
+                            style={{ marginTop: 7 }}
+                            title={project?.name}
+                            description={
+                              <p
+                                style={{
+                                  display: '-webkit-box',
+                                  WebkitLineClamp: 1,
+                                  WebkitBoxOrient: 'vertical',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis'
+                                }}
+                              >
+                                {project.tagline}
+                              </p>
+                            }
+                          />
+                          <div
+                            style={{
+                              border: '1px solid #e8e8e8',
+                              borderRadius: '5px',
+                              padding: '7px',
+                              shadow: '0 1px 3px rgba(26,26,26,.1)',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center'
+                            }}
+                          >
+                            <Avatar.Group
+                              maxCount={3}
+                              maxStyle={{
+                                color: '#f56a00',
+                                backgroundColor: '#fde3cf'
+                              }}
+                            >
+                              {project?.members.map(member =>
+                                member.profile_image !== null ? (
+                                  <Avatar src={member.profile_image} />
+                                ) : (
+                                  <Avatar
+                                    style={{ backgroundColor: '#87d068' }}
+                                  >
+                                    {member.first_name[0].toUpperCase()}
+                                    {member.last_name[0].toUpperCase()}
+                                  </Avatar>
+                                )
+                              )}
+                            </Avatar.Group>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 10
+                              }}
+                            >
+                              <div>
+                                {project?.prizes?.length
+                                  ? project?.prizes?.map(prize => (
+                                      <div
+                                        style={{
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          gap: 2,
+                                          shadow: '0 3px 6px rgba(26,26,26,.1)',
+                                          borderRadius: '5px',
+                                          padding: '3px',
+                                          border: '1px solid #e8e8e8'
+                                        }}
+                                      >
+                                        <FaMedal color="#ef78b9" size={25} />
+                                        <span>{prize?.name}</span>
+                                      </div>
+                                    ))
+                                  : null}
+                              </div>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 2
+                                }}
+                              >
+                                <AiOutlineHeart color="#ef78b9" size={25} />
+                                <span>{project?.likes}</span>
+                              </div>
+                            </div>
+                          </div>
                         </Card>
                       </Col>
                     ))}
