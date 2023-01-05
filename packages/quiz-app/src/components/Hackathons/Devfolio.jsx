@@ -35,8 +35,7 @@ const Devfolio = () => {
       .then(res => {
         if (res.status === 200) {
           if (res.data.status === 200) {
-            console.log(res.data)
-            setHackathons(res.data.result.hits)
+            setHackathons(res.data.result)
             setLoading(false)
           }
         }
@@ -46,7 +45,6 @@ const Devfolio = () => {
         console.log(err)
       })
   }, [])
-
   if (loading)
     return (
       <div
@@ -68,7 +66,7 @@ const Devfolio = () => {
   return (
     <div style={{ margin: '0px 3rem' }} key="devfolio">
       <Row gutter={25}>
-        {hackathons?.map(hackathon => (
+        {hackathons?.Past?.map(hackathon => (
           <Col key={hackathon?.uuid} span={12}>
             <Card>
               <div
@@ -282,7 +280,7 @@ const Devfolio = () => {
         ))}
       </Row>
       <DevfolioHackathonDetailsDrawer
-        hackathon={hackathons?.find(
+        hackathon={hackathons?.Past?.find(
           hackathon => hackathon?.uuid === selectedDevFolioHackathonId
         )}
         open={selectedDevFolioHackathonId !== null ? true : false}

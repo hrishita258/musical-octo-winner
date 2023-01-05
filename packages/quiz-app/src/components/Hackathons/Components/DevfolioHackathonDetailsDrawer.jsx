@@ -9,7 +9,7 @@ import {
   Row,
   Tabs
 } from 'antd'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { getRequest } from '../../../axios/axiosMethods'
 
@@ -19,14 +19,16 @@ const DevfolioHackathonDetailsDrawer = ({
   setSelectedDevFolioHackathonId,
   socialLinks
 }) => {
+  const [projects, setProjects] = useState([])
+
   useEffect(() => {
     getRequest(
       'opportunity/hackathons/devfolio/project?slug=' + hackathon?.slug
     ).then(res => {
-      console.log(res)
+      setProjects(res.data.result)
     })
   }, [hackathon])
-
+  console.log(projects, 'projects')
   return (
     <Drawer
       open={open}
@@ -408,7 +410,54 @@ const DevfolioHackathonDetailsDrawer = ({
               {
                 label: `Projects`,
                 key: '4',
-                children: `Content of Tab Pane 4`
+                children: projects.length ? (
+                  <Row gutter={15}>
+                    {projects.map(project => (
+                      <Col span={8} key={project.uuid}>
+                        <Card hoverable bodyStyle={{ padding: '10px' }}>
+                          <div
+                            style={{
+                              position: 'relative',
+                              height: '190px',
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center'
+                            }}
+                          >
+                            <Image
+                              src={project?.cover_img}
+                              style={{ borderRadius: '5px' }}
+                            />
+                          </div>
+                          <h3 style={{}}>{project?.name}</h3>
+                          <p>{project?.tagline}</p>
+                        </Card>
+                      </Col>
+                    ))}
+                  </Row>
+                ) : (
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: '50vh'
+                    }}
+                  >
+                    <Empty
+                      image="https://cdni.iconscout.com/illustration/premium/thumb/error-404-4344461-3613889.png"
+                      imageStyle={{
+                        height: 300
+                      }}
+                      description={
+                        <span>
+                          No Projects have been added to this hackathon yet.
+                          Check back later!
+                        </span>
+                      }
+                    />
+                  </div>
+                )
               },
               {
                 label: `Schedule`,

@@ -20,53 +20,79 @@ router.get('/hackathons/devpost', async (req, res) => {
 })
 
 router.get('/hackathons/devfolio', async (req, res) => {
+  // console.log(await MeiliSearchClient.index('devfolio').deleteAllDocuments())
+
   try {
-    //     const browser = await puppeteer.launch({
-    //       args: ['--disable-web-security', '--disable-features=IsolateOrigins']
-    //     })
-    //     const page = await browser.newPage()
-    //     await page.evaluate(() => {
-    //       var url = 'https://api.devfolio.co/api/search/hackathons'
-    //       var xhr = new XMLHttpRequest()
-    //       xhr.open('POST', url)
-    //       xhr.setRequestHeader('Accept', 'application/json')
-    //       xhr.setRequestHeader('Content-Type', 'application/json')
-    //       xhr.onreadystatechange = function () {
-    //         if (xhr.readyState === 4) {
-    //           document.body.appendChild(document.createElement('pre'))
-    //           document.getElementsByTagName('pre')[0].innerText = xhr.responseText
-    //         }
-    //       }
-    //       var data = `{
-    //     "type": "application_open",
+    // const browser = await puppeteer.launch({
+    //   args: ['--disable-web-security', '--disable-features=IsolateOrigins'],
+    //   headless: false
+    // })
+    // //   // const hackathonStatus = ['application_open', 'end', 'upcoming']
+    // const page = await browser.newPage()
+    // await page.evaluate(() => {
+    //   var url = 'https://api.devfolio.co/api/search/hackathons'
+    //   var xhr = new XMLHttpRequest()
+    //   xhr.open('POST', url)
+    //   xhr.setRequestHeader('Accept', 'application/json')
+    //   xhr.setRequestHeader('Content-Type', 'application/json')
+    //   xhr.onreadystatechange = function () {
+    //     if (xhr.readyState === 4) {
+    //       document.body.appendChild(document.createElement('pre'))
+    //       document.getElementsByTagName('pre')[0].innerText = xhr.responseText
+    //     }
+    //   }
+    //   var data = `{
+    //     "type": "upcoming",
     //     "from": 0,
-    //     "size": 30
+    //     "size": 1000
     // }`
-    //       xhr.send(data)
-    //     })
-    //     await page.waitForSelector('pre')
-    //     let element = await page.$('pre')
-    //     let value = await page.evaluate(el => el.textContent, element)
-    //     console.log(await MeiliSearchClient.index('devfolio').deleteAllDocuments())
-    //     await MeiliSearchClient.index('devfolio').addDocuments(
-    //       JSON.parse(value)
-    //         .hits.hits.map(s => s._source)
-    //         .map(s => ({
-    //           ...s,
-    //           end_date: Date.parse(s.ends_at)
-    //         }))
-    //     )
-    //     await browser.close()
-    //     if (value)
-    //       console.log(
-    //         await MeiliSearchClient.index('devfolio').updateFilterableAttributes([
-    //           'end_date'
-    //         ])
-    //       )
-    const result = await MeiliSearchClient.index('devfolio').search('', {
-      filter: `end_date > ${Date.now()}`,
+    //   xhr.send(data)
+    // })
+    // await page.waitForSelector('pre')
+    // let element = await page.$('pre')
+    // let value = await page.evaluate(el => el.textContent, element)
+    // if (value) {
+    //   await MeiliSearchClient.index('devfolio').addDocuments(
+    //     JSON.parse(value)
+    //       .hits.hits.map(s => s._source)
+    //       .map(s => ({
+    //         ...s,
+    //         end_date: Date.parse(s.ends_at),
+    //         Hstatus: 'upcoming'
+    //       }))
+    //   )
+    //   await MeiliSearchClient.index('devfolio').updateFilterableAttributes([
+    //     'end_date',
+    //     'Hstatus',
+    //     'private',
+    //     'devfolio_official',
+    //     'featured',
+    //     'apply_mode',
+    //     'status',
+    //     'rating',
+    //     'city'
+    //   ])
+    // }
+    // await page.close()
+    // await browser.close()
+    const result = {}
+    const Ongoing = await MeiliSearchClient.index('devfolio').search('', {
+      filter: `end_date > ${Date.now()} AND Hstatus = "application_open"`,
       limit: 50
     })
+    const Upcoming = await MeiliSearchClient.index('devfolio').search('', {
+      filter: `end_date > ${Date.now()} AND Hstatus = "upcoming"`,
+      limit: 50
+    })
+    const Past = await MeiliSearchClient.index('devfolio').search('', {
+      filter: `Hstatus = "past"`,
+      limit: 50
+    })
+
+    result.Ongoing = Ongoing.hits
+    result.Upcoming = Upcoming.hits
+    result.Past = Past.hits
+
     if (result) res.status(200).json({ result, msg: 'done', status: 200 })
   } catch (error) {
     console.log(error)
@@ -76,7 +102,6 @@ router.get('/hackathons/devfolio', async (req, res) => {
 
 router.get('/hackathons/devfolio/project', async (req, res) => {
   const { slug } = req.query
-
   try {
     const browser = await puppeteer.launch({
       args: ['--disable-web-security', '--disable-features=IsolateOrigins']
@@ -111,7 +136,12 @@ router.get('/hackathons/devfolio/project', async (req, res) => {
     let value = await page.evaluate(el => el.textContent, element)
 
     await browser.close()
-    if (value) res.status(200).json({ result: value, msg: 'done', status: 200 })
+    if (value)
+      res.status(200).json({
+        result: JSON.parse(value).hits.hits.map(s => s._source),
+        msg: 'done',
+        status: 200
+      })
   } catch (error) {
     console.log(error)
     res.status(500).json({ result: null, msg: 'error', status: 500 })
