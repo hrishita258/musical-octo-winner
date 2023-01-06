@@ -8,7 +8,8 @@ import {
   Empty,
   Image,
   Row,
-  Tabs
+  Tabs,
+  Tag
 } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineHeart } from 'react-icons/ai'
@@ -31,15 +32,19 @@ const DevfolioHackathonDetailsDrawer = ({
       setProjects(res.data.result)
     })
   }, [hackathon])
-  console.log(projects, 'projects')
+  console.log(projects)
   return (
     <Drawer
       open={open}
+      destroyOnClose
       size="large"
       closable={false}
       bodyStyle={{ padding: '0px' }}
-      width={1200}
-      onClose={() => setSelectedDevFolioHackathonId(null)}
+      onClose={() => {
+        setProjects(null)
+        setSelectedDevFolioHackathonId(null)
+      }}
+      width={window.innerWidth > 1180 ? 1150 : '100%'}
     >
       <div>
         <div
@@ -91,7 +96,7 @@ const DevfolioHackathonDetailsDrawer = ({
                       <ReactMarkdown>{hackathon?.desc}</ReactMarkdown>
                     </div>
                     <Divider orientation="left" orientationMargin={0}>
-                      <h1>Social Links</h1>
+                      <h2>Social Links</h2>
                     </Divider>
                     <div style={{ marginBottom: '4rem' }}>
                       <Row gutter={[16, 16]}>
@@ -193,44 +198,49 @@ const DevfolioHackathonDetailsDrawer = ({
                         )}
                       </Row>
                     </div>
-                    <Divider orientation="left" orientationMargin={0}>
-                      <h1>FAQs</h1>
-                    </Divider>
-                    <Collapse
-                      defaultActiveKey={['1']}
-                      style={{ marginBottom: '4rem', width: '100%' }}
-                    >
-                      {hackathon?.hackathon_faqs?.map((faq, index) => (
-                        <Collapse.Panel
-                          header={
-                            <h3
-                              style={{
-                                fontSize: '16px',
-                                fontWeight: 500,
-                                lineHeight: '28px'
-                              }}
-                            >
-                              {faq?.question}
-                            </h3>
-                          }
-                          key={faq.uuid}
+                    {hackathon?.hackathon_faqs?.length > 0 ? (
+                      <>
+                        <Divider orientation="left" orientationMargin={0}>
+                          <h2>FAQs</h2>
+                        </Divider>
+                        <Collapse
+                          defaultActiveKey={['1']}
+                          style={{ marginBottom: '4rem', width: '100%' }}
                         >
-                          <div
-                            style={{
-                              fontSize: '17px',
-                              fontWeight: 400,
-                              lineHeight: '32px'
-                            }}
-                          >
-                            <ReactMarkdown>{faq?.answer}</ReactMarkdown>
-                          </div>
-                        </Collapse.Panel>
-                      ))}
-                    </Collapse>
+                          {hackathon?.hackathon_faqs?.map((faq, index) => (
+                            <Collapse.Panel
+                              header={
+                                <h3
+                                  style={{
+                                    fontSize: '16px',
+                                    fontWeight: 500,
+                                    lineHeight: '28px'
+                                  }}
+                                >
+                                  {faq?.question}
+                                </h3>
+                              }
+                              key={faq.uuid}
+                            >
+                              <div
+                                style={{
+                                  fontSize: '17px',
+                                  fontWeight: 400,
+                                  lineHeight: '32px'
+                                }}
+                              >
+                                <ReactMarkdown>{faq?.answer}</ReactMarkdown>
+                              </div>
+                            </Collapse.Panel>
+                          ))}
+                        </Collapse>
+                      </>
+                    ) : null}
+
                     {hackathon?.sponsor_tiers.length ? (
                       <>
                         <Divider orientation="left" orientationMargin={0}>
-                          <h1>Sponsors</h1>
+                          <h2>Sponsors</h2>
                         </Divider>
                         {hackathon?.sponsor_tiers?.map(tier =>
                           tier?.sponsors.length ? (
@@ -271,7 +281,7 @@ const DevfolioHackathonDetailsDrawer = ({
                   <Row gutter={[20, 25]}>
                     {hackathon?.prizes?.map(prize => (
                       <Col span={12} key={prize.uuid}>
-                        <h2>{prize.name}</h2>
+                        <h3>{prize.name}</h3>
                         <Card>
                           <ReactMarkdown>{prize.desc}</ReactMarkdown>
                         </Card>
@@ -333,7 +343,7 @@ const DevfolioHackathonDetailsDrawer = ({
                         >
                           <Card.Meta
                             title={judge.name}
-                            description={<span>{judge.company.name}</span>}
+                            description={<span>{judge.company?.name}</span>}
                           />
                           <p
                             style={{
@@ -413,90 +423,26 @@ const DevfolioHackathonDetailsDrawer = ({
               {
                 label: `Projects`,
                 key: '4',
-                children: projects.length ? (
-                  <Row gutter={15}>
-                    {projects.map(project => (
-                      <Col span={8} key={project.uuid}>
-                        <Card
-                          hoverable
-                          bodyStyle={{ padding: '10px' }}
-                          size="small"
-                        >
-                          <div
-                            style={{
-                              position: 'relative',
-                              height: '190px',
-                              display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center'
-                            }}
+                children:
+                  projects && projects?.length ? (
+                    <Row gutter={15}>
+                      {projects.map(project => (
+                        <Col span={8} key={project.uuid}>
+                          <Card
+                            hoverable
+                            bodyStyle={{ padding: '10px' }}
+                            size="small"
                           >
-                            <Image
-                              preview={false}
-                              src={
-                                project?.cover_img
-                                  ? project?.cover_img
-                                  : 'https://imgs.search.brave.com/tHDXasdjBuBLTWM5PGkUDRMNXh04Ol31l0aGP5Mjyc0/rs:fit:675:450:1/g:ce/aHR0cHM6Ly9jZG5p/Lmljb25zY291dC5j/b20vaWxsdXN0cmF0/aW9uL3ByZW1pdW0v/dGh1bWIvYnVzaW5l/c3MtdGVhbS1wbGFu/bmluZy1wcm9qZWN0/LTI3NDEwMzYtMjI4/MDk0MC5wbmc'
-                              }
-                              style={{ borderRadius: '5px' }}
-                            />
-                          </div>
-                          <Card.Meta
-                            style={{ marginTop: 7 }}
-                            title={project?.name}
-                            description={
-                              <p
+                            {project?.prizes?.length > 0 ? (
+                              <div
                                 style={{
-                                  display: '-webkit-box',
-                                  WebkitLineClamp: 1,
-                                  WebkitBoxOrient: 'vertical',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis'
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 2,
+                                  shadow: '0 3px 6px rgba(26,26,26,.1)',
+                                  overflowX: 'scroll'
                                 }}
                               >
-                                {project.tagline}
-                              </p>
-                            }
-                          />
-                          <div
-                            style={{
-                              border: '1px solid #e8e8e8',
-                              borderRadius: '5px',
-                              padding: '7px',
-                              shadow: '0 1px 3px rgba(26,26,26,.1)',
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center'
-                            }}
-                          >
-                            <Avatar.Group
-                              maxCount={3}
-                              maxStyle={{
-                                color: '#f56a00',
-                                backgroundColor: '#fde3cf'
-                              }}
-                            >
-                              {project?.members.map(member =>
-                                member.profile_image !== null ? (
-                                  <Avatar src={member.profile_image} />
-                                ) : (
-                                  <Avatar
-                                    style={{ backgroundColor: '#87d068' }}
-                                  >
-                                    {member.first_name[0].toUpperCase()}
-                                    {member.last_name[0].toUpperCase()}
-                                  </Avatar>
-                                )
-                              )}
-                            </Avatar.Group>
-                            <div
-                              style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 10
-                              }}
-                            >
-                              <div>
                                 {project?.prizes?.length
                                   ? project?.prizes?.map(prize => (
                                       <div
@@ -506,8 +452,7 @@ const DevfolioHackathonDetailsDrawer = ({
                                           gap: 2,
                                           shadow: '0 3px 6px rgba(26,26,26,.1)',
                                           borderRadius: '5px',
-                                          padding: '3px',
-                                          border: '1px solid #e8e8e8'
+                                          padding: '3px'
                                         }}
                                       >
                                         <FaMedal color="#ef78b9" size={25} />
@@ -516,50 +461,138 @@ const DevfolioHackathonDetailsDrawer = ({
                                     ))
                                   : null}
                               </div>
+                            ) : null}
+                            <div
+                              style={{
+                                position: 'relative',
+                                height: '190px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <Image
+                                preview={false}
+                                src={
+                                  project?.cover_img
+                                    ? project?.cover_img
+                                    : 'https://imgs.search.brave.com/tHDXasdjBuBLTWM5PGkUDRMNXh04Ol31l0aGP5Mjyc0/rs:fit:675:450:1/g:ce/aHR0cHM6Ly9jZG5p/Lmljb25zY291dC5j/b20vaWxsdXN0cmF0/aW9uL3ByZW1pdW0v/dGh1bWIvYnVzaW5l/c3MtdGVhbS1wbGFu/bmluZy1wcm9qZWN0/LTI3NDEwMzYtMjI4/MDk0MC5wbmc'
+                                }
+                                style={{ borderRadius: '5px' }}
+                              />
+                            </div>
+                            <Card.Meta
+                              style={{ marginTop: 7 }}
+                              title={project?.name}
+                              description={
+                                <p
+                                  style={{
+                                    display: '-webkit-box',
+                                    WebkitLineClamp: 1,
+                                    WebkitBoxOrient: 'vertical',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                  }}
+                                >
+                                  {project.tagline}
+                                </p>
+                              }
+                            />
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 2,
+                                shadow: '0 3px 6px rgba(26,26,26,.1)',
+                                overflow: 'hidden',
+                                margin: '10px 0px '
+                              }}
+                            >
+                              {project?.hashtags?.length > 0
+                                ? project?.hashtags?.map(hashtag => (
+                                    <Tag key={hashtag?.uuid} color="red">
+                                      {hashtag?.name}
+                                    </Tag>
+                                  ))
+                                : null}
+                            </div>
+
+                            <div
+                              style={{
+                                borderRadius: '5px',
+                                padding: '7px',
+                                shadow: '0 1px 3px rgba(26,26,26,.1)',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <Avatar.Group
+                                maxCount={5}
+                                maxStyle={{
+                                  color: '#f56a00',
+                                  backgroundColor: '#fde3cf'
+                                }}
+                              >
+                                {project?.members.map(member =>
+                                  member.profile_image !== null ? (
+                                    <Avatar src={member.profile_image} />
+                                  ) : (
+                                    <Avatar
+                                      style={{ backgroundColor: '#87d068' }}
+                                    >
+                                      {member.first_name[0].toUpperCase()}
+                                      {member.last_name[0].toUpperCase()}
+                                    </Avatar>
+                                  )
+                                )}
+                              </Avatar.Group>
                               <div
                                 style={{
                                   display: 'flex',
                                   alignItems: 'center',
-                                  gap: 2
+                                  gap: 10
                                 }}
                               >
-                                <AiOutlineHeart color="#ef78b9" size={25} />
-                                <span>{project?.likes}</span>
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 2
+                                  }}
+                                >
+                                  <AiOutlineHeart color="#ef78b9" size={25} />
+                                  <span>{project?.likes}</span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </Card>
-                      </Col>
-                    ))}
-                  </Row>
-                ) : (
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      height: '50vh'
-                    }}
-                  >
-                    <Empty
-                      image="https://cdni.iconscout.com/illustration/premium/thumb/error-404-4344461-3613889.png"
-                      imageStyle={{
-                        height: 300
+                          </Card>
+                        </Col>
+                      ))}
+                    </Row>
+                  ) : (
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '50vh'
                       }}
-                      description={
-                        <span>
-                          No Projects have been added to this hackathon yet.
-                          Check back later!
-                        </span>
-                      }
-                    />
-                  </div>
-                )
-              },
-              {
-                label: `Schedule`,
-                key: '5',
-                children: `Content of Tab Pane 5`
+                    >
+                      <Empty
+                        image="https://cdni.iconscout.com/illustration/premium/thumb/error-404-4344461-3613889.png"
+                        imageStyle={{
+                          height: 300
+                        }}
+                        description={
+                          <span>
+                            No Projects have been added to this hackathon yet.
+                            Check back later!
+                          </span>
+                        }
+                      />
+                    </div>
+                  )
               }
             ]}
           />

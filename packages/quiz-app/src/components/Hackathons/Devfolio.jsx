@@ -27,6 +27,7 @@ const Devfolio = () => {
   const [loading, setLoading] = useState(true)
   const [selectedDevFolioHackathonId, setSelectedDevFolioHackathonId] =
     useState(null)
+  const [activeTab, setActiveTab] = useState('Ongoing')
 
   const socialLinks = [
     { name: 'facebook', icon: <ImFacebook />, color: '#1778F2' },
@@ -77,7 +78,7 @@ const Devfolio = () => {
   return (
     <div key="devfolio">
       {Object.keys(hackathons).length > 0
-        ? Object.keys(hackathons)?.map(key => (
+        ? Object.keys(hackathons)?.map((key, index) => (
             <>
               <Divider
                 orientation="left"
@@ -86,12 +87,13 @@ const Devfolio = () => {
                   fontSize: '22px',
                   marginTop: 50
                 }}
+                key={key + index}
               >
                 {key + ' Hackathons'}
               </Divider>
               <Row gutter={25} key={key} style={{ marginTop: 20 }}>
                 {hackathons[key]?.map(hackathon => (
-                  <Col key={hackathon?.uuid} span={8}>
+                  <Col key={hackathon?.uuid} sm={24} md={12} xl={12} xxl={8}>
                     <Card>
                       <div
                         style={{
@@ -316,9 +318,10 @@ const Devfolio = () => {
                           type="primary"
                           size="large"
                           disabled={key === 'Upcoming' ? true : false}
-                          onClick={() =>
+                          onClick={() => {
                             setSelectedDevFolioHackathonId(hackathon?.uuid)
-                          }
+                            setActiveTab(key)
+                          }}
                         >
                           {key === 'Ongoing'
                             ? 'Apply Now'
@@ -336,7 +339,7 @@ const Devfolio = () => {
         : null}
 
       <DevfolioHackathonDetailsDrawer
-        hackathon={hackathons?.Past?.find(
+        hackathon={hackathons[activeTab]?.find(
           hackathon => hackathon?.uuid === selectedDevFolioHackathonId
         )}
         open={selectedDevFolioHackathonId !== null ? true : false}
