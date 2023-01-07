@@ -11,7 +11,7 @@ import PageLayout from '../components/PageLayout'
 const Hackathons = () => {
   const [page, setPage] = useState(() => 1)
   const [devpostHackathons, setDevpostHackathons] = useState(() => [])
-  const [activeTab, setActiveTab] = useState(() => 'devpost')
+  const [activeTab, setActiveTab] = useState(() => '')
   const [loading, setLoading] = useState(() => true)
 
   const BREADCRUMBS = [
@@ -28,6 +28,12 @@ const Hackathons = () => {
   ]
 
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const tab = urlParams.get('tab')
+    if (tab) setActiveTab(tab)
+  }, [])
+
+  useEffect(() => {
     getRequest('opportunity/hackathons/devpost?page_number=' + page).then(
       res => {
         const { result } = res.data
@@ -42,6 +48,11 @@ const Hackathons = () => {
 
   useEffect(() => {
     document.title = activeTab
+    window.history.pushState(
+      { path: '/opportunities' },
+      '',
+      'opportunities?tab=' + activeTab
+    )
   }, [activeTab])
 
   return (
@@ -62,7 +73,7 @@ const Hackathons = () => {
       </div>
       <div style={{ margin: '0px 2rem' }}>
         <Tabs
-          defaultActiveKey="devpost"
+          defaultActiveKey={activeTab}
           size="large"
           onChange={e => {
             setActiveTab(e)
