@@ -1305,7 +1305,6 @@ const UnstopOpportunity = () => {
                             alignItems: 'center',
                             minHeight: 'auto',
                             paddingBottom: '20px',
-                            margin: '10px',
                             overflow: 'hidden',
                             boxShadow: '0.67px 3.67px 8px #186edf3b',
                             borderRadius: '13px',

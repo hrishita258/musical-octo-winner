@@ -5,6 +5,7 @@ import { randomBytes } from 'crypto'
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import { MeiliSearch } from 'meilisearch'
+import initScheduledJobs from './cronjobs/OpportunityCrons.js'
 import APIRoutes from './Routes/index.js'
 
 const client = new MeiliSearch({
@@ -201,5 +202,6 @@ const generateTokens = user => {
   }
 }
 const generateRandomString = () => randomBytes(128).toString('hex')
+initScheduledJobs()
 
 app.listen(PORT, console.log('server started on port' + ' ' + PORT))
