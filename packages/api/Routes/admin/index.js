@@ -1,6 +1,6 @@
 import express from 'express'
 import CollegeRoutes from './College.js'
-import OpportunityRoutes from './Opportunity.js'
+import OpportunityRoutes from './opportunity.js'
 import QuizzesRoutes from './Quizzes.js'
 import UserRoutes from './Users.js'
 

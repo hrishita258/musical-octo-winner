@@ -59,7 +59,11 @@ const Login = () => {
     <div>
       <Row className="login-container">
         <Col
-          span={16}
+          sm={24}
+          md={10}
+          lg={12}
+          xl={13}
+          xxl={15}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -81,7 +85,11 @@ const Login = () => {
           </div>
         </Col>
         <Col
-          span={8}
+          sm={24}
+          md={14}
+          lg={12}
+          xl={11}
+          xxl={9}
           style={{
             padding: '4rem',
             display: 'flex',
