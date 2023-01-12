@@ -5,6 +5,7 @@ import { randomBytes } from 'crypto'
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import { MeiliSearch } from 'meilisearch'
+import puppeteer from 'puppeteer'
 import initScheduledJobs from './cronjobs/OpportunityCrons.js'
 import APIRoutes from './Routes/index.js'
 
@@ -178,6 +179,104 @@ app.post('/api/admin/activeSessions', async (req, res) => {
     res.json({ status: 200, result: refreshToken })
   } catch (error) {
     console.log(error)
+  }
+})
+
+app.get('build', async (req, res) => {
+  const urls = [
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-ui-java-developer-assessment-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-c-software-developer-interview-questions',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-adobe-campaign-developer-assessment-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-how-well-do-you-know-front-end-developer-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-mje4odg0nq925t',
+    'https://www.proprofs.com/quiz-school/story.php?title=pp-mjk0ntk3nqkfc6',
+    'https://www.proprofs.com/quiz-school/story.php?title=mjc1mdgynafhri',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-intelligent-sql-server-2012-developer-assessment-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-what-do-you-know-about-adobe-campaign-developer',
+    'https://www.proprofs.com/quiz-school/story.php?title=njq3mzuz2jaf',
+    'https://www.proprofs.com/quiz-school/story.php?title=web-developer-skill-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=nzy5odqyvxlc',
+    'https://www.proprofs.com/quiz-school/story.php?title=mjy2mzmzmaibly',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-php-web-developer-assessment-testvv',
+    'https://www.proprofs.com/quiz-school/story.php?title=state-new-jersey-private-developer',
+    'https://www.proprofs.com/quiz-school/story.php?title=why-type-game-developer-are-you',
+    'https://www.proprofs.com/quiz-school/story.php?title=mtg3ntm1natkbg',
+    'https://www.proprofs.com/quiz-school/story.php?title=are-you-worthy-to-be-super-smash-flash-2-developer',
+    'https://www.proprofs.com/quiz-school/story.php?title=computer-game-development-quiz-1',
+    'https://www.proprofs.com/quiz-school/story.php?title=java_237',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-how-well-do-you-know-sharepoint-2013-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=mju3nzu3c3fm',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-teradata-database-administration-12-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-what-do-you-know-about-big-data-sqoop-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-how-well-do-you-know-scrum-master-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-how-well-do-you-know-3ds-max',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-do-you-know-santa-monica-studio',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-intelligent-ibm-db2-assessment-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-what-do-you-know-about-watir-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-ssis-software-trivia-quiz',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-a-quiz-about-gnu',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-can-you-survive-this-blizzard-game-challenge',
+    'https://www.proprofs.com/quiz-school/story.php?title=abap-tcodes-1',
+    'https://www.proprofs.com/quiz-school/story.php?title=09-developing-film-part-1',
+    'https://www.proprofs.com/quiz-school/story.php?title=drafting-1-quiz-2',
+    'https://www.proprofs.com/quiz-school/story.php?title=java-quiz-for-beginners',
+    'https://www.proprofs.com/quiz-school/story.php?title=exit-1-fundamentals-of-sw-testing',
+    'https://www.proprofs.com/quiz-school/story.php?title=sql-practice-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=njy2mtay1et0',
+    'https://www.proprofs.com/quiz-school/story.php?title=nzezodi3pur3',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-ruby-on-rails-interview-questions',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-what-do-you-know-about-the-movie-two-weeks-notice',
+    'https://www.proprofs.com/quiz-school/story.php?title=asc_91p9',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-microsoft-mcsa-70290-exam-prep',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-what-do-you-know-about-bryanboy-trivia-facts-quiz',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-trivia-quiz-how-well-do-you-know-about-blogger-bryanboy',
+    'https://www.proprofs.com/quiz-school/story.php?title=mjyymzq1nwqbuu',
+    'https://www.proprofs.com/quiz-school/story.php?title=which-ssbb-character-are-you',
+    'https://www.proprofs.com/quiz-school/story.php?title=databases-revision-quiz',
+    'https://www.proprofs.com/quiz-school/story.php?title=programming-algorithms',
+    'https://www.proprofs.com/quiz-school/story.php?title=mta5ode5mw1eeh',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-smalltalk-basic-programming-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=nty0mzi1',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-clojure-basic-programming-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=njexotey',
+    'https://www.proprofs.com/quiz-school/story.php?title=mtuwody4ngm550',
+    'https://www.proprofs.com/quiz-school/story.php?title=mty5mtq3mwc1sl',
+    'https://www.proprofs.com/quiz-school/story.php?title=mjy2mdm5ngt59v',
+    'https://www.proprofs.com/quiz-school/story.php?title=cprogramming_1',
+    'https://www.proprofs.com/quiz-school/story.php?title=robot-c-quiz-2',
+    'https://www.proprofs.com/quiz-school/story.php?title=fundamentals-programming-2-1',
+    'https://www.proprofs.com/quiz-school/story.php?title=commands-of-programming-language-quiz_296',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-common-lisp-basic-programming-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-python-3-basic-programming-test',
+    'https://www.proprofs.com/quiz-school/story.php?title=quiz-extreme-programming-xp-1',
+    'https://www.proprofs.com/quiz-school/story.php?title=java_168',
+    'https://www.proprofs.com/quiz-school/story.php?title=integer-programming-goal-programming_1',
+    'https://www.proprofs.com/quiz-school/story.php?title=cobol-mock-test-1',
+    'https://www.proprofs.com/quiz-school/story.php?title=mtuwmjc4naae8c',
+    'https://www.proprofs.com/quiz-school/story.php?title=et156-quiz-1',
+    'https://www.proprofs.com/quiz-school/story.php?title=computer-programming-1-prelim-exam',
+    'https://www.proprofs.com/quiz-school/story.php?title=c-programming_20',
+    'https://www.proprofs.com/quiz-school/story.php?title=pp-true-false-pandas',
+    'https://www.proprofs.com/quiz-school/story.php?title=mcq-on-c-programming-language',
+    'https://www.proprofs.com/quiz-school/story.php?title=compro_12zi',
+    'https://www.proprofs.com/quiz-school/story.php?title=3dq-easytrieve-programming-language-quiz',
+    'https://www.proprofs.com/quiz-school/story.php?title=python-assessment_3tz'
+  ]
+
+  const browser = await puppeteer.launch()
+  const page = await browser.newPage()
+  const data = []
+  for (let i = 0; i < urls.length; i++) {
+    await page.goto(urls[i])
+    const result = await page.evaluate(() => {
+      Array.from(
+        document.getElementsByClassName('questions-list')[0].children
+      ).map(question => {
+        let ques = question.innerText
+        let options = []
+      })
+    })
+    data.push(result)
   }
 })
 
