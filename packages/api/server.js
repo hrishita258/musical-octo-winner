@@ -5959,38 +5959,52 @@ app.get('/api/v1/quiz', async (req, res) => {
 
   const browser = await puppeteer.launch()
   const allQuizzes = []
-  const concurrency = 10
+  const concurrency = 5
   let currentPage = 0
+  const errors = []
 
   const pages = await browser.pages()
   async.eachLimit(
     urls,
     concurrency,
     async url => {
-      console.log(url)
+      let paginatedPage = null
+      console.log(currentPage)
       const page = pages[currentPage++] || (await browser.newPage())
       try {
-        await page.goto(url)
+        await page.goto(url, { timeout: 60000 })
+        let obj = {
+          topic: '',
+          quizzes: []
+        }
+        console.log(await page.$eval('.classh1', el => el.innerText))
+        obj.topic = await page.$eval('.classh1', el => el.innerText)
         if ((await page.$('.pages')) !== null) {
           let pages = await page.$$eval('.pages p', el => {
             return parseInt(el[0].children[el[0].children.length - 2].innerText)
           })
+
           for (let i = 1; i <= pages; i++) {
-            let urls = await page.$$eval('.pop_main_updated a', el => {
+            await page.goto(`${url}/${i}`, { timeout: 60000 })
+            paginatedPage = i
+            console.log('page child', i)
+            await page.waitForSelector('.pop_main_updated a')
+            let paginatedUrls = await page.$$eval('.pop_main_updated a', el => {
               return el.map(elem => elem.href)
             })
-            allQuizzes.push(...urls)
-            await page.goto(`${url}/${i}`)
-            console.log('page child', i)
+            obj.quizzes.push(...paginatedUrls)
           }
+          allQuizzes.push(obj)
         } else {
-          let urls = await page.$$eval('.pop_main_updated a', el => {
+          let singleUrls = await page.$$eval('.pop_main_updated a', el => {
             return el.map(elem => elem.href)
           })
-          allQuizzes.push(...urls)
+          obj.quizzes.push(...singleUrls)
+          allQuizzes.push(obj)
         }
       } catch (error) {
-        console.log(url)
+        console.log(url, error.toString(), paginatedPage)
+        errors.push({ error: error.toString(), url, paginatedPage })
       } finally {
         await page.close()
       }
@@ -5998,10 +6012,14 @@ app.get('/api/v1/quiz', async (req, res) => {
     err => {
       if (err) throw err
       if (allQuizzes.length > 0)
-        fs.writeFile('allQuizzes.json', JSON.stringify({ allQuizzes }), err => {
-          if (err) throw err
-          console.log('Data written to file')
-        })
+        fs.writeFile(
+          'allQuizzesWithTopics.json',
+          JSON.stringify({ allQuizzes, errors }),
+          err => {
+            if (err) throw err
+            console.log('Data written to file')
+          }
+        )
       browser.close()
     }
   )
