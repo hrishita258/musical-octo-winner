@@ -394,131 +394,180 @@ app.get('/build', async (req, res) => {
 })
 
 app.get('/final', async (req, res) => {
+  const data = []
+  const errors = []
+
   fs.readFile('data-no-duplicates.json', 'utf8', async (err, json) => {
     if (err) throw err
 
-    const data = []
-    const errors = []
-    const limit = 5
-    const browser = await puppeteer.launch({ headless: false })
-    let completedTopics = 0
-    JSON.parse(json).allQuizzes.forEach(quiz => {
-      const uniqueUrls = [...new Set(quiz.quizzes)]
-      async.eachLimit(
-        uniqueUrls,
-        limit,
-        async url => {
-          try {
-            console.log(`Processing ${url} for topic ${quiz.topic}`)
-            const page = await browser.newPage()
-            await page.goto(url, {
-              waitUntil: 'networkidle2',
-              timeout: 90000
-            })
-            // Extract data from the page
-            const result = await page.evaluate(() => {
-              // Your current script for extracting data from the page
-              let s = []
-              Array.from(
-                document.getElementsByClassName('questions-list')[0]
-                  ?.children || []
-              )?.map(question => {
-                let ques =
-                  question.getElementsByClassName('question-text')[0]?.innerText
-                let options = Array.from(
-                  question.getElementsByClassName('answers-list')[0]
-                    ?.children || []
-                )?.map(
-                  op => op.getElementsByClassName('opt_text')[0]?.innerText
+    const quizzes = JSON.parse(json).allQuizzes.slice(0, 1)
+    const browser = await puppeteer.launch()
+
+    await async.eachLimit(
+      quizzes,
+      1,
+      async quiz => {
+        const uniqueUrls = [...new Set(quiz.quizzes)]
+        const limit = 10
+
+        for (let i = 0; i < uniqueUrls.length; i += limit) {
+          const pagePromises = uniqueUrls
+            .slice(i, i + limit)
+            .map(async (url, i) => {
+              try {
+                console.log(
+                  `Processing topic ${quiz.topic} , ${i + 1} of ${
+                    uniqueUrls.length
+                  }`
                 )
-                s.push({
-                  ques,
-                  options,
-                  title: document.title,
-                  quizImage:
-                    document.getElementsByClassName('image_class')[0]?.src,
-                  questionImage: question.getElementsByTagName('img')[0]?.src,
-                  description:
-                    document.getElementsByClassName('question_text')[0]
-                      .innerText
+                const page = await browser.newPage()
+                await page.goto(url, {
+                  waitUntil: 'networkidle2',
+                  timeout: 90000
                 })
-              })
-              return s
-            })
-            await page.click('button[name="mySubmit"]')
-            await page.waitForSelector('#progressBar', { timeout: 90000 })
-            // Extract correct answers
-            const correct = await page.evaluate(
-              async (url, result) => {
-                let queryParams = url.split('?')[1]
 
-                if (!queryParams) {
-                  console.error('URL does not contain any query parameters')
-                  return
-                }
-
-                let title = queryParams
-                  .split('&')
-                  .find(p => p.startsWith('title='))
-
-                if (!title) {
-                  console.error('URL does not contain a title parameter')
-                  return
-                }
-
-                title = title.split('=')[1]
-
-                let requests = result.map(async (question, index) => {
-                  try {
-                    const response = await fetch(
-                      `https://www.proprofs.com/quiz-school/_ajax_quizshow_free.php?title=${title}&q=${
-                        index + 1
-                      }`
+                const result = await page.evaluate(() => {
+                  // Your current script for extracting data from the page
+                  let s = []
+                  Array.from(
+                    document.getElementsByClassName('questions-list')[0]
+                      ?.children || []
+                  )?.map(question => {
+                    let ques =
+                      question.getElementsByClassName('question-text')[0]
+                        ?.innerText
+                    let options = Array.from(
+                      question.getElementsByClassName('answers-list')[0]
+                        ?.children || []
+                    )?.map(
+                      op => op.getElementsByClassName('opt_text')[0]?.innerText
                     )
-                    const res = await response.text()
-                    let parser = new DOMParser()
-                    let doc = parser.parseFromString(res, 'text/html')
-                    return doc.getElementsByClassName('correctTxt')[0].innerText
-                  } catch (err) {
-                    console.log(err, 'ye correct option')
+                    if (options.length > 0)
+                      s.push({
+                        ques,
+                        options,
+                        title: document.title,
+                        quizImage:
+                          document.getElementsByClassName('image_class')[0]
+                            ?.src,
+                        questionImage:
+                          question.getElementsByTagName('img')[0]?.src,
+                        description:
+                          document.getElementsByClassName('question_text')[0]
+                            ?.innerText
+                      })
+                  })
+                  return s
+                })
+                await page.click('button[name="mySubmit"]')
+                await page.waitForSelector('#progressBar', { timeout: 90000 })
+
+                const correct = await page.evaluate(
+                  async (url, result) => {
+                    let queryParams = url.split('?')[1]
+
+                    if (!queryParams) {
+                      console.error('URL does not contain any query parameters')
+                      return
+                    }
+
+                    let title = queryParams
+                      .split('&')
+                      .find(p => p.startsWith('title='))
+
+                    if (!title) {
+                      console.error('URL does not contain a title parameter')
+                      return
+                    }
+
+                    title = title.split('=')[1]
+
+                    let requests = result.map(async (question, index) => {
+                      try {
+                        const response = await fetch(
+                          `https://www.proprofs.com/quiz-school/_ajax_quizshow_free.php?title=${title}&q=${
+                            index + 1
+                          }`
+                        )
+                        const res = await response.text()
+                        let parser = new DOMParser()
+                        let doc = parser.parseFromString(res, 'text/html')
+                        return Array.from(
+                          doc.getElementsByClassName('correctTxt')
+                        ).map(s => s?.innerText.replace('(Correct Answer)', ''))
+                      } catch (err) {
+                        console.log(err, 'ye correct option')
+                      }
+                    })
+                    return await Promise.all(requests)
+                  },
+                  url,
+                  result
+                )
+
+                data.push({
+                  result,
+                  correct,
+                  topic: quiz.topic
+                })
+                await page.close()
+              } catch (error) {
+                console.error(error)
+                errors.push({ url, error: error.toString() })
+              }
+            })
+          await Promise.all(pagePromises)
+        }
+      },
+      async err => {
+        if (err) {
+          console.log(err)
+        }
+        await browser.close()
+        console.log(data.length, errors.length)
+        fs.writeFile(
+          'quizDataAll.json',
+          JSON.stringify({
+            data: data.map(d => {
+              return {
+                topic: d.topic,
+                result: d.result.map((r, i) => {
+                  return {
+                    ...r,
+                    correctOption: d.correct[i].map(a => a)
                   }
                 })
-                return await Promise.all(requests)
-              },
-              url,
-              result
-            )
-            data.push({ result, correct, topic: quiz.topic })
-            await page.close()
-          } catch (error) {
-            console.log(error)
-            errors.push({ url, error: error.toString() })
+              }
+            }),
+            errors
+          }),
+          'utf8',
+          err => {
+            if (err) throw err
+            console.log('done dona done done')
           }
-        },
-        async err => {
-          if (err) {
-            console.log(err)
-          } else {
-            console.log('All URLs have been processed for topic ' + quiz.topic)
-            completedTopics++
-            console.log(completedTopics)
-            if (completedTopics === 2) {
-              console.log('this')
-              await browser.close()
-              fs.writeFile(
-                'quizDataAll.json',
-                JSON.stringify({ data, errors }),
-                'utf8',
-                err => {
-                  if (err) throw err
-                  console.log('done dona done done')
-                }
-              )
-            }
+        )
+      }
+    )
+  })
+})
+
+app.get('/this', (req, res) => {
+  fs.readFile('quizDataAll.json', 'utf8', async (err, json) => {
+    if (err) throw err
+    const { data, errors } = JSON.parse(json)
+    const f = data.map(d => {
+      return {
+        topic: d.topic,
+        result: d.result.map((r, i) => {
+          return {
+            ...r,
+            correctOption: d.correct.find(c => c.)
           }
-        }
-      )
+        })
+      }
     })
+    res.send({ f })
   })
 })
 
