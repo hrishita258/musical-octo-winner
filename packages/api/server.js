@@ -401,8 +401,8 @@ app.get('/final', async (req, res) => {
   fs.readFile('data-no-duplicates.json', 'utf8', async (err, json) => {
     if (err) throw err
 
-    const quizzes = JSON.parse(json).allQuizzes.slice(0, 1)
-    const browser = await puppeteer.launch()
+    const quizzes = JSON.parse(json).allQuizzes
+    const browser = await puppeteer.launch({ headless: false })
 
     await async.eachLimit(
       quizzes,
@@ -415,56 +415,54 @@ app.get('/final', async (req, res) => {
           const pagePromises = uniqueUrls
             .slice(i, i + limit)
             .map(async (url, i) => {
+              const page = await browser.newPage()
               try {
                 console.log(
                   `Processing topic ${quiz.topic} , ${i + 1} of ${
                     uniqueUrls.length
                   }`
                 )
-                const page = await browser.newPage()
                 await page.goto(url, {
                   waitUntil: 'networkidle2',
                   timeout: 60000
                 })
 
-                const result = await page.evaluate(() => {
-                  // Your current script for extracting data from the page
-                  let s = []
-                  Array.from(
-                    document.getElementsByClassName('questions-list')[0]
-                      ?.children || []
-                  )?.map(question => {
-                    let ques =
-                      question.getElementsByClassName('question-text')[0]
-                        ?.innerText
-                    let options = Array.from(
-                      question.getElementsByClassName('answers-list')[0]
-                        ?.children || []
-                    )?.map(
-                      op => op.getElementsByClassName('opt_text')[0]?.innerText
-                    )
-                    if (options.length > 0)
-                      s.push({
-                        ques,
-                        options,
-                        title: document.title,
-                        quizImage:
-                          document.getElementsByClassName('image_class')[0]
-                            ?.src,
-                        questionImage:
-                          question.getElementsByTagName('img')[0]?.src,
-                        description:
-                          document.getElementsByClassName('question_text')[0]
-                            ?.innerText
+                if ((await page.title()).includes('404')) throw '404'
+
+                const pageHtml = await page.content()
+                const $ = cheerio.load(pageHtml)
+
+                const result = $('.questions-list')
+                  .children()
+                  .map((i, question) => {
+                    const ques = $(question).find('.question-text').text()
+                    const options = $(question)
+                      .find('.answers-list')
+                      .children()
+                      .map((i, option) => {
+                        return $(option).find('.opt_text').text()
                       })
+                      .get()
+                    return {
+                      ques,
+                      options,
+                      title: $('title').text(),
+                      quizImage: $('.image_class').attr('src'),
+                      questionImage: $(question).find('img').attr('src'),
+                      description: $('.question_text').text()
+                    }
                   })
-                  return s
+                  .get()
+
+                await page.waitForSelector('button[name="mySubmit"]', {
+                  timeout: 60000
                 })
 
                 const btn = await page.$('button[name="mySubmit"]')
-                if (!btn) return
+                if (!btn) throw 'no button'
 
                 await page.click('button[name="mySubmit"]')
+
                 await page.waitForSelector('.qs_show_wrap', { timeout: 60000 })
 
                 const correct = await page.evaluate(
@@ -506,6 +504,7 @@ app.get('/final', async (req, res) => {
                   url,
                   result
                 )
+                await page.close()
 
                 let correctAnswers = correct?.map((c, i) => {
                   let $ = cheerio.load(c)
@@ -527,9 +526,9 @@ app.get('/final', async (req, res) => {
                   correctAnswers,
                   topic: quiz.topic
                 })
-                await page.close()
               } catch (error) {
-                console.error(error)
+                console.error(error.toString())
+                await page.close()
                 errors.push({ url, error: error.toString() })
               }
             })
