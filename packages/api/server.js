@@ -401,7 +401,7 @@ app.get('/final', async (req, res) => {
   fs.readFile('data-no-duplicates.json', 'utf8', async (err, json) => {
     if (err) throw err
 
-    const quizzes = JSON.parse(json).allQuizzes.slice(0, 1000)
+    const quizzes = JSON.parse(json).allQuizzes.slice(0, 1)
     const browser = await puppeteer.launch()
 
     await async.eachLimit(
@@ -424,7 +424,7 @@ app.get('/final', async (req, res) => {
                 const page = await browser.newPage()
                 await page.goto(url, {
                   waitUntil: 'networkidle2',
-                  timeout: 90000
+                  timeout: 60000
                 })
 
                 const result = await page.evaluate(() => {
@@ -460,8 +460,12 @@ app.get('/final', async (req, res) => {
                   })
                   return s
                 })
+
+                const btn = await page.$('button[name="mySubmit"]')
+                if (!btn) return
+
                 await page.click('button[name="mySubmit"]')
-                await page.waitForSelector('#progressBar', { timeout: 90000 })
+                await page.waitForSelector('.qs_show_wrap', { timeout: 60000 })
 
                 const correct = await page.evaluate(
                   async (url, result) => {
