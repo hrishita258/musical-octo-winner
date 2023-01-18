@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import async from 'async'
 import bcrypt from 'bcryptjs'
+import cheerio from 'cheerio'
 import cors from 'cors'
 import { randomBytes } from 'crypto'
 import express from 'express'
@@ -400,7 +401,7 @@ app.get('/final', async (req, res) => {
   fs.readFile('data-no-duplicates.json', 'utf8', async (err, json) => {
     if (err) throw err
 
-    const quizzes = JSON.parse(json).allQuizzes.slice(0, 1)
+    const quizzes = JSON.parse(json).allQuizzes.slice(0, 1000)
     const browser = await puppeteer.launch()
 
     await async.eachLimit(
@@ -490,11 +491,8 @@ app.get('/final', async (req, res) => {
                           }`
                         )
                         const res = await response.text()
-                        let parser = new DOMParser()
-                        let doc = parser.parseFromString(res, 'text/html')
-                        return Array.from(
-                          doc.getElementsByClassName('correctTxt')
-                        ).map(s => s?.innerText.replace('(Correct Answer)', ''))
+
+                        return res
                       } catch (err) {
                         console.log(err, 'ye correct option')
                       }
@@ -505,9 +503,24 @@ app.get('/final', async (req, res) => {
                   result
                 )
 
+                let correctAnswers = correct?.map((c, i) => {
+                  let $ = cheerio.load(c)
+
+                  let correct = Array.from($('.correctTxt')).map(s =>
+                    s?.children[0]?.data.replace('(Correct Answer)', '')
+                  )
+
+                  return {
+                    correct,
+                    question:
+                      $('.after_question').text() ||
+                      Array.from($('.question_text_area'))[0]?.children[0]?.data
+                  }
+                })
+
                 data.push({
                   result,
-                  correct,
+                  correctAnswers,
                   topic: quiz.topic
                 })
                 await page.close()
@@ -525,20 +538,11 @@ app.get('/final', async (req, res) => {
         }
         await browser.close()
         console.log(data.length, errors.length)
+
         fs.writeFile(
           'quizDataAll.json',
           JSON.stringify({
-            data: data.map(d => {
-              return {
-                topic: d.topic,
-                result: d.result.map((r, i) => {
-                  return {
-                    ...r,
-                    correctOption: d.correct[i].map(a => a)
-                  }
-                })
-              }
-            }),
+            data,
             errors
           }),
           'utf8',
@@ -549,25 +553,6 @@ app.get('/final', async (req, res) => {
         )
       }
     )
-  })
-})
-
-app.get('/this', (req, res) => {
-  fs.readFile('quizDataAll.json', 'utf8', async (err, json) => {
-    if (err) throw err
-    const { data, errors } = JSON.parse(json)
-    const f = data.map(d => {
-      return {
-        topic: d.topic,
-        result: d.result.map((r, i) => {
-          return {
-            ...r,
-            correctOption: d.correct.find(c => c.)
-          }
-        })
-      }
-    })
-    res.send({ f })
   })
 })
 
@@ -682,6 +667,120 @@ app.get('/api/quizzes', async (req, res) => {
   }
   // console.log(JSON.stringify(data))
   // console.log(JSON.stringify(errors))
+})
+
+app.get('/trans', (req, res) => {
+  // fs.readFile('quizDataAll.json', 'utf8', async (err, json) => {
+  //   if (err) throw err
+  //   const { data, errors } = JSON.parse(json)
+
+  //   data.forEach((json, jsonIndex) => {
+  //     json.result.forEach((question, questionIndex) => {
+  //       question.options = question.options.map(option => {
+  //         return {
+  //           text: option,
+  //           isCorrect: json.correct.some(correctOptions =>
+  //             correctOptions.includes(option)
+  //           )
+  //         }
+  //       })
+  //       const correctOption = question.options.filter(
+  //         option => option.isCorrect
+  //       )
+  //       data[jsonIndex].result[questionIndex].type =
+  //         correctOption.length > 1 ? 'multiple' : 'single'
+  //     })
+  //     json.result = json.result.filter(question =>
+  //       question.options.some(option => option.isCorrect)
+  //     )
+  //   })
+
+  //   const newData = []
+
+  //   data.forEach(d => {
+  //     if (d.result && d.result.length > 0) {
+  //       const { title, description, quizImage } = d.result[0]
+  //       const questions = d.result.map(q => {
+  //         return {
+  //           question: q.ques,
+  //           options: q.options,
+  //           type: q.type
+  //         }
+  //       })
+  //       newData.push({
+  //         title,
+  //         description,
+  //         quizImage,
+  //         questions,
+  //         topic: d.topic
+  //       })
+  //     }
+  //   })
+
+  //   fs.writeFile(
+  //     'quizDataAll.json',
+  //     JSON.stringify({ data: newData, errors }),
+  //     err => {
+  //       if (err) throw err
+  //       console.log('Data written to file')
+  //     }
+  //   )
+  // })
+
+  fs.readFile('quizDataAll.json', 'utf8', async (err, json) => {
+    if (err) throw err
+    const { Quizzez, errors } = JSON.parse(json)
+    console.log(Quizzez.length)
+    let newData = { quizzes: [] }
+    try {
+      Quizzez.forEach(data => {
+        let quiz = {
+          name: data.result[0].title,
+          topic: data.topic,
+          questions: [],
+          description: data.result[0].description,
+          quizImage: data.result[0].quizImage
+        }
+        data.result.forEach(question => {
+          if (question.ques.trim().length === 0) return // Skip the question if it's empty
+          let cleanQuestion = question.ques.trim().replace(/\s+/g, ' ')
+          let correctAnswers = data.correctAnswers.find(answers => {
+            return (
+              answers.question.trim().replace(/\s+/g, ' ') === cleanQuestion
+            )
+          })
+          if (correctAnswers) {
+            question.options = question.options.map(option => {
+              return {
+                text: option,
+                isCorrect: correctAnswers.correct.some(
+                  answer => answer === option
+                )
+              }
+            })
+            let correctCount = question.options.filter(
+              option => option.isCorrect === true
+            ).length
+            question.type = correctCount > 1 ? 'multiple' : 'single'
+          }
+          if (
+            question.options.findIndex(option => option.isCorrect === true) !==
+            -1
+          ) {
+            quiz.questions.push({
+              question: question.ques,
+              type: question.type,
+              options: question.options
+            })
+          }
+        })
+        newData.quizzes.push(quiz)
+      })
+    } catch (error) {
+      console.log(error)
+    }
+    res.send(newData)
+  })
 })
 
 const generateTokens = user => {

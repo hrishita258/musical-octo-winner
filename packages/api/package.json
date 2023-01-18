@@ -23,6 +23,7 @@
     "@types/jsonwebtoken": "^8.5.9",
     "async": "^3.2.4",
     "bcryptjs": "^2.4.3",
+    "cheerio": "^1.0.0-rc.12",
     "jsonwebtoken": "^8.5.1",
     "meilisearch": "^0.30.0",
     "node-cron": "^3.0.2",
