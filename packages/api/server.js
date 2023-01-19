@@ -494,14 +494,14 @@ app.get('/final', async (req, res) => {
       )
     })
 
-    const browser = await puppeteer.launch()
+    const browser = await puppeteer.launch({ headless: false })
 
     await async.eachLimit(
       quizzes,
       1,
       async quiz => {
         const uniqueUrls = [...new Set(quiz.quizzes)]
-        const limit = 10
+        const limit = 3
         console.log('Processing topic', quiz.topic)
         for (let i = 0; i < uniqueUrls.length; i += limit) {
           const pagePromises = uniqueUrls
@@ -547,6 +547,10 @@ app.get('/final', async (req, res) => {
                 })
 
                 await page.click('button[name="mySubmit"]')
+
+                await page.waitForRequest(request =>
+                  request.url().includes('quiz-school/quizstart.php')
+                )
 
                 await page.waitForSelector('.qs_show_wrap')
 
