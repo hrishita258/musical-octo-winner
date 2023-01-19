@@ -401,8 +401,100 @@ app.get('/final', async (req, res) => {
   fs.readFile('data-no-duplicates.json', 'utf8', async (err, json) => {
     if (err) throw err
 
-    const quizzes = JSON.parse(json).allQuizzes
-    const browser = await puppeteer.launch({ headless: false })
+    const keywords = [
+      'C Programming',
+      'Web',
+      'javascript',
+      'Programming',
+      'computer',
+      'C++',
+      'C#',
+      'Java',
+      'SQL',
+      'Ruby',
+      'Perl',
+      'Swift',
+      'Objective-C',
+      'Scala',
+      'Haskell',
+      'MATLAB',
+      'Lisp',
+      'Clojure',
+      'Dart',
+      'Rust',
+      'Elixir',
+      'Erlang',
+      'Prolog',
+      'F#',
+      'TypeScript',
+      'Kotlin',
+      'Groovy',
+      'xml',
+      'network',
+      'html',
+      'css',
+      'jquery',
+      'bootstrap',
+      'angular',
+      'react',
+      'vue',
+      'node',
+      'express',
+      'mongodb',
+      'mysql',
+      'sql',
+      'php',
+      'python',
+      'website',
+      'excel',
+      'networking',
+      'apptitude',
+      'CCNA',
+      'cisco',
+      'Cloud',
+      'Cyber',
+      'data',
+      'database',
+      'design',
+      'desktop',
+      'Engineer',
+      'Engineering',
+      'Fundamental',
+      'Fundamentals',
+      'google',
+      'Graphic',
+      'Information',
+      'Innovation',
+      'Integrated',
+      'Intelligence',
+      'Internet',
+      'security',
+      'Microsoft',
+      'Certification',
+      'Linux',
+      'Machine',
+      'Object',
+      'Office',
+      'Placement',
+      'Powerpoint',
+      'production',
+      'Programmer',
+      'product',
+      'project',
+      'professional',
+      'protocol',
+      'server',
+      'admin',
+      'software'
+    ]
+    const allQuizzes = JSON.parse(json).allQuizzes
+    const quizzes = allQuizzes.filter(quiz => {
+      return keywords.some(keyword =>
+        quiz.topic.toLowerCase().includes(keyword.toLowerCase())
+      )
+    })
+
+    const browser = await puppeteer.launch()
 
     await async.eachLimit(
       quizzes,
@@ -410,18 +502,14 @@ app.get('/final', async (req, res) => {
       async quiz => {
         const uniqueUrls = [...new Set(quiz.quizzes)]
         const limit = 10
-
+        console.log('Processing topic', quiz.topic)
         for (let i = 0; i < uniqueUrls.length; i += limit) {
           const pagePromises = uniqueUrls
             .slice(i, i + limit)
             .map(async (url, i) => {
               const page = await browser.newPage()
               try {
-                console.log(
-                  `Processing topic ${quiz.topic} , ${i + 1} of ${
-                    uniqueUrls.length
-                  }`
-                )
+                console.log(`${i + 1} of ${uniqueUrls.length}`)
                 await page.goto(url, {
                   waitUntil: 'networkidle2',
                   timeout: 60000
@@ -458,12 +546,9 @@ app.get('/final', async (req, res) => {
                   timeout: 60000
                 })
 
-                const btn = await page.$('button[name="mySubmit"]')
-                if (!btn) throw 'no button'
-
                 await page.click('button[name="mySubmit"]')
 
-                await page.waitForSelector('.qs_show_wrap', { timeout: 60000 })
+                await page.waitForSelector('.qs_show_wrap')
 
                 const correct = await page.evaluate(
                   async (url, result) => {
@@ -510,7 +595,7 @@ app.get('/final', async (req, res) => {
                   let $ = cheerio.load(c)
 
                   let correct = Array.from($('.correctTxt')).map(s =>
-                    s?.children[0]?.data.replace('(Correct Answer)', '')
+                    s?.children[0]?.data?.replace('(Correct Answer)', '')
                   )
 
                   return {
@@ -543,7 +628,7 @@ app.get('/final', async (req, res) => {
         console.log(data.length, errors.length)
 
         fs.writeFile(
-          'quizDataAll.json',
+          'quizDataAll3.json',
           JSON.stringify({
             data,
             errors
@@ -730,13 +815,13 @@ app.get('/trans', (req, res) => {
   //   )
   // })
 
-  fs.readFile('quizDataAll.json', 'utf8', async (err, json) => {
+  fs.readFile('quizDataAll2.json', 'utf8', async (err, json) => {
     if (err) throw err
     const { Quizzez, errors } = JSON.parse(json)
     console.log(Quizzez.length)
     let newData = { quizzes: [] }
     try {
-      Quizzez.forEach(data => {
+      Quizzez.slice(0, 5).forEach(data => {
         let quiz = {
           name: data.result[0].title,
           topic: data.topic,
@@ -747,6 +832,7 @@ app.get('/trans', (req, res) => {
         data.result.forEach(question => {
           if (question.ques.trim().length === 0) return // Skip the question if it's empty
           let cleanQuestion = question.ques.trim().replace(/\s+/g, ' ')
+
           let correctAnswers = data.correctAnswers.find(answers => {
             return (
               answers.question.trim().replace(/\s+/g, ' ') === cleanQuestion
@@ -755,9 +841,11 @@ app.get('/trans', (req, res) => {
           if (correctAnswers) {
             question.options = question.options.map(option => {
               return {
-                text: option,
+                text: option.trim().replace(/\s+/g, ' '),
                 isCorrect: correctAnswers.correct.some(
-                  answer => answer === option
+                  answer =>
+                    answer.trim().replace(/\s+/g, ' ') ===
+                    option.trim().replace(/\s+/g, ' ')
                 )
               }
             })
@@ -766,6 +854,7 @@ app.get('/trans', (req, res) => {
             ).length
             question.type = correctCount > 1 ? 'multiple' : 'single'
           }
+
           if (
             question.options.findIndex(option => option.isCorrect === true) !==
             -1
