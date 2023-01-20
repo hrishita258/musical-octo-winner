@@ -497,11 +497,11 @@ app.get('/final', async (req, res) => {
     const browser = await puppeteer.launch({ headless: false })
 
     await async.eachLimit(
-      quizzes,
+      quizzes.slice(61, 120),
       1,
       async quiz => {
         const uniqueUrls = [...new Set(quiz.quizzes)]
-        const limit = 3
+        const limit = 2
         console.log('Processing topic', quiz.topic)
         for (let i = 0; i < uniqueUrls.length; i += limit) {
           const pagePromises = uniqueUrls
@@ -632,7 +632,7 @@ app.get('/final', async (req, res) => {
         console.log(data.length, errors.length)
 
         fs.writeFile(
-          'quizDataAll3.json',
+          'quizDataAll5.json',
           JSON.stringify({
             data,
             errors
