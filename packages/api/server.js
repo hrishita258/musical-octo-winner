@@ -762,94 +762,122 @@ app.get('/api/quizzes', async (req, res) => {
 })
 
 app.get('/trans', (req, res) => {
-  // fs.readFile('quizDataAll.json', 'utf8', async (err, json) => {
-  //   if (err) throw err
-  //   const { data, errors } = JSON.parse(json)
-
-  //   data.forEach((json, jsonIndex) => {
-  //     json.result.forEach((question, questionIndex) => {
-  //       question.options = question.options.map(option => {
-  //         return {
-  //           text: option,
-  //           isCorrect: json.correct.some(correctOptions =>
-  //             correctOptions.includes(option)
-  //           )
-  //         }
-  //       })
-  //       const correctOption = question.options.filter(
-  //         option => option.isCorrect
-  //       )
-  //       data[jsonIndex].result[questionIndex].type =
-  //         correctOption.length > 1 ? 'multiple' : 'single'
-  //     })
-  //     json.result = json.result.filter(question =>
-  //       question.options.some(option => option.isCorrect)
-  //     )
-  //   })
-
-  //   const newData = []
-
-  //   data.forEach(d => {
-  //     if (d.result && d.result.length > 0) {
-  //       const { title, description, quizImage } = d.result[0]
-  //       const questions = d.result.map(q => {
-  //         return {
-  //           question: q.ques,
-  //           options: q.options,
-  //           type: q.type
-  //         }
-  //       })
-  //       newData.push({
-  //         title,
-  //         description,
-  //         quizImage,
-  //         questions,
-  //         topic: d.topic
-  //       })
-  //     }
-  //   })
-
-  //   fs.writeFile(
-  //     'quizDataAll.json',
-  //     JSON.stringify({ data: newData, errors }),
-  //     err => {
-  //       if (err) throw err
-  //       console.log('Data written to file')
-  //     }
-  //   )
-  // })
-
-  fs.readFile('quizDataAll2.json', 'utf8', async (err, json) => {
+  fs.readFile('quizDataAll5.json', 'utf8', async (err, json) => {
     if (err) throw err
     const { Quizzez, errors } = JSON.parse(json)
     console.log(Quizzez.length)
+
     let newData = { quizzes: [] }
+    const specializationsData = [
+      {
+        id: '0565cb47-c260-4deb-adc4-80484d0e897f',
+        specializationId: '76eb0be4-ef93-4d26-a185-86ed12a494e7',
+        specialization: 'Computer Vocabulary'
+      },
+      {
+        id: '6d025962-5cc9-4f04-8293-160584ea9d77',
+        specializationId: '9ec7acdd-2bce-4b1e-a7a6-35b50d617a09',
+        specialization: 'Cyber Safety'
+      },
+      {
+        id: '240c9ef8-02ee-4e66-8388-1ad1d46981f0',
+        specializationId: '3ee06109-e948-44d3-b65f-2f1d5c822203',
+        specialization: 'Geographic'
+      },
+      {
+        id: '46048fa9-3dee-4b18-acf9-28eb31a0bf6e',
+        specializationId: '2e9f96e6-dd25-4b71-ae6a-5420f543f7a9',
+        specialization: 'Computer Virus'
+      },
+      {
+        id: '99f8dfef-33f2-499e-8520-420736de31b4',
+        specializationId: 'e6f027bd-610c-4621-806d-aeac39972c99',
+        specialization: 'Electronics Engineering'
+      },
+      {
+        id: '11e935b9-1206-4dd1-a410-8dc242c2a65d',
+        specializationId: '564db167-e639-4189-956c-fc07e8265abf',
+        specialization: 'Data Communication'
+      },
+      {
+        id: '54b507b3-0720-4855-a5af-e79f3290d63c',
+        specializationId: '2a945726-04f6-49b8-9d47-a4984dc471c9',
+        specialization: 'Data Type'
+      },
+      {
+        id: 'ed7b3b6f-c9c0-4caf-bdc0-88d8a96ef14d',
+        specializationId: '8e5348c0-c3d0-4b34-9385-75c7ef992eb3',
+        specialization: 'Facial Expression'
+      },
+      {
+        id: '34dee615-40b0-47fe-b37c-6e85d85a6968',
+        specializationId: '029044af-0aee-490a-b88b-c856de319eef',
+        specialization: 'Data Management'
+      },
+      {
+        id: '8ea0f55d-4e8d-4e60-ab64-8544affe9e97',
+        specializationId: '191d7b94-1ffd-47bf-9b7a-5b5e0d463059',
+        specialization: 'Data Warehousing'
+      },
+      {
+        id: '20587792-2520-4041-8f91-d22746a858ea',
+        specializationId: '4dbaf6fd-afd4-4412-bfc8-ab1c97b81ece',
+        specialization: 'Ctt Plus Certification'
+      },
+      {
+        id: 'bc582c5f-5b86-49b2-b63a-e3085856d94b',
+        specializationId: 'ba936619-8a05-4def-840b-d45f38ef3f5a',
+        specialization: 'Digidesign'
+      },
+      {
+        id: '528d9e6c-1732-40a9-b388-f71463922bb0',
+        specializationId: '9a388a46-ac97-434c-ade0-7c509f711cf0',
+        specialization: 'Female Reproductive System'
+      },
+      {
+        id: '081d3895-1509-40f2-9dd9-1bef0e69fd34',
+        specializationId: '5d3634fb-47ca-4e2a-b5a4-dece4c7738a1',
+        specialization: 'Fundamentals Of Nursing NCLEX'
+      },
+      {
+        id: '8e4e4222-d2ca-416f-a3c3-a287d1c154b6',
+        specializationId: 'f03e303a-49a3-4140-a3c4-557927f1e321',
+        specialization: 'Computer'
+      },
+      {
+        id: '2a1d5c9d-2311-4397-89b5-a64dbcba7e9d',
+        specializationId: '434af6e3-8109-453a-a54d-dac2a84d5043',
+        specialization: 'Cyber Citizenship'
+      }
+    ]
     try {
-      Quizzez.slice(0, 5).forEach(data => {
+      Quizzez.forEach(data => {
         let quiz = {
-          name: data.result[0].title,
-          topic: data.topic,
+          name: data.result[0]?.title
+            ? data.result[0]?.title
+            : data.result[1]?.title,
+          topic: data?.topic,
           questions: [],
-          description: data.result[0].description,
-          quizImage: data.result[0].quizImage
+          description: data.result[0]?.description,
+          quizImage: data.result[0]?.quizImage
         }
         data.result.forEach(question => {
-          if (question.ques.trim().length === 0) return // Skip the question if it's empty
-          let cleanQuestion = question.ques.trim().replace(/\s+/g, ' ')
+          if (question.ques?.trim().length === 0) return // Skip the question if it's empty
+          let cleanQuestion = question.ques?.trim().replace(/\s+/g, ' ')
 
-          let correctAnswers = data.correctAnswers.find(answers => {
+          let correctAnswers = data.correctAnswers?.find(answers => {
             return (
-              answers.question.trim().replace(/\s+/g, ' ') === cleanQuestion
+              answers.question?.trim().replace(/\s+/g, ' ') === cleanQuestion
             )
           })
           if (correctAnswers) {
             question.options = question.options.map(option => {
               return {
-                text: option.trim().replace(/\s+/g, ' '),
+                text: option?.trim().replace(/\s+/g, ' '),
                 isCorrect: correctAnswers.correct.some(
                   answer =>
-                    answer.trim().replace(/\s+/g, ' ') ===
-                    option.trim().replace(/\s+/g, ' ')
+                    answer?.trim().replace(/\s+/g, ' ') ===
+                    option?.trim().replace(/\s+/g, ' ')
                 )
               }
             })
@@ -875,7 +903,151 @@ app.get('/trans', (req, res) => {
     } catch (error) {
       console.log(error)
     }
-    res.send(newData)
+
+    try {
+      for (const quiz of newData.quizzes.filter(s => s.questions.length > 0)) {
+        console.log(quiz.name)
+        const existingQuiz = await prisma.quiz.findFirst({
+          where: { name: quiz.name.replace('- ProProfs Quiz', '') }
+        })
+        if (existingQuiz) {
+          console.log(`Quiz ${quiz.name} already exists, skipping...`)
+          continue
+        }
+        let sd = specializationsData.find(
+          s =>
+            s.specialization.trim() ===
+            quiz.topic.replace('Quizzes & Trivia', '').trim()
+        )
+        if (sd) {
+          const createdQuiz = await prisma.quiz.create({
+            data: {
+              name: quiz.name.replace('- ProProfs Quiz', ''),
+              description: quiz.description,
+              image: quiz.quizImage,
+              collegeId: '97c1b80f-5d63-4ec8-b790-d6fa3c763605',
+              specializationId: sd.specializationId,
+              isPublished: true,
+              createdById: sd.id,
+              duration: quiz.questions.length * 2
+            }
+          })
+
+          for (const question of quiz.questions) {
+            const createdQuestion = await prisma.quizQuestions.create({
+              data: {
+                question: question.question,
+                type: question.type === 'multiple' ? 'MCQ' : 'Single',
+                quizId: createdQuiz.id,
+                Choices: {
+                  createMany: {
+                    data: question.options.map(option => {
+                      return {
+                        text: option.text,
+                        isCorrect: option.isCorrect
+                      }
+                    })
+                  }
+                }
+              }
+            })
+          }
+        }
+      }
+      console.log('Quiz created successfully')
+    } catch (error) {
+      console.log(error)
+    }
+  })
+})
+
+app.get('/trans2', (req, res) => {
+  fs.readFile('quizlib.json', 'utf8', async (err, json) => {
+    const outerArray = JSON.parse(json)
+    const filteredQuestions = []
+    try {
+      const questions = outerArray.map(x => x.results)
+      let allQuestions = []
+      questions.forEach(question => {
+        allQuestions = [...allQuestions, ...question]
+      })
+      for (let i = 0; i < allQuestions.length; i++) {
+        const question = allQuestions[i]
+        const category = question.category
+        let categoryExists = false
+
+        for (let j = 0; j < filteredQuestions.length; j++) {
+          if (filteredQuestions[j].name === category) {
+            let options = [{ text: question.correct_answer, isCorrect: true }]
+            if (question.incorrect_answers) {
+              options = [
+                ...options,
+                ...question.incorrect_answers.map(x => ({
+                  text: x,
+                  isCorrect: false
+                }))
+              ]
+            }
+            filteredQuestions[j].questions.push({
+              question: question.question,
+              type: question.type,
+              options: options
+            })
+            categoryExists = true
+            break
+          }
+        }
+
+        if (!categoryExists) {
+          let options = [{ text: question.correct_answer, isCorrect: true }]
+          if (question.incorrect_answers) {
+            options = [
+              ...options,
+              ...question.incorrect_answers.map(x => ({
+                text: x,
+                isCorrect: false
+              }))
+            ]
+          }
+          filteredQuestions.push({
+            name: category,
+            questions: [
+              {
+                question: question.question,
+                type: question.type,
+                options: options
+              }
+            ]
+          })
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+    for (let i = 0; i < filteredQuestions.length; i++) {
+      const quiz = filteredQuestions[i]
+      if (quiz.questions.length > 30) {
+        const parts = []
+        let currentPart = { name: '', questions: [] }
+        for (let j = 0; j < quiz.questions.length; j++) {
+          const question = quiz.questions[j]
+          if (currentPart.questions.length === 0) {
+            currentPart.name = `${quiz.name} - Part 1`
+          } else if (currentPart.questions.length === 30) {
+            parts.push(currentPart)
+            currentPart = {
+              name: `${quiz.name} - Part ${parts.length + 1}`,
+              questions: []
+            }
+          }
+          currentPart.questions.push(question)
+        }
+        parts.push(currentPart)
+        filteredQuestions.splice(i, 1, ...parts)
+      }
+    }
+
+    res.send(filteredQuestions)
   })
 })
 
