@@ -768,88 +768,22 @@ app.get('/trans', (req, res) => {
     console.log(Quizzez.length)
 
     let newData = { quizzes: [] }
-    const specializationsData = [
-      {
-        id: '0565cb47-c260-4deb-adc4-80484d0e897f',
-        specializationId: '76eb0be4-ef93-4d26-a185-86ed12a494e7',
-        specialization: 'Computer Vocabulary'
-      },
-      {
-        id: '6d025962-5cc9-4f04-8293-160584ea9d77',
-        specializationId: '9ec7acdd-2bce-4b1e-a7a6-35b50d617a09',
-        specialization: 'Cyber Safety'
-      },
-      {
-        id: '240c9ef8-02ee-4e66-8388-1ad1d46981f0',
-        specializationId: '3ee06109-e948-44d3-b65f-2f1d5c822203',
-        specialization: 'Geographic'
-      },
-      {
-        id: '46048fa9-3dee-4b18-acf9-28eb31a0bf6e',
-        specializationId: '2e9f96e6-dd25-4b71-ae6a-5420f543f7a9',
-        specialization: 'Computer Virus'
-      },
-      {
-        id: '99f8dfef-33f2-499e-8520-420736de31b4',
-        specializationId: 'e6f027bd-610c-4621-806d-aeac39972c99',
-        specialization: 'Electronics Engineering'
-      },
-      {
-        id: '11e935b9-1206-4dd1-a410-8dc242c2a65d',
-        specializationId: '564db167-e639-4189-956c-fc07e8265abf',
-        specialization: 'Data Communication'
-      },
-      {
-        id: '54b507b3-0720-4855-a5af-e79f3290d63c',
-        specializationId: '2a945726-04f6-49b8-9d47-a4984dc471c9',
-        specialization: 'Data Type'
-      },
-      {
-        id: 'ed7b3b6f-c9c0-4caf-bdc0-88d8a96ef14d',
-        specializationId: '8e5348c0-c3d0-4b34-9385-75c7ef992eb3',
-        specialization: 'Facial Expression'
-      },
-      {
-        id: '34dee615-40b0-47fe-b37c-6e85d85a6968',
-        specializationId: '029044af-0aee-490a-b88b-c856de319eef',
-        specialization: 'Data Management'
-      },
-      {
-        id: '8ea0f55d-4e8d-4e60-ab64-8544affe9e97',
-        specializationId: '191d7b94-1ffd-47bf-9b7a-5b5e0d463059',
-        specialization: 'Data Warehousing'
-      },
-      {
-        id: '20587792-2520-4041-8f91-d22746a858ea',
-        specializationId: '4dbaf6fd-afd4-4412-bfc8-ab1c97b81ece',
-        specialization: 'Ctt Plus Certification'
-      },
-      {
-        id: 'bc582c5f-5b86-49b2-b63a-e3085856d94b',
-        specializationId: 'ba936619-8a05-4def-840b-d45f38ef3f5a',
-        specialization: 'Digidesign'
-      },
-      {
-        id: '528d9e6c-1732-40a9-b388-f71463922bb0',
-        specializationId: '9a388a46-ac97-434c-ade0-7c509f711cf0',
-        specialization: 'Female Reproductive System'
-      },
-      {
-        id: '081d3895-1509-40f2-9dd9-1bef0e69fd34',
-        specializationId: '5d3634fb-47ca-4e2a-b5a4-dece4c7738a1',
-        specialization: 'Fundamentals Of Nursing NCLEX'
-      },
-      {
-        id: '8e4e4222-d2ca-416f-a3c3-a287d1c154b6',
-        specializationId: 'f03e303a-49a3-4140-a3c4-557927f1e321',
-        specialization: 'Computer'
-      },
-      {
-        id: '2a1d5c9d-2311-4397-89b5-a64dbcba7e9d',
-        specializationId: '434af6e3-8109-453a-a54d-dac2a84d5043',
-        specialization: 'Cyber Citizenship'
-      }
-    ]
+    const specializationsData = (
+      await prisma.user.findMany({
+        where: {
+          role: 'faculty'
+        },
+        select: {
+          id: true,
+          specialization: true
+        }
+      })
+    )?.map(user => ({
+      id: user.id,
+      specializationId: user.specialization.id,
+      specialization: user.specialization.name
+    }))
+
     try {
       Quizzez.forEach(data => {
         let quiz = {
@@ -925,7 +859,7 @@ app.get('/trans', (req, res) => {
               name: quiz.name.replace('- ProProfs Quiz', ''),
               description: quiz.description,
               image: quiz.quizImage,
-              collegeId: '97c1b80f-5d63-4ec8-b790-d6fa3c763605',
+              collegeId: '301ae32b-db28-4ef8-b9fe-6ffc3b2b8eee',
               specializationId: sd.specializationId,
               isPublished: true,
               createdById: sd.id,
