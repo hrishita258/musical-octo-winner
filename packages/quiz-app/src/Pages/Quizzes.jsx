@@ -1,4 +1,16 @@
-import { Avatar, Card, Col, Form, message, Row, Select, Tag } from 'antd'
+import {
+  Avatar,
+  Card,
+  Col,
+  Divider,
+  Form,
+  message,
+  Pagination,
+  Row,
+  Select,
+  Spin,
+  Tag
+} from 'antd'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -60,24 +72,49 @@ const images = [
 const Quizzes = () => {
   const [quizzesData, setQuizzesData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1)
   const [query, setQuery] = useState(() => null)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [filters, setFilters] = useState(null)
+  const [loadingFilter, setLoadingFilter] = useState(false)
+
   useEffect(() => {
-    getRequest('quizzes?' + serialize(query))
+    setLoadingFilter(true)
+    getRequest(
+      `quizzes?page=${page}&itemsPerPage=${itemsPerPage}&` + serialize(query)
+    )
       .then(response => {
         if (response.status === 200) {
           if (response.data.status) {
             setQuizzesData(response.data.result)
+            setTotal(response.data.totalItems)
+            setLoading(false)
+            setLoadingFilter(false)
           }
-          setLoading(false)
         } else {
+          setLoading(false)
+          setLoadingFilter(false)
         }
       })
       .catch(err => {
         setLoading(false)
+        setLoadingFilter(false)
         console.log(err)
         message.error('internal server error please try agin later')
       })
-  }, [query])
+  }, [query, page, itemsPerPage])
+
+  useEffect(() => {
+    getRequest(`quizzes/filters`).then(response => {
+      if (response.status === 200) {
+        if (response.data.status) {
+          setFilters(response.data.result)
+        }
+      } else {
+      }
+    })
+  }, [])
 
   let i = 0
   const roundArray = index => {
@@ -99,6 +136,7 @@ const Quizzes = () => {
       }
     return str.join('&')
   }
+  console.log(filters)
   return (
     <PageLayout breadcrumbs={BREADCRUMBS} loading={loading}>
       <Card>
@@ -112,7 +150,7 @@ const Quizzes = () => {
         >
           Filters
         </h1>
-        <Form layout="vertical">
+        <Form layout="vertical" initialValues={query}>
           <Row gutter={10}>
             <Col span={6}>
               <Form.Item
@@ -139,8 +177,8 @@ const Quizzes = () => {
                   }
                   showSearch
                 >
-                  {quizzesData
-                    ?.map(quiz => quiz.Specialization)
+                  {filters
+                    ?.map(s => s.Specialization)
                     .reduce((unique, o) => {
                       if (!unique.some(obj => obj.id === o.id)) {
                         unique.push(o)
@@ -158,7 +196,7 @@ const Quizzes = () => {
             <Col span={6}>
               <Form.Item
                 style={{ width: '100%' }}
-                name="College"
+                name="collegeId"
                 label="College"
               >
                 <Select
@@ -175,8 +213,8 @@ const Quizzes = () => {
                   }
                   showSearch
                 >
-                  {quizzesData
-                    ?.map(quiz => quiz.College)
+                  {filters
+                    ?.map(s => s.College)
                     .reduce((unique, o) => {
                       if (!unique.some(obj => obj.id === o.id)) {
                         unique.push(o)
@@ -194,7 +232,7 @@ const Quizzes = () => {
             <Col span={6}>
               <Form.Item
                 style={{ width: '100%' }}
-                name="faculty"
+                name="createdById"
                 label="Created by"
               >
                 <Select
@@ -216,8 +254,8 @@ const Quizzes = () => {
                   }
                   showSearch
                 >
-                  {quizzesData
-                    ?.map(quiz => quiz.User)
+                  {filters
+                    ?.map(s => s.User)
                     .reduce((unique, o) => {
                       if (!unique.some(obj => obj.id === o.id)) {
                         unique.push(o)
@@ -235,131 +273,186 @@ const Quizzes = () => {
           </Row>
         </Form>
       </Card>
-      <Row gutter={20}>
-        {quizzesData ? (
-          quizzesData?.map((quiz, i) => (
-            <Col
-              key={quiz.id}
-              xs={{
-                span: 24
-              }}
-              sm={{
-                span: 12
-              }}
-              md={{
-                span: 12
-              }}
-              lg={{
-                span: 8
-              }}
-              xl={{
-                span: 6
-              }}
-            >
-              <Link to={`/quizzes/${quiz.id}`}>
-                <Card
-                  hoverable
-                  cover={
-                    <img
-                      alt="example"
-                      className="quiz-card-img"
-                      src={images[roundArray(i)]}
-                    />
-                  }
-                >
-                  <div>
-                    <Card.Meta
-                      style={{ marginBottom: '.7rem' }}
-                      title={quiz.name}
-                    />
-                    <div className="quiz-card-items-container">
-                      <Avatar
-                        style={{
-                          color: '#ea5455',
-                          backgroundColor: 'rgba(234,84,85,.12)'
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          marginTop: '70px'
+        }}
+      >
+        <Pagination
+          defaultCurrent={page}
+          total={total}
+          onChange={page => {
+            setPage(page)
+          }}
+          pageSize={itemsPerPage}
+          onShowSizeChange={(current, size) => {
+            setItemsPerPage(size)
+          }}
+        />
+      </div>
+      <Divider orientationMargin={30} orientation={'left'}>
+        <h1 style={{ fontSize: '25px' }}>Courses</h1>
+      </Divider>
+      <Spin spinning={loadingFilter} size="large">
+        <Row gutter={20}>
+          {quizzesData ? (
+            quizzesData?.map((quiz, i) => (
+              <Col
+                key={quiz.id}
+                xs={{
+                  span: 24
+                }}
+                sm={{
+                  span: 12
+                }}
+                md={{
+                  span: 12
+                }}
+                lg={{
+                  span: 8
+                }}
+                xl={{
+                  span: 6
+                }}
+              >
+                <Link to={`/quizzes/${quiz.id}`}>
+                  <Card
+                    hoverable
+                    cover={
+                      <img
+                        alt="example"
+                        className="quiz-card-img"
+                        src={
+                          quiz.image.includes('quiz-school')
+                            ? 'https://www.proprofs.com/' + quiz.image
+                            : quiz.image
+                        }
+                        onError={e => {
+                          e.target.onerror = null
+                          e.target.src = images[roundArray(i)]
                         }}
-                      >
-                        {' '}
-                        <b>
-                          {quiz.User.name[0].toLocaleUpperCase() +
-                            quiz.User.name.split('')[1][0].toLocaleUpperCase()}
-                        </b>
-                      </Avatar>{' '}
-                      <div
-                        style={{
-                          marginLeft: '0.4rem'
-                        }}
-                      >
-                        <small
+                      />
+                    }
+                  >
+                    <div>
+                      <Card.Meta
+                        style={{ marginBottom: '.7rem' }}
+                        title={quiz.name}
+                      />
+                      <div className="quiz-card-items-container">
+                        <Avatar
                           style={{
-                            fontWeight: 400,
-                            color: '#b9b9c3',
-                            marginRight: '0.4rem'
+                            color: '#ea5455',
+                            backgroundColor: 'rgba(234,84,85,.12)'
                           }}
                         >
-                          by
-                        </small>
-                        <small
-                          style={{ color: '#6e6b7b', fontSize: '.857rem' }}
-                        >
-                          {quiz.User.name}
-                        </small>
-                        <span
+                          {' '}
+                          <b>
+                            {quiz.User.name[0].toLocaleUpperCase() +
+                              quiz.User.name
+                                .split('')[1][0]
+                                .toLocaleUpperCase()}
+                          </b>
+                        </Avatar>{' '}
+                        <div
                           style={{
-                            margin: '0px 0.4rem',
-                            color: '#b9b9c3'
+                            marginLeft: '0.4rem'
                           }}
                         >
-                          |
-                        </span>
-                        <small
-                          style={{
-                            color: '#b9b9c3',
-                            fontSize: '.857rem'
-                          }}
-                        >
-                          {moment(new Date(quiz.createdAt)).format('MMM Do YY')}
-                        </small>
+                          <small
+                            style={{
+                              fontWeight: 400,
+                              color: '#b9b9c3',
+                              marginRight: '0.4rem'
+                            }}
+                          >
+                            by
+                          </small>
+                          <small
+                            style={{ color: '#6e6b7b', fontSize: '.857rem' }}
+                          >
+                            {quiz.User.name}
+                          </small>
+                          <span
+                            style={{
+                              margin: '0px 0.4rem',
+                              color: '#b9b9c3'
+                            }}
+                          >
+                            |
+                          </span>
+                          <small
+                            style={{
+                              color: '#b9b9c3',
+                              fontSize: '.857rem'
+                            }}
+                          >
+                            {moment(new Date(quiz.createdAt)).format(
+                              'MMM Do YY'
+                            )}
+                          </small>
+                        </div>
                       </div>
+                      <Tag
+                        style={{
+                          marginBottom: '0.7rem',
+                          borderRadius: '5px',
+                          color: '#7367f0',
+                          padding: '0px 0.5rem',
+                          fontWeight: 600,
+                          fontSize: '83%'
+                        }}
+                        color="rgba(115,103,240,.12)"
+                      >
+                        {quiz.Specialization.name}
+                      </Tag>
+                      <QuizCardStat
+                        duration={quiz.duration}
+                        users={quiz._count.Users}
+                        questions={quiz._count.Questions}
+                      />
                     </div>
-                    <Tag
-                      style={{
-                        marginBottom: '0.7rem',
-                        borderRadius: '5px',
-                        color: '#7367f0',
-                        padding: '0px 0.5rem',
-                        fontWeight: 600,
-                        fontSize: '83%'
-                      }}
-                      color="rgba(115,103,240,.12)"
-                    >
-                      {quiz.Specialization.name}
-                    </Tag>
-                    <QuizCardStat
-                      duration={quiz.duration}
-                      users={quiz._count.Users}
-                      questions={quiz._count.Questions}
-                    />
-                  </div>
-                </Card>
-              </Link>
-            </Col>
-          ))
-        ) : (
-          <MessageCard
-            status={403}
-            title={'No Quiz found'}
-            subTitle={
-              'create some quiz and come back again. click on Create Quiz Button to add new Quiz'
-            }
-            btnLink={{
-              text: 'Create Quiz',
-              link: '/create',
-              type: 'primary'
-            }}
-          />
-        )}
-      </Row>
+                  </Card>
+                </Link>
+              </Col>
+            ))
+          ) : (
+            <MessageCard
+              status={403}
+              title={'No Quiz found'}
+              subTitle={
+                'create some quiz and come back again. click on Create Quiz Button to add new Quiz'
+              }
+              btnLink={{
+                text: 'Create Quiz',
+                link: '/create',
+                type: 'primary'
+              }}
+            />
+          )}
+        </Row>
+      </Spin>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          margin: '50px 0px'
+        }}
+      >
+        <Pagination
+          defaultCurrent={page}
+          total={total}
+          onChange={page => {
+            setPage(page)
+          }}
+          pageSize={itemsPerPage}
+          onShowSizeChange={(current, size) => {
+            setItemsPerPage(size)
+          }}
+        />
+      </div>
     </PageLayout>
   )
 }

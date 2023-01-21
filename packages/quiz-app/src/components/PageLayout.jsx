@@ -18,7 +18,7 @@ const { Content } = Layout
 const PageLayout = ({ children, breadcrumbs, loading, noStyle = false }) => {
   const { selectedKeys, setSelectedKeys } = useMenuSelectedKeys()
   const { appState } = useAppState()
-  console.log('PageLayout appState', appState)
+
   const getMenuChildren = data =>
     data.map(item => {
       if (item.show === false) return null
