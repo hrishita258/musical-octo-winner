@@ -286,6 +286,7 @@ const Quizzes = () => {
           onChange={page => {
             setPage(page)
           }}
+          current={page}
           pageSize={itemsPerPage}
           onShowSizeChange={(current, size) => {
             setItemsPerPage(size)
@@ -293,7 +294,12 @@ const Quizzes = () => {
         />
       </div>
       <Divider orientationMargin={30} orientation={'left'}>
-        <h1 style={{ fontSize: '25px' }}>Courses</h1>
+        <h1 style={{ fontSize: '25px', display: 'flex', alignItems: 'center' }}>
+          Courses
+          <p style={{ fontSize: '14px', margin: '0px 5px' }}>
+            ( {total} results on HH Quizzer )
+          </p>
+        </h1>
       </Divider>
       <Spin spinning={loadingFilter} size="large">
         <Row gutter={20}>
@@ -447,6 +453,7 @@ const Quizzes = () => {
           onChange={page => {
             setPage(page)
           }}
+          current={page}
           pageSize={itemsPerPage}
           onShowSizeChange={(current, size) => {
             setItemsPerPage(size)

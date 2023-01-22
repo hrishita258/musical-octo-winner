@@ -14,9 +14,11 @@ router.get('/', async (req, res) => {
   delete query.page
   delete query.itemsPerPage
 
-  if (query) {
+  if (Object.keys(query).length) {
     skip = 0
   }
+
+  console.log({ itemsPerPage, skip })
 
   const totalItems = await postgres.quiz.count({ where: query })
   const result = await postgres.quiz.findMany({
