@@ -18,6 +18,7 @@ import { getRequest } from '../axios/axiosMethods'
 import MessageCard from '../components/MessageCard'
 import PageLayout from '../components/PageLayout'
 import QuizCardStat from '../components/QuizCardStat'
+
 const BREADCRUMBS = [
   {
     name: 'Home',
@@ -75,7 +76,7 @@ const Quizzes = () => {
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [query, setQuery] = useState(() => null)
-  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [itemsPerPage, setItemsPerPage] = useState(25)
   const [filters, setFilters] = useState(null)
   const [loadingFilter, setLoadingFilter] = useState(false)
 
@@ -123,6 +124,7 @@ const Quizzes = () => {
       return (i = (i + 1) % images.length)
     }
   }
+
   const serialize = function (obj) {
     const query = obj
     if (query)
@@ -136,7 +138,7 @@ const Quizzes = () => {
       }
     return str.join('&')
   }
-  console.log(filters)
+
   return (
     <PageLayout breadcrumbs={BREADCRUMBS} loading={loading}>
       <Card>
@@ -322,6 +324,7 @@ const Quizzes = () => {
                 xl={{
                   span: 6
                 }}
+                xxl={{ span: 4 }}
               >
                 <Link to={`/quizzes/${quiz.id}`}>
                   <Card
@@ -381,39 +384,37 @@ const Quizzes = () => {
                           >
                             {quiz.User.name}
                           </small>
-                          <span
-                            style={{
-                              margin: '0px 0.4rem',
-                              color: '#b9b9c3'
-                            }}
-                          >
-                            |
-                          </span>
-                          <small
-                            style={{
-                              color: '#b9b9c3',
-                              fontSize: '.857rem'
-                            }}
-                          >
-                            {moment(new Date(quiz.createdAt)).format(
-                              'MMM Do YY'
-                            )}
-                          </small>
                         </div>
                       </div>
-                      <Tag
+                      <div
                         style={{
-                          marginBottom: '0.7rem',
-                          borderRadius: '5px',
-                          color: '#7367f0',
-                          padding: '0px 0.5rem',
-                          fontWeight: 600,
-                          fontSize: '83%'
+                          display: 'flex',
+                          justifyContent: 'space-between'
                         }}
-                        color="rgba(115,103,240,.12)"
                       >
-                        {quiz.Specialization.name}
-                      </Tag>
+                        <Tag
+                          style={{
+                            marginBottom: '0.7rem',
+                            borderRadius: '5px',
+                            color: '#7367f0',
+                            padding: '0px 0.5rem',
+                            fontWeight: 600,
+                            fontSize: '83%'
+                          }}
+                          color="rgba(115,103,240,.12)"
+                        >
+                          {quiz.Specialization.name}
+                        </Tag>
+                        <small
+                          style={{
+                            color: '#b9b9c3',
+                            fontSize: '.857rem'
+                          }}
+                        >
+                          {moment(new Date(quiz.createdAt)).format('MMM Do YY')}
+                        </small>
+                      </div>
+
                       <QuizCardStat
                         duration={quiz.duration}
                         users={quiz._count.Users}

@@ -985,6 +985,39 @@ app.get('/trans2', (req, res) => {
   })
 })
 
+// app.get('/mediusa', (req, res) => {
+//   fs.readFile('mediusa.json', 'utf8', async (err, json) => {
+//     const data = JSON.parse(json)
+//     const newData = data.map(x => {
+//       return {
+//         name: x.Name,
+//         price: x.Price,
+//         formated_price: x.PriceFormated,
+//         msrp: x.MSRP,
+//         formated_msrp: x.MSRPFormated,
+//         description: x.Description,
+//         thumbnail: x.MediThumbURL,
+//         product_url: x.URL,
+//         stock: x.stock,
+//         imageUrl: x.MediImageURL,
+//         product_id: x.ProductID,
+//         isMedical: x.IsMedical,
+//         isCEP: x.IsCEP,
+//         isTopicalGear: x.IsTopicalGear,
+//         category: x.MediNavigation,
+//         subcategory: x.CEPNavigation,
+//         subsubcategory: x.TopicalGearNavigation
+//       }
+//     })
+//     fs.writeFile('mediusaData.json', JSON.stringify(newData), 'utf8', err => {
+//       if (err) {
+//         console.log(err)
+//       }
+//       res.send('done')
+//     })
+//   })
+// })
+
 const generateTokens = user => {
   const iat = Math.floor(Date.now() / 1000)
   const expire = Math.floor(Date.now() / 1000) + ACCESS_TOKEN_EXPIRE_TIME

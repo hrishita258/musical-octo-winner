@@ -132,6 +132,100 @@ router.get('/:id', async (req, res) => {
   res.status(200).json({ result: quiz, msg: 'done', status: 200 })
 })
 
+router.post('/api/violations', async (req, res) => {
+  try {
+    const { type, start, end, duration, quizId } = req.body
+    const newViolation = await prisma.createViolation({
+      type,
+      start,
+      end,
+      duration
+    })
+    res.json({ violation: newViolation })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+router.post('/api/mark-for-review', async (req, res) => {
+  const { userId } = req.user
+  const { questionId, quizId } = req.body
+  try {
+    const markedQuestion = await prisma.markedForReview.findFirst({
+      where: { questionId, quizId, userId }
+    })
+
+    if (markedQuestion) {
+      await prisma.question.update({
+        where: { id: questionId },
+        data: { markedQuestion: false }
+      })
+    } else {
+      await prisma.markedForReview.create({
+        data: { questionId, quizId, userId, markedQuestion: true }
+      })
+    }
+
+    res
+      .status(200)
+      .send({ message: 'Question marked for review successfully.' })
+  } catch (error) {
+    res.status(500).send({ message: 'Error marking question for review.' })
+  }
+})
+
+router.post('/api/selectedOptions', async (req, res) => {
+  const { selectedOptions, quizId, userId } = req.body
+  try {
+    // Iterate over the selected options object
+    for (const questionId in selectedOptions) {
+      // Check if the question is a single select or MCQ
+      if (Array.isArray(selectedOptions[questionId])) {
+        // Handle MCQ
+        // Deactivate all previously selected options for this question
+        await prisma.selected_options.updateMany({
+          where: { questionId, quizId, userId },
+          data: { isActive: false }
+        })
+        // Create new options
+        selectedOptions[questionId].forEach(async optionId => {
+          await prisma.selected_options.create({
+            data: {
+              optionId,
+              questionId,
+              quizId,
+              userId,
+              isActive: true
+            }
+          })
+        })
+      } else {
+        // Handle single select
+        // Deactivate all previously selected options for this question
+        await prisma.selected_options.updateMany({
+          where: { questionId, quizId, userId },
+          data: { isActive: false }
+        })
+        // Create a new option
+        await prisma.selected_options.create({
+          data: {
+            optionId: selectedOptions[questionId],
+            questionId,
+            quizId,
+            userId,
+            isActive: true
+          }
+        })
+      }
+    }
+    res.status(200).send({ message: 'Selected options stored successfully' })
+  } catch (err) {
+    res
+      .status(500)
+      .send({ message: 'Failed to store selected options', error: err })
+  }
+})
+
 router.get('/hackathons/get', async (req, res) => {
   try {
     const pageN = req.query.page || 1
