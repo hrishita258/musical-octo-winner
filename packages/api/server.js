@@ -497,7 +497,7 @@ app.get('/final', async (req, res) => {
     const browser = await puppeteer.launch({ headless: false })
 
     await async.eachLimit(
-      quizzes.slice(61, 120),
+      quizzes.slice(120, 180),
       1,
       async quiz => {
         const uniqueUrls = [...new Set(quiz.quizzes)]
@@ -632,7 +632,7 @@ app.get('/final', async (req, res) => {
         console.log(data.length, errors.length)
 
         fs.writeFile(
-          'quizDataAll5.json',
+          'quizDataAll7.json',
           JSON.stringify({
             data,
             errors
