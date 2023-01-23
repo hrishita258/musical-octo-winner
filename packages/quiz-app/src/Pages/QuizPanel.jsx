@@ -36,11 +36,23 @@ const QuizPanel = () => {
   const [loading, setLoading] = useState(true)
   const [secondsRemaining, setSecondsRemaining] = useState(0)
   const [rulesDrawerOpen, setRulesDrawerOpen] = useState(false)
+  const [selectedOptions, setSelectedOptions] = useState({})
+  const [currentQuestion, setCurrentQuestion] = useState(0)
+  const [markedForReview, setMarkedForReview] = useState({})
+  const [startTime, setStartTime] = useState(null)
+  const [endTime, setEndTime] = useState(null)
+  const [violations, setViolations] = useState([])
+  const [bookmarkedQuestions, setBookmarkedQuestions] = useState([])
+
   const [startQuiz, setStartQuiz] = useState(
     localStorage.getItem('quizStarted') &&
-      localStorage.getItem('quizStarted') === true
+      Boolean(localStorage.getItem('quizStarted')) === true
       ? true
       : false
+  )
+
+  const [isFullscreenModalOpen, setIsFullscreenModalOpen] = useState(
+    () => startQuiz
   )
 
   const params = useParams()
@@ -54,16 +66,22 @@ const QuizPanel = () => {
       .then(response => {
         if (response.status === 200) {
           if (response.data.status) {
+            let duration = response.data.result.duration
+
             setQuizData(response.data.result)
-            setSecondsRemaining(
-              localStorage.getItem('currentCount') !== undefined || null
-                ? parseInt(localStorage.getItem('currentCount'))
-                : response.data.result.duration * 60
-            )
-            INITIAL_COUNT =
-              localStorage.getItem('currentCount') !== undefined || null
-                ? parseInt(localStorage.getItem('currentCount'))
-                : response.data.result.duration * 60
+
+            if (duration !== undefined && duration !== null) {
+              let count = localStorage.getItem('currentCount')
+              INITIAL_COUNT =
+                count !== undefined && count !== null
+                  ? parseInt(count)
+                  : duration * 60
+              setSecondsRemaining(
+                count !== undefined && count !== null
+                  ? parseInt(count)
+                  : duration * 60
+              )
+            }
           }
           setLoading(false)
         } else {
@@ -110,25 +128,106 @@ const QuizPanel = () => {
   }
 
   useEffect(() => {
-    function onFullscreenChange() {
+    function handleFullscreenChange() {
       if (document.fullscreenElement) {
-        console.log('fullscreen')
-        document.querySelector('body').style.overflow = 'hidden'
+        setStartTime(Date.now())
       } else {
-        console.log('not fullscreen')
-        document.querySelector('body').style.overflow = 'auto'
+        setIsFullscreenModalOpen(true)
+        setEndTime(Date.now())
+        setViolations([
+          ...violations,
+          {
+            type: 'fullscreen',
+            start: startTime,
+            end: endTime,
+            duration: endTime - startTime
+          }
+        ])
       }
     }
 
-    document.addEventListener('fullscreenchange', onFullscreenChange)
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+    }
+  }, [violations, startTime, endTime])
 
-    return () =>
-      document.removeEventListener('fullscreenchange', onFullscreenChange)
-  }, [])
+  useEffect(() => {
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        setEndTime(Date.now())
+        setViolations([
+          ...violations,
+          {
+            type: 'tab change',
+            start: startTime,
+            end: endTime,
+            duration: endTime - startTime
+          }
+        ])
+      } else {
+        setStartTime(Date.now())
+      }
+    }
 
-  console.log(quizData)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [violations, startTime, endTime])
+
+  function handleOptionSelect(questionId, optionId) {
+    if (quizData.Questions[currentQuestion].type === 'MCQ') {
+      //if question type is MCQ
+      if (selectedOptions[questionId]) {
+        if (selectedOptions[questionId].includes(optionId)) {
+          //if option is already selected remove it
+          setSelectedOptions({
+            ...selectedOptions,
+            [questionId]: selectedOptions[questionId].filter(
+              o => o !== optionId
+            )
+          })
+        } else {
+          //if option is not selected add it
+          setSelectedOptions({
+            ...selectedOptions,
+            [questionId]: [...selectedOptions[questionId], optionId]
+          })
+        }
+      } else {
+        //if question is not selected add option
+        setSelectedOptions({
+          ...selectedOptions,
+          [questionId]: [optionId]
+        })
+      }
+    } else {
+      //if question type is single
+      setSelectedOptions({
+        ...selectedOptions,
+        [questionId]: optionId
+      })
+    }
+  }
+
+  const handleMarkForReview = questionId => {
+    if (markedForReview[questionId]) {
+      setMarkedForReview({
+        ...markedForReview,
+        [questionId]: false
+      })
+    } else {
+      setMarkedForReview({
+        ...markedForReview,
+        [questionId]: true
+      })
+    }
+  }
 
   const twoDigits = num => String(num).padStart(2, '0')
+
+  console.log({ violations, selectedOptions, markedForReview })
   return (
     <PageLayout noStyle loading={loading}>
       <Card className="quiz-panel-pageheader" bodyStyle={{ padding: 2 }}>
@@ -225,21 +324,39 @@ const QuizPanel = () => {
               bodyStyle={{ padding: 7 }}
             >
               <div className="quiz-panel-status-badges-container">
-                {STATUS_BADGES.map(h => (
-                  <div key={h.name}>
-                    <small>{h.name}</small>
-                    <div className="quiz-panel-status-badges-item-container">
-                      <div
-                        style={{
-                          backgroundColor: h.bgColor,
-                          color: h.color
-                        }}
-                        className="quiz-panel-status-badge"
-                      ></div>
-                      <span>1</span>
+                {STATUS_BADGES.map(h => {
+                  let count
+                  switch (h.name) {
+                    case 'Completed':
+                      count = quizData?.Questions.filter(
+                        q => selectedOptions[q.id]
+                      ).length
+                      break
+                    case 'Not Answered':
+                      count = quizData?.Questions.filter(
+                        q => !selectedOptions[q.id]
+                      ).length
+                      break
+                    case 'Current':
+                      count = currentQuestion + 1
+                      break
+                  }
+                  return (
+                    <div key={h.name}>
+                      <small>{h.name}</small>
+                      <div className="quiz-panel-status-badges-item-container">
+                        <div
+                          style={{
+                            backgroundColor: h.bgColor,
+                            color: h.color
+                          }}
+                          className="quiz-panel-status-badge"
+                        ></div>
+                        <span>{count}</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
 
               <p className="quiz-panel-sidebar-total-questions">
@@ -252,7 +369,19 @@ const QuizPanel = () => {
                 {quizData &&
                   quizData.Questions &&
                   quizData.Questions?.map((q, s) => (
-                    <div key={s} className="quiz-panel-indextags">
+                    <div
+                      key={s}
+                      className={`quiz-panel-indextags ${
+                        s === currentQuestion
+                          ? 'quiz-panel-indextags-current'
+                          : selectedOptions[q.id]
+                          ? 'quiz-panel-indextags-completed'
+                          : markedForReview[q.id]
+                          ? 'quiz-panel-indextags-review'
+                          : ''
+                      }`}
+                      onClick={() => setCurrentQuestion(s)}
+                    >
                       <span>{s + 1}</span>
                     </div>
                   ))}
@@ -281,20 +410,38 @@ const QuizPanel = () => {
               >
                 <div style={{ fontSize: '15px', letterSpacing: 3 }}>
                   <strong>
-                    <b style={{ marginRight: 15 }}>Question</b> 01/20
+                    <b style={{ marginRight: 15 }}>Question</b>{' '}
+                    {currentQuestion + 1}/{quizData?.Questions?.length}
                   </strong>
-                  <Progress size="small" percent={2} showInfo={false} />
+                  <Progress
+                    size="small"
+                    percent={
+                      ((currentQuestion + 1) / quizData?.Questions?.length) *
+                      100
+                    }
+                    showInfo={false}
+                  />
                 </div>
-                <span>
+                <Button
+                  onClick={() =>
+                    handleMarkForReview(quizData?.Questions[currentQuestion].id)
+                  }
+                  type={
+                    markedForReview[quizData?.Questions[currentQuestion].id]
+                      ? 'default'
+                      : 'link'
+                  }
+                >
                   <BsEye
                     style={{
-                      marginRight: 7,
-                      alignSelf: 'baseline',
-                      fontSize: 19
+                      marginRight: 7
                     }}
-                  />{' '}
-                  Mark for review
-                </span>
+                  />
+                  {markedForReview[quizData?.Questions[currentQuestion].id]
+                    ? 'Unmark'
+                    : 'Mark'}{' '}
+                  for review
+                </Button>
               </div>
               <div
                 style={{ margin: '40px 0px', fontSize: 18, fontWeight: 500 }}
@@ -302,15 +449,33 @@ const QuizPanel = () => {
                 <ReactMarkdown>
                   {quizData &&
                     quizData.Questions &&
-                    quizData.Questions[0].question}
+                    quizData.Questions[currentQuestion].question}
                 </ReactMarkdown>
               </div>
+
               <Row gutter={25}>
                 {quizData &&
                   quizData.Questions &&
-                  quizData.Questions[0].Choices.map((c, i) => (
+                  quizData.Questions[currentQuestion].Choices.map((c, i) => (
                     <Col key={c?.id} span={12}>
-                      <Card>
+                      <Card
+                        className={`quiz-panel-option-card ${
+                          selectedOptions[
+                            quizData.Questions[currentQuestion].id
+                          ] &&
+                          selectedOptions[
+                            quizData.Questions[currentQuestion].id
+                          ].includes(c.id)
+                            ? 'quiz-panel-option-selected'
+                            : ''
+                        }`}
+                        onClick={() =>
+                          handleOptionSelect(
+                            quizData.Questions[currentQuestion].id,
+                            c?.id
+                          )
+                        }
+                      >
                         <div
                           style={{
                             display: 'flex',
@@ -341,6 +506,7 @@ const QuizPanel = () => {
                     </Col>
                   ))}
               </Row>
+
               <div style={{ width: '100%', marginTop: 30 }}>
                 <div
                   style={{
@@ -354,10 +520,18 @@ const QuizPanel = () => {
                   }}
                 >
                   <div style={{ display: 'flex', gap: 15 }}>
-                    <Button>
+                    <Button
+                      onClick={() => setCurrentQuestion(currentQuestion - 1)}
+                      disabled={currentQuestion === 0}
+                    >
                       <AiOutlineLeft />
                     </Button>
-                    <Button>
+                    <Button
+                      onClick={() => setCurrentQuestion(currentQuestion + 1)}
+                      disabled={
+                        currentQuestion === quizData?.Questions?.length - 1
+                      }
+                    >
                       <AiOutlineRight />
                     </Button>
                   </div>
@@ -429,7 +603,6 @@ const QuizPanel = () => {
           </div>
         </Drawer>
         {/* intial modal */}
-        {console.log(startQuiz, 'startQuiz')}
         <Modal centered open={!startQuiz} footer={false}>
           <div
             style={{
@@ -450,12 +623,37 @@ const QuizPanel = () => {
             <Button
               id="fullscreen"
               onClick={() => {
-                localStorage.setItem('quizStarted', 'true')
+                localStorage.setItem('quizStarted', true)
                 document.documentElement.requestFullscreen()
                 setStartQuiz(true)
               }}
             >
               Start Assesment
+            </Button>
+          </div>
+        </Modal>
+        {/* warning modal */}
+        <Modal centered open={isFullscreenModalOpen} footer={false}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column',
+              gap: 15
+            }}
+          >
+            <p style={{ fontSize: 19, fontWeight: 500 }}>
+              You have exited fullscreen mode. This will be recorded as a
+              violation.
+            </p>
+            <Button
+              onClick={() => {
+                document.documentElement.requestFullscreen()
+                setIsFullscreenModalOpen(false)
+              }}
+            >
+              go to fullscreen
             </Button>
           </div>
         </Modal>

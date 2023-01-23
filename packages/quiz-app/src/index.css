@@ -411,3 +411,30 @@ code {
   background: #fff;
   border-radius: 5px;
 }
+
+.quiz-panel-option-selected {
+  background-color: #0073e6 !important;
+  color: #fff !important;
+}
+
+.quiz-panel-option-card:hover {
+  cursor: pointer;
+  background-color: #0073e6 !important;
+  color: #fff !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.quiz-panel-indextags-current {
+  background-color: #142439 !important;
+  color: #fff !important;
+}
+
+.quiz-panel-indextags-review {
+  background-color: #666 !important;
+  color: #fff !important;
+}
+
+.quiz-panel-indextags-completed {
+  background-color: #0cb66e !important;
+  color: #fff !important;
+}
