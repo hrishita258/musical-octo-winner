@@ -11,9 +11,11 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getRequest } from '../axios/axiosMethods'
 import PageLayout from '../components/PageLayout'
+import QuillEditor from '../components/QuillEditor'
 
 const QuizQuestionsEdit = () => {
   const [questionsData, setQuestionsData] = useState(null)
+  const [selectedCorrectOption, setSelectedCorrectOption] = useState(null)
 
   const [loading, setLoading] = useState(true)
   const params = useParams()
@@ -41,6 +43,23 @@ const QuizQuestionsEdit = () => {
       setLoading(false)
     })
   }, [params])
+
+  const updateOption = (questionIndex, optionIndex, option) => {
+    const newQuestions = [...questionsData.Questions]
+    newQuestions[questionIndex].Choices[optionIndex] = {
+      ...newQuestions[questionIndex].Choices[optionIndex],
+      ...option
+    }
+    setQuestionsData({ ...questionsData, Questions: newQuestions })
+  }
+
+  const addOption = questionIndex => {
+    const newQuestions = [...questionsData.Questions]
+    const newOption = { id: Date.now(), text: '', isCorrect: false }
+    newQuestions[questionIndex].Choices.push(newOption)
+    setQuestionsData({ ...questionsData, Questions: newQuestions })
+  }
+
   console.log(questionsData)
   return (
     <PageLayout loading={loading} breadcrumbs={BREADCRUMBS}>
@@ -82,16 +101,7 @@ const QuizQuestionsEdit = () => {
                 style={{ fontSize: '16px', cursor: 'pointer' }}
               />
             </div>
-            <Typography.Paragraph
-              size="large"
-              style={{ fontSize: '16px', marginBottom: '1rem' }}
-              editable={{
-                icon: <HighlightOutlined />,
-                tooltip: 'click to edit text'
-              }}
-            >
-              {convert(ques.question)}
-            </Typography.Paragraph>
+            <QuillEditor question={ques.question} />
             <div>
               {ques.Choices?.map((choice, j) => (
                 <Card
@@ -123,6 +133,7 @@ const QuizQuestionsEdit = () => {
                       icon: <HighlightOutlined />,
                       tooltip: 'click to edit text'
                     }}
+                    onChange={text => updateOption(index, j, { text })}
                   >
                     {convert(choice.text)}
                   </Typography.Paragraph>
@@ -141,6 +152,7 @@ const QuizQuestionsEdit = () => {
                         alignItems: 'center',
                         fontSize: '20px'
                       }}
+                      onClick={() => setSelectedCorrectOption(j)}
                     >
                       <CheckOutlined />
                     </Button>
