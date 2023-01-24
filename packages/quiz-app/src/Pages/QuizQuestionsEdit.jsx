@@ -5,7 +5,8 @@ import {
   DeleteTwoTone,
   HighlightOutlined
 } from '@ant-design/icons'
-import { Button, Card, Typography } from 'antd'
+import PlusOutlined from '@ant-design/icons/PlusOutlined'
+import { Button, Card, Select, Space, Typography } from 'antd'
 import { convert } from 'html-to-text'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -15,7 +16,6 @@ import QuillEditor from '../components/QuillEditor'
 
 const QuizQuestionsEdit = () => {
   const [questionsData, setQuestionsData] = useState(null)
-  const [selectedCorrectOption, setSelectedCorrectOption] = useState(null)
 
   const [loading, setLoading] = useState(true)
   const params = useParams()
@@ -44,11 +44,81 @@ const QuizQuestionsEdit = () => {
     })
   }, [params])
 
-  const updateOption = (questionIndex, optionIndex, option) => {
+  const addQuestion = question => {
+    const newQuestions = [...questionsData.Questions, question]
+    setQuestionsData({ ...questionsData, Questions: newQuestions })
+  }
+
+  const updateQuestion = (questionId, question) => {
     const newQuestions = [...questionsData.Questions]
-    newQuestions[questionIndex].Choices[optionIndex] = {
-      ...newQuestions[questionIndex].Choices[optionIndex],
-      ...option
+    const questionIndex = newQuestions.findIndex(q => q.id === questionId)
+    newQuestions[questionIndex] = {
+      ...newQuestions[questionIndex],
+      ...question
+    }
+    setQuestionsData({ ...questionsData, Questions: newQuestions })
+  }
+
+  const deleteQuestion = questionId => {
+    const newQuestions = [...questionsData.Questions].filter(
+      question => question.id !== questionId
+    )
+    setQuestionsData({ ...questionsData, Questions: newQuestions })
+  }
+
+  const updateQuestionType = (questionId, newType) => {
+    const newQuestions = [...questionsData.Questions]
+    const questionIndex = newQuestions.findIndex(
+      question => question.id === questionId
+    )
+    newQuestions[questionIndex] = {
+      ...newQuestions[questionIndex],
+      type: newType,
+      Choices: newQuestions[questionIndex].Choices.map(choice => {
+        return { ...choice, isCorrect: false }
+      })
+    }
+    setQuestionsData({ ...questionsData, Questions: newQuestions })
+  }
+
+  const updateOption = (questionId, optionId, option) => {
+    const newQuestions = [...questionsData.Questions]
+    const questionIndex = newQuestions.findIndex(
+      question => question.id === questionId
+    )
+    const questionType = newQuestions[questionIndex].type
+    const optionIndex = newQuestions[questionIndex].Choices.findIndex(
+      opt => opt.id === optionId
+    )
+
+    if (questionType === 'Single') {
+      if ('text' in option) {
+        newQuestions[questionIndex].Choices[optionIndex] = {
+          ...newQuestions[questionIndex].Choices[optionIndex],
+          text: option.text
+        }
+      }
+
+      if ('isCorrect' in option) {
+        newQuestions[questionIndex].Choices = newQuestions[
+          questionIndex
+        ].Choices.map(opt => {
+          return { ...opt, isCorrect: opt.id === optionId }
+        })
+      }
+    } else if (questionType === 'MCQ') {
+      if ('text' in option) {
+        newQuestions[questionIndex].Choices[optionIndex] = {
+          ...newQuestions[questionIndex].Choices[optionIndex],
+          text: option.text
+        }
+      } else if ('isCorrect' in option) {
+        const currentOption = newQuestions[questionIndex].Choices[optionIndex]
+        newQuestions[questionIndex].Choices[optionIndex] = {
+          ...currentOption,
+          isCorrect: option.isCorrect
+        }
+      }
     }
     setQuestionsData({ ...questionsData, Questions: newQuestions })
   }
@@ -60,7 +130,18 @@ const QuizQuestionsEdit = () => {
     setQuestionsData({ ...questionsData, Questions: newQuestions })
   }
 
-  console.log(questionsData)
+  const deleteOption = (questionId, optionId) => {
+    const newQuestions = [...questionsData.Questions]
+    const questionIndex = newQuestions.findIndex(
+      question => question.id === questionId
+    )
+    const optionIndex = newQuestions[questionIndex].Choices.findIndex(
+      option => option.id === optionId
+    )
+    newQuestions[questionIndex].Choices.splice(optionIndex, 1)
+    setQuestionsData({ ...questionsData, Questions: newQuestions })
+  }
+
   return (
     <PageLayout loading={loading} breadcrumbs={BREADCRUMBS}>
       <div
@@ -96,10 +177,29 @@ const QuizQuestionsEdit = () => {
                   Question {index + 1}
                 </span>
               </div>
-              <DeleteTwoTone
-                twoToneColor="red"
-                style={{ fontSize: '16px', cursor: 'pointer' }}
-              />
+
+              <Space>
+                <Select
+                  defaultValue={ques.type}
+                  style={{ width: 120 }}
+                  onChange={e => updateQuestionType(ques.id, e)}
+                  options={[
+                    { value: 'Single', label: 'Single' },
+                    { value: 'MCQ', label: 'Multiple' }
+                  ]}
+                ></Select>
+              </Space>
+              <Button
+                danger
+                type="primary"
+                shape="circle"
+                onClick={() => deleteQuestion(ques.id)}
+              >
+                <DeleteTwoTone
+                  twoToneColor="white"
+                  style={{ fontSize: '16px', cursor: 'pointer' }}
+                />
+              </Button>
             </div>
             <QuillEditor question={ques.question} />
             <div>
@@ -131,9 +231,13 @@ const QuizQuestionsEdit = () => {
                     style={{ fontSize: '14px', width: '80%', margin: 0 }}
                     editable={{
                       icon: <HighlightOutlined />,
-                      tooltip: 'click to edit text'
+                      tooltip: 'click to edit text',
+                      onChange: text => {
+                        updateOption(ques.id, choice.id, {
+                          text
+                        })
+                      }
                     }}
-                    onChange={text => updateOption(index, j, { text })}
                   >
                     {convert(choice.text)}
                   </Typography.Paragraph>
@@ -152,16 +256,34 @@ const QuizQuestionsEdit = () => {
                         alignItems: 'center',
                         fontSize: '20px'
                       }}
-                      onClick={() => setSelectedCorrectOption(j)}
+                      onClick={() =>
+                        updateOption(ques.id, choice.id, {
+                          isCorrect: true
+                        })
+                      }
                     >
                       <CheckOutlined />
                     </Button>
-                    <Button type="text">
+                    <Button
+                      type="text"
+                      onClick={() => {
+                        deleteOption(ques.id, choice.id)
+                      }}
+                    >
                       <CloseOutlined />
                     </Button>
                   </div>
                 </Card>
               ))}
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Button
+                  type="text"
+                  style={{ color: '#1890ff' }}
+                  onClick={() => addOption(index)}
+                >
+                  <PlusOutlined /> Add Option
+                </Button>
+              </div>
             </div>
           </div>
         </Card>
