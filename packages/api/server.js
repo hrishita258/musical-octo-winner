@@ -1018,6 +1018,8 @@ app.get('/trans2', (req, res) => {
 //   })
 // })
 
+app.get('/insert', async (req, res) => {})
+
 const generateTokens = user => {
   const iat = Math.floor(Date.now() / 1000)
   const expire = Math.floor(Date.now() / 1000) + ACCESS_TOKEN_EXPIRE_TIME

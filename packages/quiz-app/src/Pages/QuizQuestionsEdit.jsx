@@ -3,12 +3,13 @@ import {
   CheckOutlined,
   CloseOutlined,
   DeleteTwoTone,
-  HighlightOutlined
+  HighlightOutlined,
+  PlusOutlined
 } from '@ant-design/icons'
-import PlusOutlined from '@ant-design/icons/PlusOutlined'
-import { Button, Card, Select, Space, Typography } from 'antd'
+import { Button, Card, FloatButton, Select, Space, Typography } from 'antd'
 import { convert } from 'html-to-text'
 import React, { useEffect, useState } from 'react'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { useParams } from 'react-router-dom'
 import { getRequest } from '../axios/axiosMethods'
 import PageLayout from '../components/PageLayout'
@@ -47,6 +48,7 @@ const QuizQuestionsEdit = () => {
   const addQuestion = question => {
     const newQuestions = [...questionsData.Questions, question]
     setQuestionsData({ ...questionsData, Questions: newQuestions })
+    window.scrollTo(0, document.body.scrollHeight)
   }
 
   const updateQuestion = (questionId, question) => {
@@ -142,152 +144,307 @@ const QuizQuestionsEdit = () => {
     setQuestionsData({ ...questionsData, Questions: newQuestions })
   }
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0 })
+  }, [])
+
   return (
     <PageLayout loading={loading} breadcrumbs={BREADCRUMBS}>
       <div
-        style={{ borderBottom: '1px solid lightgray', marginBottom: '1rem' }}
+        style={{
+          borderBottom: '1px solid lightgray',
+          marginBottom: '1rem',
+          display: 'flex',
+          justifyContent: 'space-between'
+        }}
       >
-        <h1 style={{ fontSize: '20px' }}>Questions Builder</h1>
-        <p>add new questions to the quiz or update them as per your need</p>
+        <div>
+          <h1 style={{ fontSize: '20px' }}>Questions Builder</h1>
+          <p>add new questions to the quiz or update them as per your need</p>
+        </div>
+        <Button type="primary">Save Changes</Button>
       </div>
-      {questionsData?.Questions.map((ques, index) => (
-        <Card
-          key={ques.id}
+      <div style={{ overflow: 'auto' }}>
+        <div
           style={{
-            padding: '0px 7rem'
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: '25px'
           }}
         >
-          <div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '.5rem'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <BorderInnerOutlined
-                  style={{
-                    fontSize: '25px',
-                    color: 'gray',
-                    marginRight: '10px'
-                  }}
-                />
-                <span style={{ fontSize: '14px', fontWeight: 500 }}>
-                  Question {index + 1}
-                </span>
-              </div>
+          <Button
+            type="text"
+            style={{ color: '#1890ff' }}
+            onClick={() =>
+              addQuestion({
+                id: Date.now(),
+                text: '',
+                type: 'Single',
+                Choices: [
+                  {
+                    id: 1,
+                    text: '',
+                    isCorrect: false
+                  },
+                  {
+                    id: 2,
+                    text: '',
+                    isCorrect: false
+                  }
+                ]
+              })
+            }
+          >
+            Add new question
+          </Button>
+        </div>
+        <DragDropContext
+          onDragEnd={result => {
+            console.log(result)
+            // if (!result.destination) {
+            //   return
+            // }
 
-              <Space>
-                <Select
-                  defaultValue={ques.type}
-                  style={{ width: 120 }}
-                  onChange={e => updateQuestionType(ques.id, e)}
-                  options={[
-                    { value: 'Single', label: 'Single' },
-                    { value: 'MCQ', label: 'Multiple' }
-                  ]}
-                ></Select>
-              </Space>
-              <Button
-                danger
-                type="primary"
-                shape="circle"
-                onClick={() => deleteQuestion(ques.id)}
-              >
-                <DeleteTwoTone
-                  twoToneColor="white"
-                  style={{ fontSize: '16px', cursor: 'pointer' }}
-                />
-              </Button>
-            </div>
-            <QuillEditor question={ques.question} />
-            <div>
-              {ques.Choices?.map((choice, j) => (
-                <Card
-                  key={choice.id}
-                  style={{ marginBottom: 15, boxShadow: 'none' }}
-                  bodyStyle={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 20,
-                    fontWeight: 500,
-                    padding: 7
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <BorderInnerOutlined
-                      style={{
-                        fontSize: '23px',
-                        color: 'gray',
-                        marginRight: 10
-                      }}
-                    />
-                    <span style={{ fontSize: '14px', color: 'gray' }}>
-                      {String.fromCharCode(65 + j)}{' '}
-                    </span>
-                  </div>
-                  <Typography.Paragraph
-                    style={{ fontSize: '14px', width: '80%', margin: 0 }}
-                    editable={{
-                      icon: <HighlightOutlined />,
-                      tooltip: 'click to edit text',
-                      onChange: text => {
-                        updateOption(ques.id, choice.id, {
-                          text
-                        })
-                      }
-                    }}
+            // if (result.destination.index === result.source.index) {
+            //   return
+            // }
+
+            // const newQuestions = [...questionsData.Questions]
+            // const [removedQuestion] = newQuestions.splice(
+            //   result.source.index,
+            //   1
+            // )
+            // newQuestions.splice(result.destination.index, 0, removedQuestion)
+            // setQuestionsData({ ...questionsData, Questions: newQuestions })
+          }}
+        >
+          <Droppable droppableId="question-list" type="question">
+            {provided => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {questionsData?.Questions.map((ques, index) => (
+                  <Draggable
+                    draggableId={ques.id}
+                    index={index}
+                    key={ques.id}
+                    type="question"
                   >
-                    {convert(choice.text)}
-                  </Typography.Paragraph>
-                  <div style={{ display: 'flex', gap: 10 }}>
-                    <Button
-                      style={{
-                        backgroundColor: choice.isCorrect
-                          ? '#50cd89'
-                          : '#e8fff3',
-                        color: choice.isCorrect ? '#FFF' : '#50cd89',
-                        borderColor: '#b7eb8f',
-                        height: 30,
-                        width: 30,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        fontSize: '20px'
-                      }}
-                      onClick={() =>
-                        updateOption(ques.id, choice.id, {
-                          isCorrect: true
-                        })
-                      }
-                    >
-                      <CheckOutlined />
-                    </Button>
-                    <Button
-                      type="text"
-                      onClick={() => {
-                        deleteOption(ques.id, choice.id)
-                      }}
-                    >
-                      <CloseOutlined />
-                    </Button>
-                  </div>
-                </Card>
-              ))}
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button
-                  type="text"
-                  style={{ color: '#1890ff' }}
-                  onClick={() => addOption(index)}
-                >
-                  <PlusOutlined /> Add Option
-                </Button>
+                    {provided => (
+                      <div {...provided.draggableProps} ref={provided.innerRef}>
+                        <Card
+                          id={ques.id}
+                          {...provided.dragHandleProps}
+                          style={{
+                            padding: '0px 7rem'
+                          }}
+                        >
+                          <div>
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                marginBottom: '.5rem'
+                              }}
+                            >
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center'
+                                }}
+                              >
+                                <BorderInnerOutlined
+                                  style={{
+                                    fontSize: '25px',
+                                    color: 'gray',
+                                    marginRight: '10px'
+                                  }}
+                                />
+                                <span
+                                  style={{ fontSize: '14px', fontWeight: 500 }}
+                                >
+                                  Question {index + 1}
+                                </span>
+                              </div>
+
+                              <Space>
+                                <Select
+                                  defaultValue={ques.type}
+                                  style={{ width: 120 }}
+                                  onChange={e => updateQuestionType(ques.id, e)}
+                                  options={[
+                                    { value: 'Single', label: 'Single' },
+                                    { value: 'MCQ', label: 'Multiple' }
+                                  ]}
+                                ></Select>
+                              </Space>
+                              <Button
+                                danger
+                                type="primary"
+                                shape="circle"
+                                onClick={() => deleteQuestion(ques.id)}
+                              >
+                                <DeleteTwoTone
+                                  twoToneColor="white"
+                                  style={{
+                                    fontSize: '16px',
+                                    cursor: 'pointer'
+                                  }}
+                                />
+                              </Button>
+                            </div>
+                            <QuillEditor question={ques.question} />
+                            <div style={{ marginTop: '25px' }}>
+                              {ques.Choices?.map((choice, j) => (
+                                <Card
+                                  key={choice.id}
+                                  style={{
+                                    marginBottom: 15,
+                                    boxShadow: 'none'
+                                  }}
+                                  bodyStyle={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 20,
+                                    fontWeight: 500,
+                                    padding: 7
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      alignItems: 'center'
+                                    }}
+                                  >
+                                    <BorderInnerOutlined
+                                      style={{
+                                        fontSize: '23px',
+                                        color: 'gray',
+                                        marginRight: 10
+                                      }}
+                                    />
+                                    <span
+                                      style={{
+                                        fontSize: '14px',
+                                        color: 'gray'
+                                      }}
+                                    >
+                                      {String.fromCharCode(65 + j)}{' '}
+                                    </span>
+                                  </div>
+                                  <Typography.Paragraph
+                                    style={{
+                                      fontSize: '14px',
+                                      width: '80%',
+                                      margin: 0
+                                    }}
+                                    editable={{
+                                      icon: <HighlightOutlined />,
+                                      tooltip: 'click to edit text',
+                                      onChange: text => {
+                                        updateOption(ques.id, choice.id, {
+                                          text
+                                        })
+                                      }
+                                    }}
+                                  >
+                                    {convert(choice.text)}
+                                  </Typography.Paragraph>
+                                  <div style={{ display: 'flex', gap: 10 }}>
+                                    <Button
+                                      style={{
+                                        backgroundColor: choice.isCorrect
+                                          ? '#50cd89'
+                                          : '#e8fff3',
+                                        color: choice.isCorrect
+                                          ? '#FFF'
+                                          : '#50cd89',
+                                        borderColor: '#b7eb8f',
+                                        height: 30,
+                                        width: 30,
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        fontSize: '20px'
+                                      }}
+                                      onClick={() =>
+                                        updateOption(ques.id, choice.id, {
+                                          isCorrect: true
+                                        })
+                                      }
+                                    >
+                                      <CheckOutlined />
+                                    </Button>
+                                    <Button
+                                      type="text"
+                                      onClick={() => {
+                                        deleteOption(ques.id, choice.id)
+                                      }}
+                                    >
+                                      <CloseOutlined />
+                                    </Button>
+                                  </div>
+                                </Card>
+                              ))}
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                  marginTop: '20px'
+                                }}
+                              >
+                                <Button
+                                  type="text"
+                                  style={{ color: '#1890ff' }}
+                                  onClick={() => addOption(index)}
+                                >
+                                  <PlusOutlined /> Add Option
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
               </div>
-            </div>
-          </div>
-        </Card>
-      ))}
+            )}
+          </Droppable>
+        </DragDropContext>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '15px'
+          }}
+        >
+          <Button
+            key="bottomQaddBtn"
+            onClick={() =>
+              addQuestion({
+                id: Date.now(),
+                text: '',
+                type: 'Single',
+                Choices: [
+                  {
+                    id: 1,
+                    text: '',
+                    isCorrect: false
+                  },
+                  {
+                    id: 2,
+                    text: '',
+                    isCorrect: false
+                  }
+                ]
+              })
+            }
+          >
+            Add new question
+          </Button>
+        </div>
+        <FloatButton.BackTop />
+      </div>
     </PageLayout>
   )
 }

@@ -226,6 +226,95 @@ router.post('/api/selectedOptions', async (req, res) => {
   }
 })
 
+router.post('/save-changes', async (req, res) => {
+  try {
+    const { questionsData } = req.body
+    const existingQuestions = await prisma.question.findMany({
+      where: {
+        id: {
+          $in: questionsData.map(q => q.id)
+        }
+      }
+    })
+    const existingOptions = await prisma.option.findMany({
+      where: {
+        id: {
+          $in: questionsData
+            .map(q => q.options)
+            .flat()
+            .map(o => o.id)
+        }
+      }
+    }) // Update existing questions
+    const updateQuestionsPromises = existingQuestions.map(existingQuestion => {
+      const updatedQuestion = questionsData.find(
+        q => q.id === existingQuestion.id
+      )
+      return prisma.question.update({
+        where: { id: existingQuestion.id },
+        data: {
+          question: updatedQuestion.question,
+          type: updatedQuestion.type
+        }
+      })
+    })
+
+    // Update existing options
+    const updateOptionsPromises = existingOptions.map(existingOption => {
+      const updatedOption = questionsData
+        .map(q => q.options)
+        .flat()
+        .find(o => o.id === existingOption.id)
+      return prisma.option.update({
+        where: { id: existingOption.id },
+        data: {
+          option: updatedOption.option,
+          isAnswer: updatedOption.isAnswer
+        }
+      })
+    })
+
+    // Create new questions
+    const newQuestions = questionsData.filter(
+      q => !existingQuestions.find(eq => eq.id === q.id)
+    )
+    const createQuestionsPromises = newQuestions.map(q => {
+      return prisma.question.create({
+        data: {
+          question: q.question,
+          type: q.type
+        }
+      })
+    })
+
+    // Create new options
+    const newOptions = questionsData
+      .map(q => q.options)
+      .flat()
+      .filter(o => !existingOptions.find(eo => eo.id === o.id))
+    const createOptionsPromises = newOptions.map(o => {
+      return prisma.option.create({
+        data: {
+          option: o.option,
+          isAnswer: o.isAnswer
+        }
+      })
+    })
+
+    await Promise.all([
+      ...updateQuestionsPromises,
+      ...updateOptionsPromises,
+      ...createQuestionsPromises,
+      ...createOptionsPromises
+    ])
+
+    res.status(200).json({ message: 'Changes saved successfully' })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: 'Error saving changes' })
+  }
+})
+
 router.get('/hackathons/get', async (req, res) => {
   try {
     const pageN = req.query.page || 1
