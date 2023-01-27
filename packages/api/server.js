@@ -1018,7 +1018,83 @@ app.get('/trans2', (req, res) => {
 //   })
 // })
 
-app.get('/insert', async (req, res) => {})
+app.get('/edx', async (req, res) => {
+  const headers = {
+    Accept: 'application/json, text/plain, */*',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Accept-Language': 'en-GB,en;q=0.6',
+    Authorization:
+      'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIyYWE2NTE4Mi02YzAyLTA3MDQtYzEwZi01MmUyMDQ0ODA3YzQiLCJleHAiOjE2NzQ4OTQ3MjYsImFjY291bnRHdWlkIjoiMTk0NDJkODAtMzUyNC04ZDA0LTgxODAtZmM1ZmIzOTJlYjM2IiwibWFzdGVyQWNjb3VudEd1aWQiOiIxOTQ0MmQ4MC0zNTI0LThkMDQtODE4MC1mYzVmYjM5MmViMzYiLCJpbnRlZ3JhdGlvbk5pZCI6IjE3Mzk2MTQyIiwidGVuYW50SWQiOm51bGwsImFjY2Vzc0Rpc3BsYXkiOmZhbHNlLCJyb2xlcyI6WyJhbm9ueW1vdXMgdXNlciJdLCJjb21wYW55SWQiOm51bGx9.SYb--HrJ2w44zlslpGshP_u7G4YSfAYKgwvbJFLWRvQ',
+    'Content-Type': 'application/json',
+    Cookie:
+      '	os_external_domain=false; osano_consentmanager_uuid=5d8966c2-2177-437c-8ee8-116dcfade7d0; osano_consentmanager=38q90vnzYkfosXfiN4-d_ZSw1n_VeN4eF2h_hj2weP4D93yVO15yp2KhHrQ-uD07IN6aiqNjCi0tqG-4fQZ_UmYnEaAcQg3ADIJwwxPIfwJy-MjFfyjwroKqX94v5H9Z8dCehcPcSwAt9WH2mOJE9_t0xckXjZSWp0VFOfdoahMuDMZDJxhP4yeabUrPhn-PgM0ioNM-KGsNvgWXOhE_hmwmXhqbqbCB6A1pUnfhdVKDa1m1wnqHR0n0fjpnvtr9MEFHEpXvDqg4eNk5DqY2IN96RUZ7R27HxYhxRw==; drift_campaign_refresh=f555971c-050a-49d4-810a-7418485ac6be; drift_aid=66c5dfa3-5d65-4226-a794-99130b3053db; driftt_aid=66c5dfa3-5d65-4226-a794-99130b3053db; os_integration_name=; os_sec=63D4348B%3Baf9fb7344fa6f43e2ca9e77fd1d2217e20ee408d0bce2f0ef3cf8a774962c4fd%3B704928243'
+  }
+
+  async function fetchData(offset, data = []) {
+    try {
+      const response = await fetch(
+        `https://www.opensesame.com/api/v3/search:view?count=25&offset=${offset}&sortField=_score&sortDirection=desc`,
+        {
+          method: 'post',
+          headers,
+          body: JSON.stringify({
+            filters: {
+              includeSubtitleLanguages: true,
+              audioTranslated: true,
+              subtitlesTranslated: true
+            }
+          })
+        }
+      )
+      const json = await response.json()
+      console.log('offset', offset)
+      data.push(json)
+      if (offset === 9975) {
+        return data
+      } else {
+        return fetchData(offset + 25, data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  fetchData(10000).then(data => {
+    // data is an array of all the API responses
+    // you can use a library like fs to write the data to a json file
+    fs.writeFile('sea2.json', JSON.stringify(data), 'utf8', err => {
+      if (err) {
+        console.log(err)
+      }
+      res.send('done')
+    })
+  })
+})
+
+app.get('/insert', async (req, res) => {
+  fs.readFile('sea.json', 'utf8', async (err, data) => {
+    if (err) {
+      console.log(err)
+    }
+
+    const newData = []
+    JSON.parse(data).map(item => {
+      newData.push(...item.search.courses)
+    })
+
+    fs.writeFile(
+      'opensesameAllCourses.json',
+      JSON.stringify(newData),
+      'utf8',
+      err => {
+        if (err) {
+          console.log(err)
+        }
+        res.send('done')
+      }
+    )
+  })
+})
 
 const generateTokens = user => {
   const iat = Math.floor(Date.now() / 1000)
