@@ -317,7 +317,7 @@ const QuizPanel = () => {
         </div>
       </Card>
       <div style={{ padding: '0.5rem' }}>
-        <Row gutter={5} style={{ height: 'calc(100vh - 100px)' }}>
+        <Row gutter={5} style={{ height: 'calc(100vh - 87px)' }}>
           <Col span={5}>
             <Card
               style={{ position: 'relative', height: '100%' }}

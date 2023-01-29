@@ -148,10 +148,10 @@ const App = () => {
             colorInfo: '#ce69a0',
             borderRadius: '6px'
           },
-          algorithm: [theme.defaultAlgorithm],
+          algorithm: [theme.darkAlgorithm],
           components: {
             Layout: {
-              colorBgHeader: 'light' === 'dark' ? '#141414' : '#fff'
+              colorBgHeader: 'dark' === 'dark' ? '#141414' : '#fff'
             }
           }
         }}
