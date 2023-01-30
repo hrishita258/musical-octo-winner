@@ -1,9 +1,9 @@
-import { Prisma } from '@prisma/client'
+import pkg from '@prisma/client'
 import express from 'express'
 import postgres from '../../db/Prisma.js'
 
 const router = express.Router()
-
+const { Prisma } = pkg
 router.get('/', async (req, res) => {
   const users = await postgres.user.findMany({
     select: {

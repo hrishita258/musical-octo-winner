@@ -1,4 +1,15 @@
-import { Card, Checkbox, Col, Collapse, Input, Row, Tree } from 'antd'
+import {
+  Card,
+  Checkbox,
+  Col,
+  Collapse,
+  Image,
+  Input,
+  Rate,
+  Row,
+  Tag,
+  Tree
+} from 'antd'
 import React, { useEffect, useState } from 'react'
 import { getRequest } from '../axios/axiosMethods'
 import PageLayout from '../components/PageLayout'
@@ -54,22 +65,25 @@ const Edx = () => {
   if (loading) return 'Loading...'
   if (error) return 'Error!'
   if (!data) return null
-  console.log(
-    filters['categoriesFacet']?.map(s => ({
-      title: s.name,
-      key: s.id
-    }))
-  )
+  console.log(data)
   return (
     <PageLayout breadcrumbs={BREADCRUMBS}>
-      <Row gutter={15}>
+      <Row
+        style={{
+          position: 'relative'
+        }}
+        gutter={15}
+      >
         <Col
-          span={6}
+          xs={0}
+          md={8}
+          lg={8}
+          xl={6}
+          xxl={5}
           style={{
-            position: 'relative',
-            height: 'calc(100vh - 10px)',
+            height: 'calc(100vh - 50px)',
             position: 'sticky',
-            top: '150px',
+            top: '70px',
             overflowY: 'auto',
             overflowX: 'hidden',
             borderRight: '2px solid #e8e8e8',
@@ -285,11 +299,67 @@ const Edx = () => {
             </Collapse>
           </div>
         </Col>
-        <Col span={18}>
+        <Col xs={0} md={8} lg={16} xl={18} xxl={19}>
           <Row gutter={15} style={{ marginLeft: '10px' }}>
             {data?.map(item => (
-              <Col span={6} key={item.id}>
-                <Card></Card>
+              <Col xs={24} sm={12} md={12} lg={12} xl={8} xxl={6} key={item.id}>
+                <Card
+                  cover={
+                    <div
+                      style={{
+                        position: 'relative',
+                        display: 'flex',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <Image
+                        alt={item.title}
+                        src={item.imagePath}
+                        style={{
+                          padding: '0.7rem',
+                          height: '220px',
+                          width: '100%'
+                        }}
+                        preview={false}
+                      />
+                    </div>
+                  }
+                  bodyStyle={{
+                    position: 'relative',
+                    padding: '0px 15px 25px 15px'
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: 10,
+                      alignItems: 'center',
+                      width: '100%',
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <div>
+                      <Rate
+                        allowHalf
+                        defaultValue={Math.ceil(item.ratingCount / 20)}
+                      />
+                      <small>({item.ratingCount})</small>
+                    </div>
+                    <span>
+                      <b>{item.durationMinutes} Min</b>
+                    </span>
+                  </div>
+                  <Card.Meta
+                    title={item.title}
+                    description={item.publishedByUser.displayName}
+                  />
+                  <div style={{ display: 'flex', marginTop: '20px' }}>
+                    {!item.isOpenSesameExclusive ? (
+                      <Tag color="orange">Exclusive</Tag>
+                    ) : null}
+                    {item.isPlus ? <Tag color="green">Plus</Tag> : null}
+                  </div>
+                </Card>
               </Col>
             ))}
           </Row>
