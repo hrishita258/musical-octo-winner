@@ -488,7 +488,7 @@ router.get('/explore/unstop', async (req, res) => {
 
 router.get('/openseasme', async (req, res) => {
   const result = await MeiliSearchClient.index('opensesame').getDocuments({
-    limit: 25
+    limit: 50
   })
   res.status(200).json({
     result,

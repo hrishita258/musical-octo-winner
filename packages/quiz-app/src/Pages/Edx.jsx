@@ -43,6 +43,7 @@ const Edx = () => {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [selectedFilters, setSelectedFilters] = useState([])
 
   const fetchData = async () => {
     setLoading(true)
@@ -58,16 +59,52 @@ const Edx = () => {
     }
   }
 
+  const TreeTitle = ({ name, count }) => (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between'
+      }}
+    >
+      <h4 style={{ fontSize: '14px', color: '#555', fontWeight: 600 }}>
+        {name}
+      </h4>
+      <span style={{ fontSize: '12px', color: '#555', fontWeight: 600 }}>
+        {count}
+      </span>
+    </div>
+  )
+
   useEffect(() => {
     fetchData()
   }, [])
 
-  if (loading) return 'Loading...'
+  const onFilterSelectionChange = (filterKey, id) => {
+    let selectedFilter = selectedFilters.find(f => f.filterKey === filterKey)
+
+    if (selectedFilter) {
+      // If the filter already exists, add or remove the id from selectedIds
+      if (selectedFilter.selectedIds.includes(id)) {
+        selectedFilter.selectedIds = selectedFilter.selectedIds.filter(
+          i => i !== id
+        )
+      } else {
+        selectedFilter.selectedIds.push(id)
+      }
+    } else {
+      // If the filter does not exist, add it to selectedFilters
+      selectedFilter = { filterKey, selectedIds: [id] }
+      selectedFilters.push(selectedFilter)
+    }
+
+    setSelectedFilters([...selectedFilters])
+  }
+
   if (error) return 'Error!'
   if (!data) return null
-  console.log(data)
+  console.log(selectedFilters)
   return (
-    <PageLayout breadcrumbs={BREADCRUMBS}>
+    <PageLayout breadcrumbs={BREADCRUMBS} loading={loading}>
       <Row
         style={{
           position: 'relative'
@@ -127,126 +164,30 @@ const Edx = () => {
                         {filter === 'categoriesFacet' ? (
                           <Tree
                             checkable
+                            onCheck={c => setSelectedFilters(filter, c)}
                             treeData={filters.facetValues[
                               'categoriesFacet'
                             ]?.map(s => ({
                               title: (
-                                <div
-                                  style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    width: '100%'
-                                  }}
-                                >
-                                  <h4
-                                    style={{
-                                      fontSize: '14px',
-                                      color: '#555',
-                                      fontWeight: 600
-                                    }}
-                                  >
-                                    {s.name}
-                                  </h4>
-                                  <span
-                                    style={{
-                                      fontSize: '12px',
-                                      color: '#555',
-                                      fontWeight: 600
-                                    }}
-                                  >
-                                    {s.count}
-                                  </span>
-                                </div>
+                                <TreeTitle name={s.name} count={s.count} />
                               ),
                               key: s.id,
                               children: s.children?.map(c => ({
                                 title: (
-                                  <div
-                                    style={{
-                                      display: 'flex',
-                                      justifyContent: 'space-between',
-                                      width: '100%'
-                                    }}
-                                  >
-                                    <h4
-                                      style={{
-                                        fontSize: '14px',
-                                        color: '#555',
-                                        fontWeight: 600
-                                      }}
-                                    >
-                                      {c.name}
-                                    </h4>
-                                    <span
-                                      style={{
-                                        fontSize: '12px',
-                                        color: '#555',
-                                        fontWeight: 600
-                                      }}
-                                    >
-                                      {c.count}
-                                    </span>
-                                  </div>
+                                  <TreeTitle name={c.name} count={c.count} />
                                 ),
                                 key: c.id,
                                 children: c.children?.map(b => ({
                                   title: (
-                                    <div
-                                      style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        width: '100%'
-                                      }}
-                                    >
-                                      <h4
-                                        style={{
-                                          fontSize: '14px',
-                                          color: '#555',
-                                          fontWeight: 600
-                                        }}
-                                      >
-                                        {b.name}
-                                      </h4>
-                                      <span
-                                        style={{
-                                          fontSize: '12px',
-                                          color: '#555',
-                                          fontWeight: 600
-                                        }}
-                                      >
-                                        {b.count}
-                                      </span>
-                                    </div>
+                                    <TreeTitle name={b.name} count={b.count} />
                                   ),
                                   key: b.id,
                                   children: b.children?.map(d => ({
                                     title: (
-                                      <div
-                                        style={{
-                                          display: 'flex',
-                                          justifyContent: 'space-between',
-                                          width: '100%'
-                                        }}
-                                      >
-                                        <h4
-                                          style={{
-                                            fontSize: '14px',
-                                            color: '#555',
-                                            fontWeight: 600
-                                          }}
-                                        >
-                                          {d.name}
-                                        </h4>
-                                        <span
-                                          style={{
-                                            fontSize: '12px',
-                                            color: '#555',
-                                            fontWeight: 600
-                                          }}
-                                        >
-                                          {d.count}
-                                        </span>
-                                      </div>
+                                      <TreeTitle
+                                        name={d.name}
+                                        count={d.count}
+                                      />
                                     ),
                                     key: d.id
                                   }))
@@ -268,8 +209,14 @@ const Edx = () => {
                                   justifyContent: 'space-between',
                                   alignItems: 'center'
                                 }}
+                                key={s.id}
                               >
-                                <Checkbox style={{ width: '85%' }}>
+                                <Checkbox
+                                  style={{ width: '85%' }}
+                                  onChange={() =>
+                                    onFilterSelectionChange(filter, s.id)
+                                  }
+                                >
                                   <h4
                                     style={{
                                       fontSize: '14px',
@@ -354,7 +301,7 @@ const Edx = () => {
                     description={item.publishedByUser.displayName}
                   />
                   <div style={{ display: 'flex', marginTop: '20px' }}>
-                    {!item.isOpenSesameExclusive ? (
+                    {item.isOpenSesameExclusive ? (
                       <Tag color="orange">Exclusive</Tag>
                     ) : null}
                     {item.isPlus ? <Tag color="green">Plus</Tag> : null}
