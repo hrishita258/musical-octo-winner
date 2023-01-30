@@ -1,5 +1,6 @@
 import { Card, Checkbox, Col, Collapse, Input, Row, Tree } from 'antd'
 import React, { useEffect, useState } from 'react'
+import { getRequest } from '../axios/axiosMethods'
 import PageLayout from '../components/PageLayout'
 import filters from '../data/openseasme.json'
 
@@ -35,12 +36,11 @@ const Edx = () => {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const response = await fetch(
-        'https://jsonplaceholder.typicode.com/todos/1'
-      )
-      const json = await response.json()
-      setData(json)
+      getRequest('opportunity/openseasme').then(json => {
+        setData(json.data.result.results)
+      })
     } catch (error) {
+      console.log(error)
       setError(error)
     } finally {
       setLoading(false)
@@ -64,23 +64,19 @@ const Edx = () => {
     <PageLayout breadcrumbs={BREADCRUMBS}>
       <Row gutter={15}>
         <Col
-          span={4}
+          span={6}
           style={{
-            minWidth: '370px',
-            position: 'relative'
+            position: 'relative',
+            height: 'calc(100vh - 10px)',
+            position: 'sticky',
+            top: '150px',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            borderRight: '2px solid #e8e8e8',
+            backgroundColor: '#fff'
           }}
         >
-          <Card
-            style={{
-              height: 'calc(100vh - 10px)',
-              position: 'sticky',
-              top: '150px',
-              overflowY: 'auto'
-            }}
-            bodyStyle={{
-              padding: '5px'
-            }}
-          >
+          <div style={{ width: '99%' }}>
             <Collapse
               defaultActiveKey={['categoriesFacet', 'productType']}
               ghost
@@ -125,7 +121,6 @@ const Edx = () => {
                                   style={{
                                     display: 'flex',
                                     justifyContent: 'space-between',
-                                    minWidth: '250px',
                                     width: '100%'
                                   }}
                                 >
@@ -156,7 +151,6 @@ const Edx = () => {
                                     style={{
                                       display: 'flex',
                                       justifyContent: 'space-between',
-                                      minWidth: '200px',
                                       width: '100%'
                                     }}
                                   >
@@ -187,7 +181,6 @@ const Edx = () => {
                                       style={{
                                         display: 'flex',
                                         justifyContent: 'space-between',
-                                        minWidth: '200px',
                                         width: '100%'
                                       }}
                                     >
@@ -218,7 +211,6 @@ const Edx = () => {
                                         style={{
                                           display: 'flex',
                                           justifyContent: 'space-between',
-                                          minWidth: '200px',
                                           width: '100%'
                                         }}
                                       >
@@ -255,37 +247,34 @@ const Edx = () => {
                               style={{ marginBottom: '10px' }}
                             />
                             {filters.facetValues[filter]?.map(s => (
-                              <div key={s.name} style={{ minWidth: '330px' }}>
-                                <Checkbox style={{ width: '320px' }}>
-                                  <div
+                              <div
+                                style={{
+                                  width: '100%',
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center'
+                                }}
+                              >
+                                <Checkbox style={{ width: '85%' }}>
+                                  <h4
                                     style={{
-                                      minWidth: '280px',
-                                      width: '100%',
-                                      display: 'flex',
-                                      justifyContent: 'space-between'
+                                      fontSize: '14px',
+                                      color: '#555',
+                                      fontWeight: 600
                                     }}
                                   >
-                                    <h4
-                                      style={{
-                                        width: '200px',
-                                        fontSize: '14px',
-                                        color: '#555',
-                                        fontWeight: 600
-                                      }}
-                                    >
-                                      {s.name}
-                                    </h4>
-                                    <span
-                                      style={{
-                                        fontSize: '12px',
-                                        color: '#555',
-                                        fontWeight: 600
-                                      }}
-                                    >
-                                      {s.count}
-                                    </span>
-                                  </div>
+                                    {s.name}
+                                  </h4>
                                 </Checkbox>
+                                <span
+                                  style={{
+                                    fontSize: '12px',
+                                    color: '#555',
+                                    fontWeight: 600
+                                  }}
+                                >
+                                  {s.count}
+                                </span>
                               </div>
                             ))}
                           </div>
@@ -294,10 +283,16 @@ const Edx = () => {
                     )
                 )}
             </Collapse>
-          </Card>
+          </div>
         </Col>
-        <Col span={20}>
-          <Row></Row>
+        <Col span={18}>
+          <Row gutter={15} style={{ marginLeft: '10px' }}>
+            {data?.map(item => (
+              <Col span={6} key={item.id}>
+                <Card></Card>
+              </Col>
+            ))}
+          </Row>
         </Col>
       </Row>
     </PageLayout>

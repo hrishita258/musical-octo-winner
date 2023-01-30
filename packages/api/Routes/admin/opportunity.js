@@ -486,4 +486,14 @@ router.get('/explore/unstop', async (req, res) => {
   }
 })
 
+router.get('/openseasme', async (req, res) => {
+  const result = await MeiliSearchClient.index('opensesame').getDocuments({
+    limit: 25
+  })
+  res.status(200).json({
+    result,
+    status: 200
+  })
+})
+
 export default router
