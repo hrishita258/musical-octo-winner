@@ -32,6 +32,7 @@ const filterKeys = {
   publishersFacet: 'Publishers',
   ratingsRanges: 'Rating',
   durationRanges: 'Seat Time',
+  featuresFacet: 'Features',
   languages: 'Languages',
   accreditationFacet: 'Accreditation Organizations',
   priceRanges: 'Price',
@@ -61,6 +62,7 @@ const Edx = () => {
 
   const TreeTitle = ({ name, count }) => (
     <div
+      key={name}
       style={{
         display: 'flex',
         justifyContent: 'space-between'
@@ -79,8 +81,10 @@ const Edx = () => {
     fetchData()
   }, [])
 
+  console.log(data)
+
   const onFilterSelectionChange = (filterKey, id) => {
-    let selectedFilter = selectedFilters.find(f => f.filterKey === filterKey)
+    let selectedFilter = selectedFilters?.find(f => f.filterKey === filterKey)
 
     if (selectedFilter) {
       // If the filter already exists, add or remove the id from selectedIds
@@ -196,7 +200,7 @@ const Edx = () => {
                             }))}
                           />
                         ) : (
-                          <div>
+                          <div key={filter}>
                             <Input
                               placeholder={`Filter ${filterKeys[filter]}`}
                               style={{ marginBottom: '10px' }}
@@ -214,7 +218,10 @@ const Edx = () => {
                                 <Checkbox
                                   style={{ width: '85%' }}
                                   onChange={() =>
-                                    onFilterSelectionChange(filter, s.id)
+                                    onFilterSelectionChange(
+                                      filter,
+                                      s.id ? s.id : s.name
+                                    )
                                   }
                                 >
                                   <h4

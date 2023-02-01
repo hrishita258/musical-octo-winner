@@ -487,13 +487,114 @@ router.get('/explore/unstop', async (req, res) => {
 })
 
 router.get('/openseasme', async (req, res) => {
-  const result = await MeiliSearchClient.index('opensesame').getDocuments({
-    limit: 50
-  })
-  res.status(200).json({
-    result,
-    status: 200
-  })
+  try {
+    const s = {
+      id: 'id',
+      title: 'title',
+      description: 'description',
+      duration: 'durationMinutes',
+      rating_count: 'ratingCount',
+      rating_average: 'ratingAverage',
+      price: 'price',
+      published_by: {
+        user_id: 'publishedByUser.id',
+        display_name: 'publishedByUser.displayName'
+      },
+      languages: 'languages',
+      language_codes: 'languageCodes',
+      language_group_course_details: [
+        {
+          language_codes: 'languageCodes',
+          node_id: 'nodeId',
+          course_guid: 'courseGuid'
+        }
+      ],
+      image_path: 'imagePath',
+      date_created: 'dateCreated',
+      date_changed: 'dateChanged',
+      has_demo: 'hasDemo',
+      audio_languages: 'audioLanguages',
+      includes_language_switcher: 'includesLanguageSwitcher',
+      course_style: 'courseStyle'
+    }
+
+    const filterObject = [
+      {
+        filterKey: 'featuresFacet',
+        selectedIds: ['12']
+      },
+      {
+        filterKey: 'priceRanges',
+        selectedIds: ['under $20', '$20 - $40']
+      },
+      {
+        filterKey: 'accreditationFacet',
+        selectedIds: ['1444', '1833', '2178', '1479']
+      },
+      {
+        filterKey: 'languages',
+        selectedIds: ['fr', 'ar', 'pt', 'de']
+      },
+      {
+        filterKey: 'durationRanges',
+        selectedIds: ['1 - 10 minutes', '11 - 30 minutes']
+      },
+      {
+        filterKey: 'ratingsRanges',
+        selectedIds: ['All courses', '1 star & up']
+      },
+      {
+        filterKey: 'publishersFacet',
+        selectedIds: [
+          '742',
+          '909837',
+          '5663',
+          '10370',
+          '4927',
+          '11689',
+          '66573'
+        ]
+      }
+    ]
+
+    // console.log(filterObject.map(f => f.filterKey))
+    // console.log(
+    //   await MeiliSearchClient.index('openseasme').updateFilterableAttributes([
+    //     'featuresFacet',
+    //     'priceRanges',
+    //     'accreditationFacet',
+    //     'languages',
+    //     'durationRanges',
+    //     'ratingsRanges',
+    //     'publishersFacet'
+    //   ])
+    // )
+
+    // const filters = filterObject.reduce((acc, filter) => {
+    //   const { filterKey, selectedIds } = filter
+    //   acc.push(...selectedIds.map(id => `${filterKey} = "${id}"`))
+    //   return acc
+    // }, [])
+
+    // const groupedFilters = []
+    // const stringFilters = filters.filter(filter => typeof filter === 'string')
+
+    // if (stringFilters.length) {
+    //   groupedFilters.push(stringFilters)
+    // }
+
+    const result = await MeiliSearchClient.index('opensesame').getDocuments({
+      limit: 100
+    })
+
+    res.status(200).json({
+      result,
+      status: 200
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ result: null, msg: 'error', status: 500 })
+  }
 })
 
 export default router
