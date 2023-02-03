@@ -28,14 +28,15 @@ const initScheduledJobs = async () => {
           )
         }
         console.log(`Adding ${newData.length} opportunities to MeiliSearch`)
-        await MeiliSearchClient.index('unstop').addDocuments(newData)
-        await MeiliSearchClient.index('unstop').updateFilterableAttributes([
-          'end_date_filter',
-          'type'
-        ])
       } catch (error) {
         console.log(error)
       }
+
+      await MeiliSearchClient.index('unstop').addDocuments(newData)
+      await MeiliSearchClient.index('unstop').updateFilterableAttributes([
+        'end_date_filter',
+        'type'
+      ])
     }
   )
   updateUnstoppedOpportunities.start()

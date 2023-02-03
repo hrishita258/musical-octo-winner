@@ -1079,6 +1079,53 @@ app.get('/mediusa', async (req, res) => {
   // })
 })
 
+app.get('/mediusatrans', (req, res) => {
+  fs.readFile('mediusaData2.json', 'utf8', async (err, json) => {
+    const data = JSON.parse(json)
+    const newData = data.map(x => ({
+      ...x,
+      childrens: x.childrens
+        .filter(child => {
+          return Object.values(child).every(value => value !== '')
+        })
+        .map(child => {
+          let keys = Object.keys(child)
+          return keys.map(key => {
+            const string = child[key]
+            const firstSplit = string.split(' ')
+            if (firstSplit.length > 3) {
+              const stockStauts = firstSplit[0] + ' ' + firstSplit[1]
+              const priceSkuString = firstSplit[firstSplit.length - 1]
+              const secondSplit = priceSkuString.split('.')
+              const price =
+                secondSplit[0] + '.' + secondSplit[1].substring(0, 2)
+              const sku = secondSplit[1].slice(2)
+              let obj = {
+                price,
+                sku,
+                stockStauts: stockStauts.includes('<i class=')
+                  ? 'special order'
+                  : stockStauts,
+                [keys[0]]: child[keys[0]],
+                size: key
+              }
+              return obj
+            }
+          })
+        })
+        .flat()
+        .filter(s => s)
+    }))
+
+    fs.writeFile('mediusaData3.json', JSON.stringify(newData), 'utf8', err => {
+      if (err) {
+        console.log(err)
+      }
+      res.send('done')
+    })
+  })
+})
+
 app.get('/edx', async (req, res) => {
   const headers = {
     Accept: 'application/json, text/plain, */*',

@@ -415,12 +415,13 @@ router.get('/hackerearth/challenges', async (req, res) => {
 
 router.get('/mlh/challenges', async (req, res) => {
   try {
+    // await MeiliSearchClient.index('mlh').deleteAllDocuments()
     // const currentYear = new Date().getFullYear()
     // console.log(currentYear + 1)
-    // const browser = await puppeteer.launch({ headless: true })
+    // const browser = await puppeteer.launch({ headless: false })
     // const page = await browser.newPage()
-    // await page.goto(`https://mlh.io/seasons/${currentYear + 1}/events`)
-    // await page.waitForSelector('.feature')
+    // await page.goto(`https://mlh.io/seasons/${currentYear}/events`)
+    // // await page.waitForSelector('.feature')
     // const scrapedData = await page.evaluate(() =>
     //   Array.from(
     //     document
@@ -442,9 +443,720 @@ router.get('/mlh/challenges', async (req, res) => {
     //     type: card.getElementsByClassName('event-hybrid-notes')[0]?.innerText
     //   }))
     // )
-    // console.log(JSON.stringify(scrapedData))
+    // await browser.close()
+    // const s = await MeiliSearchClient.index('mlh').addDocuments(
+    //   [
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/491/thumb/bwh.png?1673973490',
+    //       title: 'Black Wings Hacks',
+    //       url: 'https://rewritingthecode.org/black-wings-hacks/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/491/thumb/bwhe.png?1673973489',
+    //       date: 'FEB 3RD - 5TH',
+    //       location: {
+    //         city: 'Durham',
+    //         state: 'North Carolina'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/458/thumb/Untitled_design__5_.png?1674070005',
+    //       title: 'CruzHacks',
+    //       url: 'https://www.cruzhacks.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/458/thumb/_1669668208734_CruzHacks_Icon_Gradient.png?1674070005',
+    //       date: 'FEB 3RD - 5TH',
+    //       location: {
+    //         city: 'Santa Cruz',
+    //         state: 'California'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/449/thumb/Backsplash.png?1670052391',
+    //       title: 'Hack-ccelerate',
+    //       url: 'https://organize.mlh.io/participants/events/9001-hack-ccelerate',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/449/thumb/fph-gene-logo.jpeg?1670051970',
+    //       date: 'FEB 3RD - 5TH',
+    //       location: {
+    //         city: 'APAC Timezone',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/448/thumb/Backsplash.png?1670051917',
+    //       title: 'Hack for the Future',
+    //       url: 'https://organize.mlh.io/participants/events/9000-hack-for-the-future',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/448/thumb/fph-gene-logo.jpeg?1670051917',
+    //       date: 'FEB 3RD - 5TH',
+    //       location: {
+    //         city: 'North American Timezone',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/211/559/thumb/background.png?1657871617',
+    //       title: 'Hack This Fall 3.0',
+    //       url: 'https://hackthisfall.tech/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/211/559/thumb/_1656686778557_300X300-LightBG-8.png?1656699165',
+    //       date: 'FEB 3RD - 5TH',
+    //       location: {
+    //         city: 'Gandhinagar GJ',
+    //         state: 'India'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/211/561/thumb/UH8Background300x300.png?1659375649',
+    //       title: 'UGAHacks 8',
+    //       url: 'https://8.ugahacks.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/211/561/thumb/UH8EventLogo100x100.png?1659375648',
+    //       date: 'FEB 3RD - 5TH',
+    //       location: {
+    //         city: 'Athens',
+    //         state: 'Georgia'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/475/thumb/cuhackit_splash.png?1672767615',
+    //       title: 'CUHackit',
+    //       url: 'http://cuhack.it/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/475/thumb/cuhackit_logo.png?1672767614',
+    //       date: 'FEB 4TH - 5TH',
+    //       location: {
+    //         city: 'Clemson',
+    //         state: 'South Carolina'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/488/thumb/Event_Background_Square.png?1673544155',
+    //       title: 'HackViolet',
+    //       url: 'https://www.hackviolet.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/488/thumb/HackvioletLogo.png?1673544155',
+    //       date: 'FEB 4TH - 5TH',
+    //       location: {
+    //         city: 'Blacksburg',
+    //         state: 'Virginia'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/468/thumb/hackathon_mlh_bilingue.png?1672258912',
+    //       title: 'PolyHacks',
+    //       url: 'https://polyhacks.io/#/en',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/468/thumb/hackathon_mlh_carre.png?1672258912',
+    //       date: 'FEB 4TH - 5TH',
+    //       location: {
+    //         city: 'Montreal',
+    //         state: 'Quebec'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/472/thumb/RHv6_300x300.png?1672917923',
+    //       title: 'Royal Hackaway v6',
+    //       url: 'https://royalhackaway.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/472/thumb/HackawaySymbolSquareOpaque.png?1672659053',
+    //       date: 'FEB 4TH - 5TH',
+    //       location: {
+    //         city: 'Egham',
+    //         state: 'England'
+    //       },
+    //       type: 'Hybrid, In-Person Focus'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/501/thumb/Feb-generic_IG.png?1674855718',
+    //       title: 'GHW: AI/ML Week',
+    //       url: 'https://organize.mlh.io/participants/events/9030-global-hack-week-ai-ml-week',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/501/thumb/Screen_Shot_2023-01-27_at_4.40.08_PM.png?1674855717',
+    //       date: 'FEB 6TH - 13TH',
+    //       location: {
+    //         city: 'Everywhere',
+    //         state: 'Online'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/211/562/thumb/Hacklytics_splash_screen.png?1656712204',
+    //       title: 'Hacklytics 2023',
+    //       url: 'https://hacklytics.io/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/211/562/thumb/Hacklytics_logo.png?1656712204',
+    //       date: 'FEB 10TH - 12TH',
+    //       location: {
+    //         city: 'Atlanta',
+    //         state: 'Georgia'
+    //       },
+    //       type: 'Hybrid, In-Person Focus'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/487/thumb/Backsplash_Cover.png?1673529300',
+    //       title: 'Hackville 2023',
+    //       url: 'https://hackville.io/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/487/thumb/profile.png?1673529300',
+    //       date: 'FEB 10TH - 12TH',
+    //       location: {
+    //         city: 'Mississauga',
+    //         state: 'ON, Canada'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/479/thumb/preview_%281%29.png?1672952640',
+    //       title: 'uOttaHack V',
+    //       url: 'https://2023.uottahack.ca/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/479/thumb/preview.png?1672952640',
+    //       date: 'FEB 10TH - 12TH',
+    //       location: {
+    //         city: 'Ottawa',
+    //         state: 'Canada'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/470/thumb/300-300.png?1672414679',
+    //       title: 'AuburnHacks',
+    //       url: 'https://auburnhacks.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/470/thumb/auburnhacks-logo_100px_.png?1672414678',
+    //       date: 'FEB 11TH - 12TH',
+    //       location: {
+    //         city: 'Auburn',
+    //         state: 'Alabama'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/465/thumb/_1670859900279_Logo.png?1670869614',
+    //       title: 'Frontera Hacks',
+    //       url: 'https://fronterahacks.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/465/thumb/_1670859900350_Square_Logo__Night_.png?1670869614',
+    //       date: 'FEB 11TH - 12TH',
+    //       location: {
+    //         city: 'Weslaco',
+    //         state: 'TX'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/490/thumb/HackHers_Logo_Transparent.png?1674682920',
+    //       title: 'HackHERS',
+    //       url: 'https://ruhackhers.org/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/490/thumb/HackHers_Logo_Transparent.png?1674682920',
+    //       date: 'FEB 11TH - 12TH',
+    //       location: {
+    //         city: 'New Brunswick',
+    //         state: 'New Jersey'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/476/thumb/website_bkg_300x300-01.png?1672769759',
+    //       title: 'Pearl Hacks',
+    //       url: 'https://pearlhacks.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/476/thumb/logo_bkg.png?1672769759',
+    //       date: 'FEB 11TH - 12TH',
+    //       location: {
+    //         city: 'Chapel Hill',
+    //         state: 'NC'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/482/thumb/FINAL_LOGO__2_.png?1673015949',
+    //       title: 'WEHack',
+    //       url: 'https://wehackutd.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/482/thumb/FINAL_LOGO__2_.png?1673015948',
+    //       date: 'FEB 11TH - 12TH',
+    //       location: {
+    //         city: 'Richardson',
+    //         state: 'Texas'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/493/thumb/ElleHacks_Backsplash_300x300.png?1674069146',
+    //       title: 'ElleHacks',
+    //       url: 'https://ellehacks.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/493/thumb/ElleHacks_Logo.png?1674069144',
+    //       date: 'FEB 17TH - 19TH',
+    //       location: {
+    //         city: 'Toronto',
+    //         state: 'Canada'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/451/thumb/Backsplash.png?1670052513',
+    //       title: 'TransportHacks',
+    //       url: 'https://organize.mlh.io/participants/events/9007-transporthacks',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/451/thumb/fph-gene-logo.jpeg?1670052097',
+    //       date: 'FEB 17TH - 19TH',
+    //       location: {
+    //         city: 'North American Timezone',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/452/thumb/Backsplash.png?1670052533',
+    //       title: 'Work-a-thon',
+    //       url: 'https://organize.mlh.io/participants/events/9006-work-a-thon',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/452/thumb/fph-gene-logo.jpeg?1670052161',
+    //       date: 'FEB 17TH - 19TH',
+    //       location: {
+    //         city: 'APAC Timezone',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/492/thumb/BackgroundSpalsh_CrimsonCode2023.jpg?1673561884',
+    //       title: 'CrimsonCode Hackathon',
+    //       url: 'https://crimsoncode2023.devpost.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/492/thumb/CrimsonCodeLogo2023.png?1673561883',
+    //       date: 'FEB 18TH - 19TH',
+    //       location: {
+    //         city: 'Pullman',
+    //         state: 'Washington'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/494/thumb/Event_Backsplash.png?1673562402',
+    //       title: 'HackNYU',
+    //       url: 'https://www.hacknyu.org/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/494/thumb/Event_Logo.png?1673562402',
+    //       date: 'FEB 18TH - 19TH',
+    //       location: {
+    //         city: 'Brooklyn',
+    //         state: 'New York'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/495/thumb/EventBackground300x300MLH_2.png?1673977134',
+    //       title: 'HackSussex',
+    //       url: 'https://www.hacksussex.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/495/thumb/Logo100x100.png?1673871196',
+    //       date: 'FEB 18TH - 19TH',
+    //       location: {
+    //         city: 'Brighton And Hove',
+    //         state: 'United Kingdom'
+    //       },
+    //       type: 'Hybrid, In-Person Focus'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/454/thumb/Backsplash.png?1670052302',
+    //       title: 'Hack Around the World 2',
+    //       url: 'https://organize.mlh.io/participants/events/9005-hack-around-the-world-2',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/454/thumb/fph-gene-logo.jpeg?1670052302',
+    //       date: 'FEB 24TH - 26TH',
+    //       location: {
+    //         city: 'APAC Timezone',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/453/thumb/Backsplash.png?1670052227',
+    //       title: 'WhiskerHacks',
+    //       url: 'https://organize.mlh.io/participants/events/9004-whiskerhacks',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/453/thumb/fph-gene-logo.jpeg?1670052227',
+    //       date: 'FEB 24TH - 26TH',
+    //       location: {
+    //         city: 'North American Timezone',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/252/thumb/athenahacks_backsplash2.png?1666625116',
+    //       title: 'AthenaHacks',
+    //       url: 'https://athenahacks.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/252/thumb/athena2023_gradientlogo.png?1664810260',
+    //       date: 'FEB 25TH - 26TH',
+    //       location: {
+    //         city: 'Los Angelos',
+    //         state: 'California'
+    //       },
+    //       type: 'Hybrid, In-Person Focus'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/477/thumb/mlh-banner-300.png?1674064310',
+    //       title: 'BrickHack 9',
+    //       url: 'https://brickhack.io/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/477/thumb/brickhack100x100.png?1674064309',
+    //       date: 'FEB 25TH - 26TH',
+    //       location: {
+    //         city: 'Rochester',
+    //         state: 'NY'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/473/thumb/300x300_bg.png?1672759825',
+    //       title: 'Diversion 2k23',
+    //       url: 'https://diversion.tech/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/473/thumb/Dlogo100x100.png?1672759822',
+    //       date: 'FEB 25TH - 26TH',
+    //       location: {
+    //         city: 'Kolkata',
+    //         state: 'West Bengal'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/471/thumb/revuc.PNG?1672421393',
+    //       title: 'RevolutionUC',
+    //       url: 'https://revolutionuc.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/471/thumb/revuc.PNG?1672421393',
+    //       date: 'FEB 25TH - 26TH',
+    //       location: {
+    //         city: 'Cincinnatti',
+    //         state: 'Ohio'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/489/thumb/HackAtCEWIT_2023_MLH_Backsplash.jpg?1673557675',
+    //       title: 'Hack@CEWIT',
+    //       url: 'https://www.cewit.org/hackatcewit/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/489/thumb/HackAtCEWIT_2023_MLH_logo.jpg?1673557674',
+    //       date: 'MAR 3RD - 5TH',
+    //       location: {
+    //         city: 'Stony Brook',
+    //         state: 'New York'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/410/thumb/Backsplash.png?1669815542',
+    //       title: 'HackForCreators',
+    //       url: 'https://organize.mlh.io/participants/events/8987-hack-for-creators',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/410/thumb/fph-gene-logo.jpeg?1669815542',
+    //       date: 'MAR 3RD - 5TH',
+    //       location: {
+    //         city: 'APAC Timezone',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/409/thumb/Backsplash.png?1669815463',
+    //       title: 'SpaceAthon',
+    //       url: 'https://organize.mlh.io/participants/events/8986-space-a-thon',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/409/thumb/fph-gene-logo.jpeg?1669815463',
+    //       date: 'MAR 3RD - 5TH',
+    //       location: {
+    //         city: 'North American Timezone',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/499/thumb/hackpalachia.png?1674660554',
+    //       title: 'HackPalachia',
+    //       url: 'https://www.hackpalachia.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/499/thumb/hackpalachia.png?1674660554',
+    //       date: 'MAR 4TH - 5TH',
+    //       location: {
+    //         city: 'Athens',
+    //         state: 'Ohio'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/500/thumb/Backsplash-01.png?1674682793',
+    //       title: 'MadHacks',
+    //       url: 'https://www.madhacks.io/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/500/thumb/MLH_Logo-01.png?1674682792',
+    //       date: 'MAR 4TH - 5TH',
+    //       location: {
+    //         city: 'Madison',
+    //         state: 'Wisconsin'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/502/thumb/generic.png?1675263356',
+    //       title: 'GHW: Social Good Week',
+    //       url: 'https://organize.mlh.io/participants/events/9151-global-hack-week-social-good-week',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/502/thumb/bolt.png?1675263356',
+    //       date: 'MAR 6TH - 13TH',
+    //       location: {
+    //         city: 'Everywhere',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/474/thumb/Logo.jpg?1672764396',
+    //       title: 'Hack Dearborn',
+    //       url: 'https://www.hackdearborn.org/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/474/thumb/Logo.jpg?1672764396',
+    //       date: 'MAR 11TH - 12TH',
+    //       location: {
+    //         city: 'Dearborn',
+    //         state: 'MI'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/412/thumb/Backsplash.png?1669815710',
+    //       title: 'ConnectHacks',
+    //       url: 'https://organize.mlh.io/participants/events/8990-connecthacks',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/412/thumb/fph-gene-logo.jpeg?1669815710',
+    //       date: 'MAR 17TH - 19TH',
+    //       location: {
+    //         city: 'APAC Timezone',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/467/thumb/_1671033485135_FTH-2023-10_LOGO_square.png?1671551776',
+    //       title: 'Fashion Tech Hackathon 2023',
+    //       url: 'https://www.kent.edu/fashion/fth',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/467/thumb/_1671033485236_FTH-2023-10_LOGO_100px-square.png?1671551775',
+    //       date: 'MAR 17TH - 19TH',
+    //       location: {
+    //         city: 'Kent',
+    //         state: 'Ohio'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/450/thumb/Backsplash.png?1670052430',
+    //       title: 'Hacktag',
+    //       url: 'https://organize.mlh.io/participants/events/9003-hackathon',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/450/thumb/fph-gene-logo.jpeg?1670052039',
+    //       date: 'MAR 17TH - 19TH',
+    //       location: {
+    //         city: 'North American Timezone',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/411/thumb/Backsplash.png?1669815648',
+    //       title: 'AirHacks',
+    //       url: 'https://organize.mlh.io/participants/events/8989-airhacks',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/411/thumb/fph-gene-logo.jpeg?1669815648',
+    //       date: 'MAR 24TH - 26TH',
+    //       location: {
+    //         city: 'North American Timezone',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/478/thumb/Backsplash.png?1672937050',
+    //       title: 'HackThePlan',
+    //       url: 'https://organize.mlh.io/participants/events/9119-hacktheplan',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/478/thumb/fph-gene-logo.jpeg?1672937050',
+    //       date: 'MAR 24TH - 26TH',
+    //       location: {
+    //         city: 'APAC Timezone',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/497/thumb/Backsplash.png?1674153599',
+    //       title: 'MapHacks 2',
+    //       url: 'https://organize.mlh.io/participants/events/9159-maphacks-2',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/497/thumb/fph-gene-logo.jpeg?1674153599',
+    //       date: 'MAR 31ST - APR 2ND',
+    //       location: {
+    //         city: 'North American Timezone',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/496/thumb/Backsplash.png?1674153541',
+    //       title: 'OpenHacks',
+    //       url: 'https://organize.mlh.io/participants/events/9158-openhacks',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/496/thumb/fph-gene-logo.jpeg?1674153541',
+    //       date: 'MAR 31ST - APR 2ND',
+    //       location: {
+    //         city: 'APAC Timezone',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/503/thumb/generic.png?1675264738',
+    //       title: 'GHW: API Week',
+    //       url: 'https://organize.mlh.io/participants/events/9152-global-hack-week-api-week',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/503/thumb/bolt.png?1675264737',
+    //       date: 'APR 3RD - 10TH',
+    //       location: {
+    //         city: 'Everywhere',
+    //         state: 'Online'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/498/thumb/mlh_banner.png?1674592390',
+    //       title: 'HackKU',
+    //       url: 'https://hackku.org/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/498/thumb/mlh_banner.png?1674592390',
+    //       date: 'APR 14TH - 16TH',
+    //       location: {
+    //         city: 'Lawrence',
+    //         state: 'Kansas'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/466/thumb/_1669534908643_300_x_300.png?1671465107',
+    //       title: 'LA Hacks',
+    //       url: 'https://lahacks.com/',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/466/thumb/_1669534908864_100_x_100.png?1671465107',
+    //       date: 'APR 21ST - 23RD',
+    //       location: {
+    //         city: 'Los Angeles',
+    //         state: 'California'
+    //       },
+    //       type: 'In-Person Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/504/thumb/generic.png?1675264912',
+    //       title: 'GHW: Game Week',
+    //       url: 'https://organize.mlh.io/participants/events/9153-global-hack-week-game-week',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/504/thumb/bolt.png?1675264912',
+    //       date: 'MAY 1ST - 8TH',
+    //       location: {
+    //         city: 'Everywhere',
+    //         state: 'Worldwide'
+    //       },
+    //       type: 'Digital Only'
+    //     },
+    //     {
+    //       imageUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/splashes/000/212/505/thumb/generic.png?1675264963',
+    //       title: 'GHW: Security Week',
+    //       url: 'https://organize.mlh.io/participants/events/9154-global-hack-week-security-week',
+    //       logoUrl:
+    //         'https://s3.amazonaws.com/assets.mlh.io/events/logos/000/212/505/thumb/bolt.png?1675264963',
+    //       date: 'JUN 5TH - 12TH',
+    //       location: {
+    //         city: 'Everywhere',
+    //         state: 'Worldwide'
+    //       },
+    //       type: 'Digital Only'
+    //     }
+    //   ].map(s => ({
+    //     ...s,
+    //     id: Math.trunc(new Date().getTime() + Math.random() * 1000)
+    //   }))
+    // )
+    // const s = await MeiliSearchClient.getTask('2563')
+    // console.log('done', s)
     res.json({
-      result: await MeiliSearchClient.index('mlh').getDocuments(),
+      result: await MeiliSearchClient.index('mlh').getDocuments({
+        limit: 50
+      }),
       msg: 'done',
       status: 200
     })
