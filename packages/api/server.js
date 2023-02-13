@@ -986,97 +986,97 @@ app.get('/trans2', (req, res) => {
 })
 
 app.get('/mediusa', async (req, res) => {
-  fs.readFile('mediusaData.json', 'utf8', async (err, json) => {
-    const browser = await puppeteer.launch({
-      headless: false
-    })
-    const lpage = await browser.newPage()
-    await lpage.goto('https://b2b.mediusa.com/account/signin?ReturnUrl=%2F')
-    await lpage.type('#email', 'cs@medicaleshop.com')
-    await lpage.type('#password', 'Ab1098Zx++')
-    await lpage.click('button[type="submit"]')
-
-    const finalData = []
-    const errors = []
-
-    async.eachLimit(
-      JSON.parse(json),
-      5,
-      async product => {
-        try {
-          console.log(product.product_url)
-          const page = await browser.newPage()
-          await page.goto('https://b2b.mediusa.com' + product.product_url)
-          await page.waitForSelector('.table-wrapper')
-          let others = await page.evaluate(() => {
-            return document
-              .getElementById('sizing')
-              .getElementsByTagName('img')[0].src
-          })
-          const html = await page.$eval('.table-wrapper', e => e.innerHTML)
-          await page.goto('https://www.convertjson.com/html-table-to-json.htm')
-
-          await page.evaluate(html => {
-            document.querySelector('#txt1').value = html
-          }, html)
-          await page.click('#txt1')
-          finalData.push({
-            ...product,
-            childrens: JSON.parse(await page.$eval('#txta', e => e.value)),
-            others
-          })
-          await page.close()
-        } catch (error) {
-          console.log(error)
-          errors.push({ productId: product.product_url, error })
-        }
-      },
-      err => {
-        if (err) {
-          console.log(err)
-        }
-        fs.writeFile(
-          'mediusaData2.json',
-          JSON.stringify(finalData),
-          'utf8',
-          () => {
-            console.log('done')
-          }
-        )
-        console.log('done')
-      }
-    )
-  })
-  // fs.readFile('queries.json', 'utf8', async (err, json) => {
-  //   const data = JSON.parse(json)
-  //   const newData = data.results[0].hits.map(x => {
-  //     return {
-  //       name: x.Name,
-  //       price: x.Price,
-  //       formated_price: x.PriceFormated,
-  //       msrp: x.MSRP,
-  //       formated_msrp: x.MSRPFormated,
-  //       description: x.Description,
-  //       thumbnail: x.MediThumbURL,
-  //       product_url: x.URL,
-  //       stock: x.stock,
-  //       imageUrl: x.MediImageURL,
-  //       product_id: x.ProductID,
-  //       isMedical: x.IsMedical,
-  //       isCEP: x.IsCEP,
-  //       isTopicalGear: x.IsTopicalGear,
-  //       category: x.MediNavigation,
-  //       subcategory: x.CEPNavigation,
-  //       subsubcategory: x.TopicalGearNavigation
-  //     }
+  // fs.readFile('mediusaData.json', 'utf8', async (err, json) => {
+  //   const browser = await puppeteer.launch({
+  //     headless: false
   //   })
-  //   fs.writeFile('mediusaData.json', JSON.stringify(newData), 'utf8', err => {
-  //     if (err) {
-  //       console.log(err)
+  //   const lpage = await browser.newPage()
+  //   await lpage.goto('https://b2b.mediusa.com/account/signin?ReturnUrl=%2F')
+  //   await lpage.type('#email', 'cs@medicaleshop.com')
+  //   await lpage.type('#password', 'Ab1098Zx++')
+  //   await lpage.click('button[type="submit"]')
+
+  //   const finalData = []
+  //   const errors = []
+
+  //   async.eachLimit(
+  //     JSON.parse(json),
+  //     5,
+  //     async product => {
+  //       try {
+  //         console.log(product.product_url)
+  //         const page = await browser.newPage()
+  //         await page.goto('https://b2b.mediusa.com' + product.product_url)
+  //         await page.waitForSelector('.table-wrapper')
+  //         let others = await page.evaluate(() => {
+  //           return document
+  //             .getElementById('sizing')
+  //             .getElementsByTagName('img')[0].src
+  //         })
+  //         const html = await page.$eval('.table-wrapper', e => e.innerHTML)
+  //         await page.goto('https://www.convertjson.com/html-table-to-json.htm')
+
+  //         await page.evaluate(html => {
+  //           document.querySelector('#txt1').value = html
+  //         }, html)
+  //         await page.click('#txt1')
+  //         finalData.push({
+  //           ...product,
+  //           childrens: JSON.parse(await page.$eval('#txta', e => e.value)),
+  //           others
+  //         })
+  //         await page.close()
+  //       } catch (error) {
+  //         console.log(error)
+  //         errors.push({ productId: product.product_url, error })
+  //       }
+  //     },
+  //     err => {
+  //       if (err) {
+  //         console.log(err)
+  //       }
+  //       fs.writeFile(
+  //         'mediusaData2.json',
+  //         JSON.stringify(finalData),
+  //         'utf8',
+  //         () => {
+  //           console.log('done')
+  //         }
+  //       )
+  //       console.log('done')
   //     }
-  //     res.send('done')
-  //   })
+  //   )
   // })
+  fs.readFile('mediusa.json', 'utf8', async (err, json) => {
+    const data = JSON.parse(json)
+    const newData = data.results[0].hits.map(x => {
+      return {
+        name: x.Name,
+        price: x.Price,
+        formated_price: x.PriceFormated,
+        msrp: x.MSRP,
+        formated_msrp: x.MSRPFormated,
+        description: x.Description,
+        thumbnail: x.MediThumbURL,
+        product_url: x.URL,
+        stock: x.stock,
+        imageUrl: x.MediImageURL,
+        product_id: x.ProductID,
+        isMedical: x.IsMedical,
+        isCEP: x.IsCEP,
+        isTopicalGear: x.IsTopicalGear,
+        category: x.MediNavigation,
+        subcategory: x.CEPNavigation,
+        subsubcategory: x.TopicalGearNavigation
+      }
+    })
+    fs.writeFile('mediusaData.json', JSON.stringify(newData), 'utf8', err => {
+      if (err) {
+        console.log(err)
+      }
+      res.send('done')
+    })
+  })
 })
 
 app.get('/mediusatrans', (req, res) => {
@@ -5522,6 +5522,28 @@ app.get('/insert', async (req, res) => {
   // })
   // console.log(JSON.stringify(await client.getTask(1122)))
   // res.send(d)
+})
+
+app.get('/rank', async (req, res) => {
+  const browser = await puppeteer.launch({
+    headless: false
+  })
+  const page = await browser.newPage()
+  await page.goto(
+    'https://www.hackerrank.com/interview/preparation-kits/three-month-preparation-kit/three-month-week-one/challenges'
+  )
+
+  const data = await page.evaluate(() => {
+    const challenges = Array.from(document.querySelectorAll('.interview-ch-li'))
+    console.log(challenges)
+    return challenges.map(challenge => ({
+      title: challenge.querySelector('.interview-ch-li-title').innerText,
+      url: ''
+      // description: challenge.querySelector('p').innerText
+    }))
+  })
+
+  console.log(data)
 })
 
 const generateTokens = user => {
