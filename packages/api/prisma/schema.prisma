@@ -37,6 +37,8 @@ model User {
   scores         StudenQuizScores[]
   createdQuiz    Quiz[]
   refreshTokens  RefreshTokens[]
+  Class          Class[]
+  Analytics      Analytics[]
 }
 
 model Specialization {
@@ -166,6 +168,88 @@ model RefreshTokens {
   User User @relation(fields: [userId], references: [id])
 }
 
+// Course table for scheduling classes
+model Course {
+  id          String  @id @default(uuid()) @db.Uuid
+  name        String  @unique
+  description String?
+  credits     Int?
+  // ... other course-related fields
+  Classes     Class[] // Courses can have many classes
+}
+
+// Class table for individual class sessions
+model Class {
+  id String @id @default(uuid()) @db.Uuid
+
+  startTime DateTime
+  endTime   DateTime
+  date      DateTime
+  // ... other class-related fields
+  Course    Course?     @relation(fields: [courseId], references: [id])
+  courseId  String?     @db.Uuid
+  User      User?       @relation(fields: [userId], references: [id])
+  userId    String?     @db.Uuid
+  Room      Room?       @relation(fields: [roomId], references: [id])
+  roomId    String?     @db.Uuid
+  Analytics Analytics[]
+}
+
+// Room table for scheduling rooms
+model Room {
+  id        String      @id @default(uuid()) @db.Uuid
+  name      String
+  capacity  Int
+  // ... other room-related fields
+  Classes   Class[]
+  Analytics Analytics[]
+}
+
+// Report table for generating reports
+model Report {
+  id   String     @id @default(uuid()) @db.Uuid
+  type ReportType
+  // ... other report-related fields
+}
+
+// Enum for different report types
+enum ReportType {
+  COURSES
+  FACULTY
+  STUDENTS
+  SCHEDULES
+}
+
+// Integration table for integrating with other systems
+model Integration {
+  id   String          @id @default(uuid()) @db.Uuid
+  type IntegrationType
+  // ... other integration-related fields
+}
+
+// Enum for different integration types
+enum IntegrationType {
+  STUDENT_INFO
+  FACULTY_DB
+  ROOM_RESERVATION
+}
+
+// Analytics table for tracking system usage
+model Analytics {
+  id        String             @id @default(uuid()) @db.Uuid
+  eventType AnalyticsEventType
+  dateTime  DateTime
+
+  eventDetails String?
+  ipAddress    String?
+  Class        Class?  @relation(fields: [classId], references: [id])
+  classId      String? @db.Uuid
+  User         User?   @relation(fields: [userId], references: [id])
+  userId       String? @db.Uuid
+  Room         Room?   @relation(fields: [roomId], references: [id])
+  roomId       String? @db.Uuid
+}
+
 enum QuizQuestionType {
   Single
   MCQ
@@ -181,4 +265,34 @@ enum Role {
   student
   faculty
   spoc
+}
+
+enum AnalyticsEventType {
+  LOGIN
+  LOGOUT
+  COURSE_CREATE
+  COURSE_UPDATE
+  COURSE_DELETE
+  CLASS_CREATE
+  CLASS_UPDATE
+  CLASS_DELETE
+  ROOM_CREATE
+  ROOM_UPDATE
+  ROOM_DELETE
+  FACULTY_CREATE
+  FACULTY_UPDATE
+  FACULTY_DELETE
+  STUDENT_CREATE
+  STUDENT_UPDATE
+  STUDENT_DELETE
+  SCHEDULE_CREATE
+  SCHEDULE_UPDATE
+  SCHEDULE_DELETE
+  REPORT_GENERATE
+  INTEGRATION_CREATE
+  INTEGRATION_UPDATE
+  INTEGRATION_DELETE
+  FEEDBACK_CREATE
+  FEEDBACK_UPDATE
+  FEEDBACK_DELETE
 }

@@ -17,7 +17,7 @@
   "editor.letterSpacing": 0.5,
   "editor.cursorWidth": 8,
   "editor.cursorBlinking": "expand",
-  "editor.cursorSmoothCaretAnimation": true,
+  "editor.cursorSmoothCaretAnimation": "on",
   "workbench.colorTheme": "SynthWave '84",
   // Tailwind
   "css.validate": false,
