@@ -14,7 +14,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { BsEye } from 'react-icons/bs'
 import ReactMarkdown from 'react-markdown'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+
 import { getRequest } from '../axios/axiosMethods'
 import PageLayout from '../components/PageLayout'
 import { useAppState } from '../state/AppState'
@@ -386,14 +387,19 @@ const QuizPanel = () => {
                     </div>
                   ))}
               </div>
-              <Button
-                type="primary"
-                block
-                danger
-                className="quiz-panel-submit-btn"
-              >
-                Submit
-              </Button>
+              {quizData?.Questions.filter(q => selectedOptions[q.id]).length >
+              quizData?.Questions?.length / 2 ? (
+                <Link to={`/leaderboard`}>
+                  <Button
+                    type="primary"
+                    block
+                    danger
+                    className="quiz-panel-submit-btn"
+                  >
+                    Submit
+                  </Button>
+                </Link>
+              ) : null}
             </Card>
           </Col>
           <Col span={19}>
@@ -535,7 +541,6 @@ const QuizPanel = () => {
                       <AiOutlineRight />
                     </Button>
                   </div>
-                  <Button type="default">Skip</Button>
                 </div>
               </div>
             </Card>

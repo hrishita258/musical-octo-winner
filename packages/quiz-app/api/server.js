@@ -10,6 +10,7 @@ import jwt from 'jsonwebtoken'
 import { MeiliSearch } from 'meilisearch'
 import puppeteer from 'puppeteer'
 import APIRoutes from './Routes/index.js'
+import QuizLinks from './allQuizzes.js'
 import initScheduledJobs from './cronjobs/OpportunityCrons.js'
 import postgres from './db/Prisma.js'
 

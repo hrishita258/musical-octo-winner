@@ -14,44 +14,39 @@ export const MenuData = [
           {
             key: '1-1-1',
             label: 'User List',
-            link: 'userManagment/user-list'
-          },
-          {
-            key: '1-1-2',
-            label: 'Add User',
-            link: 'userManagment/add-user'
-          }
-        ]
-      },
-      {
-        key: '1-2',
-        label: 'Specialization Management',
-        role: ['admin', 'spoc'],
-        children: [
-          {
-            key: '1-2-1',
-            label: 'Specialization List',
-            link: 'specializationManagement/specialization-list'
-          },
-          {
-            key: '1-2-2',
-            label: 'Add Specialization',
-            link: 'specializationManagement/add-specialization'
-          }
-        ]
-      },
-      {
-        key: '1-3',
-        label: 'Assign Specialization',
-        children: [
-          {
-            key: '1-3-1',
-            label: 'Assign Specialization',
-            role: ['admin', 'spoc'],
-            link: 'assignSpecialization/assign-specialization'
+            link: '/users'
           }
         ]
       }
+      // {
+      //   key: '1-2',
+      //   label: 'Specialization Management',
+      //   role: ['admin', 'spoc'],
+      //   children: [
+      //     {
+      //       key: '1-2-1',
+      //       label: 'Specialization List',
+      //       link: 'specializationManagement/specialization-list'
+      //     },
+      //     {
+      //       key: '1-2-2',
+      //       label: 'Add Specialization',
+      //       link: 'specializationManagement/add-specialization'
+      //     }
+      //   ]
+      // },
+      // {
+      //   key: '1-3',
+      //   label: 'Assign Specialization',
+      //   children: [
+      //     {
+      //       key: '1-3-1',
+      //       label: 'Assign Specialization',
+      //       role: ['admin', 'spoc'],
+      //       link: 'assignSpecialization/assign-specialization'
+      //     }
+      //   ]
+      // }
     ]
   },
   {
@@ -63,13 +58,7 @@ export const MenuData = [
         key: '2-1',
         label: 'Quiz List',
         role: ['admin', 'spoc', 'faculty'],
-        link: 'quiz/quiz-list'
-      },
-      {
-        key: '2-2',
-        label: 'Add Quiz',
-        role: ['faculty'],
-        link: 'quiz/add-quiz'
+        link: '/quizzes'
       }
     ]
   },
@@ -82,12 +71,7 @@ export const MenuData = [
       {
         key: '3-1',
         label: 'College List',
-        link: 'collegeManagement/college-list'
-      },
-      {
-        key: '3-2',
-        label: 'Add College',
-        link: 'collegeManagement/add-college'
+        link: '/colleges'
       }
     ]
   },

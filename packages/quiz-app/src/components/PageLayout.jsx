@@ -93,7 +93,7 @@ const PageLayout = ({ children, breadcrumbs, loading, noStyle = false }) => {
                       width: 'max-content'
                     }}
                   >
-                    HH Quizzer &copy;
+                    Quizzer &copy;
                   </Link>
                 </Col>
                 <Col span={16}>

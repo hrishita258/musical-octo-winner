@@ -1,16 +1,19 @@
 import {
   Avatar,
+  Button,
   Card,
   Col,
   Descriptions,
   Divider,
   Form,
   Input,
-  message,
-  Row
+  Row,
+  message
 } from 'antd'
 
 import moment from 'moment'
+import { Link } from 'react-router-dom'
+
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getRequest } from '../axios/axiosMethods'
@@ -63,7 +66,14 @@ const Quiz = () => {
       {quizData ? (
         <div>
           <Descriptions
-            title="Quiz Info"
+            title={
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Quiz Info</span>
+                <Link to={`/quizzes/${params.quizId}/edit`}>
+                  <Button type="primary">Edit</Button>
+                </Link>
+              </div>
+            }
             size="small"
             column={24}
             contentStyle={{ textAlign: 'center' }}

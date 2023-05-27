@@ -299,7 +299,7 @@ const Quizzes = () => {
         <h1 style={{ fontSize: '25px', display: 'flex', alignItems: 'center' }}>
           Courses
           <p style={{ fontSize: '14px', margin: '0px 5px' }}>
-            ( {total} results on HH Quizzer )
+            ( {total} results on Quizzer )
           </p>
         </h1>
       </Divider>

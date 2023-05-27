@@ -10,7 +10,7 @@ import { Button, Card, FloatButton, Select, Space, Typography } from 'antd'
 import { convert } from 'html-to-text'
 import React, { useEffect, useState } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { getRequest } from '../axios/axiosMethods'
 import PageLayout from '../components/PageLayout'
 import QuillEditor from '../components/QuillEditor'
@@ -162,7 +162,9 @@ const QuizQuestionsEdit = () => {
           <h1 style={{ fontSize: '20px' }}>Questions Builder</h1>
           <p>add new questions to the quiz or update them as per your need</p>
         </div>
-        <Button type="primary">Save Changes</Button>
+        <Link to={`/quizzes/${params.quizId}/quizpanel`}>
+          <Button type="primary">Review Quiz</Button>
+        </Link>
       </div>
       <div style={{ overflow: 'auto' }}>
         <div
